@@ -1,12 +1,18 @@
 package com.ususstudios.noway;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 import java.time.Duration;
 
 public class Game {
     static GamePanel gamePanel;
+    public static final Logger LOGGER = LoggerFactory.getLogger("NoWayButDown");
 	
 	public static boolean running = true;
     public static String FPS = "0.00";
@@ -14,8 +20,15 @@ public class Game {
     public static int screenHeight = 600;
     
     public static void main(String[] args) {
+        LOGGER.info("Program started");
         JFrame jFrame = new JFrame("No Way But Down");
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                endGame();
+                System.exit(0);
+            }
+        });
         jFrame.setSize(screenWidth, screenHeight);
         jFrame.getContentPane().setBackground(Color.BLACK);
         
@@ -26,11 +39,17 @@ public class Game {
         
         jFrame.setVisible(true);
 	    
-	    Thread gameThread = new Thread(gamePanel);
+	    Thread gameThread = new Thread(gamePanel, "gThread");
         gameThread.start();
+        LOGGER.info("Game thread started");
     }
     
     public static void update() {
+    }
+    
+    public static void endGame() {
+        running = false;
+        LOGGER.info("Game ended");
     }
 }
 
@@ -45,7 +64,6 @@ class GamePanel extends JPanel implements Runnable {
             
             Game.update();
             repaint();
-            System.out.println("FPS: " + Game.FPS);
             
             long elapsed = System.nanoTime() - start;
             long sleepTime = OPTIMAL_TIME - elapsed;
