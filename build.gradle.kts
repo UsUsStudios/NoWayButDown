@@ -11,7 +11,7 @@ repositories {
 }
 
 application {
-    mainClass.set("com.ususstudios.noway.Main")
+    mainClass.set("com.ususstudios.noway.Game")
 }
 
 dependencies {
