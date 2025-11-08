@@ -1,5 +1,6 @@
 package com.ususstudios.noway.main;
 
+import com.ususstudios.noway.rendering.MapTileHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.swing.*;
@@ -18,6 +19,7 @@ public class Game {
     public static String FPS = "0.00";
     public static int screenWidth = 800;
     public static int screenHeight = 600;
+    public static int tileSize = 32;
     
     public static void main(String[] args) {
         LOGGER.info("Program started");
@@ -38,6 +40,9 @@ public class Game {
         jFrame.pack();
         
         jFrame.setVisible(true);
+        
+        MapTileHandler.loadTiles();
+        MapTileHandler.loadMaps();
 	    
 	    Thread gameThread = new Thread(gamePanel, "gThread");
         gameThread.start();
