@@ -5,8 +5,9 @@ import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.config.plugins.*;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Plugin(name = "Queue", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE)
 public class QueueAppender extends AbstractAppender {
@@ -19,6 +20,8 @@ public class QueueAppender extends AbstractAppender {
 			if (new File("logs/").mkdirs()) { LOGGER.info("Created logs directory"); }
 			if (file.createNewFile()) { LOGGER.info("Created latest.log file"); }
 			fileWriter = new PrintWriter(new FileWriter(file, true), true);
+			String dateTime =   LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss"));
+			fileWriter.println(" --- New Session - " + dateTime + " --- ");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -41,7 +44,10 @@ public class QueueAppender extends AbstractAppender {
 		
 		System.out.print(message);
 		if (fileWriter != null) {
-			fileWriter.print(message);
+			fileWriter.print(message.replace("\u001B[34m", "")
+							.replace("\u001B[32m", "")
+							.replace("\u001B[36m", "")
+							.replace("\u001B[m", ""));
 			fileWriter.flush();
 		}
 	}
