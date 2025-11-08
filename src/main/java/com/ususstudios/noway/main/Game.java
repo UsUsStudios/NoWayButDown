@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+// Main game class
 public class Game {
     public static final Logger LOGGER = LoggerFactory.getLogger("NoWayButDown");
 	
@@ -23,6 +24,7 @@ public class Game {
     
     public static void main(String[] args) {
         LOGGER.info("Program started");
+        // Set up the window
         JFrame jFrame = new JFrame("No Way But Down");
         jFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -34,6 +36,7 @@ public class Game {
         jFrame.setSize(screenWidth, screenHeight);
         jFrame.getContentPane().setBackground(Color.BLACK);
         
+        // Set up the game panel
         gamePanel = new GamePanel();
         gamePanel.setPreferredSize(new Dimension(screenWidth, screenHeight));
         jFrame.add(gamePanel);
@@ -41,9 +44,11 @@ public class Game {
         
         jFrame.setVisible(true);
         
+        // Load everything we need
         MapTileHandler.loadTiles();
         MapTileHandler.loadMaps();
 	    
+        // Start game thread!
 	    Thread gameThread = new Thread(gamePanel, "gThread");
         gameThread.start();
         LOGGER.info("Game thread started");

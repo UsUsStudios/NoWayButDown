@@ -14,10 +14,12 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Objects;
 
+// Loads maps and tile types
 public class MapTileHandler {
 	public static HashMap<String, Map> maps = new HashMap<>();
 	public static HashMap<Integer, Tile> tileTypes = new HashMap<>();
 	
+	// Register all the tile types used in the game
 	public static void loadTiles() {
 		registerTile(0, "nothing", false);
 		
@@ -77,21 +79,22 @@ public class MapTileHandler {
 		Game.LOGGER.info("Loaded {} tile images", tileTypes.size());
 	}
 	
+	// Registers a tile type with the given ID, image name, and collision property
 	public static void registerTile(int i, String imageName, boolean collision) {
 		// Create a new tile and add it to the tileTypes HashMap, as well as store it in a field for later use.
 		Tile tile = new Tile();
 		tile.collision = collision;
 		tileTypes.put(i, tile);
 
-        /* Entering try and catch zone because this part involves ImageIO.
-         The catch also has a NullPointerException because "requireNonNull" is used in the code*/
+        // Entering try and catch zone because this part involves ImageIO.
+        // The catch also has a NullPointerException because "requireNonNull" is used in the code
 		try {
 			// Get the imageStream that we will use for the tile. It's separately instantiated as it will be used for null checking
 			InputStream imageStream = MapTileHandler.class.getResourceAsStream("/drawable/tile/" + imageName + ".png");
 
-            /* Make sure the imageStream is a member of "/drawable/tile/" and is a png. If not, use the disabled imageStream and warn.
-             * The way we find out that is by checking if the imageStream is null. If it is, it's likely not a valid member.
-            However, if the imageName was just "", don't warn as it may be a result of an error */
+            // Make sure the imageStream is a member of "/drawable/tile/" and is a png. If not, use the disabledimageStream and warn.
+            // The way we find out that is by checking if the imageStream is null. If it is, it's likely not a valid member.
+            // However, if the imageName was just "", don't warn as it may be a result of an error.
 			if (imageName.isEmpty()) {
 				tile.image = ImageIO.read(Objects.requireNonNull(
 						MapTileHandler.class.getResourceAsStream("/drawable/disabled.png")));
@@ -111,6 +114,7 @@ public class MapTileHandler {
 		}
 	}
 	
+	// Load all map files from the resources/values/maps/ directory
 	public static void loadMaps() {
 		String[] mapFiles = getResourceFileNames("/values/maps");
 		for (String mapFile : mapFiles) {
@@ -130,6 +134,7 @@ public class MapTileHandler {
 		Game.LOGGER.info("Loaded {} map files", maps.size());
 	}
 	
+	// Load a specific map from a JSON file
 	private static void loadMap(String fileName) {
 		Game.LOGGER.info("Loading map: {}", fileName);
 		JSONObject file = getJsonObject("/values/maps/" + fileName + ".json");
@@ -142,15 +147,18 @@ public class MapTileHandler {
 			}
 		}
 		
+		// Get the basic map properties
 		String name = file.getString("name");
 		JSONArray map = file.getJSONArray("map");
 		int width = file.getInt("width");
 		int height = file.getInt("height");
 		
+		// Prepare the layers
 		JSONArray lay1 = map.getJSONArray(0);
 		int[][] layer1 = new int[height][width];
 		int[][] layer2 = new int[height][width];
 		int[][] layer3 = new int[height][width];
+		
 		// Load layer 1
 		for (int y = 0; y < height; y++) {
 			String[] row = lay1.getString(y).split(" ");
@@ -199,6 +207,7 @@ public class MapTileHandler {
 		maps.put(name, mapObj);
 	}
 	
+	// Scale an image to the specified width and height
 	public static BufferedImage scaleImage(BufferedImage original, int width, int height) {
 		BufferedImage scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics2D = scaledImage.createGraphics();
@@ -208,6 +217,7 @@ public class MapTileHandler {
 		return scaledImage;
 	}
 	
+	// Get the names of all resource files in a given directory
 	public static String[] getResourceFileNames(String directoryPath) {
 		try (InputStream inputStream = MapTileHandler.class.getResourceAsStream(directoryPath)) {
 			if (inputStream == null) {
@@ -224,6 +234,7 @@ public class MapTileHandler {
 		}
 	}
 	
+	// Read a JSON object from a file in the resources
 	public static JSONObject getJsonObject(String filePath) {
 		try (InputStream inputStream = MapTileHandler.class.getResourceAsStream(filePath)) {
 			if (inputStream == null) {

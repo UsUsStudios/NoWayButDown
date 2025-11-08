@@ -8,20 +8,24 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 
 public class GamePanel extends JPanel implements Runnable {
+	// Game loop
 	@Override
 	public void run() {
 		final int TARGET_FPS = 60;
 		final long OPTIMAL_TIME = 1_000_000_000 / TARGET_FPS;
 		
+		// Run for as long as the game hasn't been terminated
 		while (Game.running) {
 			long start = System.nanoTime();
 			
+			// Update game state and draw
 			Game.update();
 			repaint();
 			
 			long elapsed = System.nanoTime() - start;
 			long sleepTime = OPTIMAL_TIME - elapsed;
 			
+			// Sleep to maintain target FPS
 			if (sleepTime > 0) {
 				try {
 					Thread.sleep(Duration.ofNanos(sleepTime - 750_000));
@@ -37,8 +41,9 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		// Check the game state and call the appropriate draw method
 		switch (Game.gameState) {
-			case PLAYING -> GameRendering.draw(g);
+			case PLAYING -> GameRendering.drawPanel(g);
 		}
 	}
 }
