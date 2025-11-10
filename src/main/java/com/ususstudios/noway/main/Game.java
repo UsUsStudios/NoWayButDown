@@ -1,5 +1,7 @@
 package com.ususstudios.noway.main;
 
+import com.ususstudios.noway.entity.Entity;
+import com.ususstudios.noway.entity.Player;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,22 +9,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 // Main game class
 public class Game {
     public static final Logger LOGGER = LoggerFactory.getLogger("NoWayButDown");
 	
     // Game State
-    public static GameState gameState = GameState.NULL;
+    public static States.GameStates gameState = States.GameStates.NULL;
     public static String currentMap = "main";
     
     // Custom Classes
     public static GamePanel gamePanel;
+    public static InputHandler inputHandler;
+    
+    // Entities
+    public static Player player;
+    public static ArrayList<Entity> entities = new ArrayList<>();
     
 	public static boolean running = true;
     public static String FPS = "0.00";
-    public static int screenWidth = 800;
-    public static int screenHeight = 600;
+    public static int screenWidth = 1100;
+    public static int screenHeight = 700;
     public static int tileSize = 32;
     
     public static void main(String[] args) {
@@ -50,11 +58,13 @@ public class Game {
         // Load everything we need
         MapTileHandler.loadTiles();
         MapTileHandler.loadMaps();
+        inputHandler = new InputHandler();
+        jFrame.addKeyListener(inputHandler);
 	    
         // Start game thread!
 	    Thread gameThread = new Thread(gamePanel, "gThread");
         gameThread.start();
-        gameState = GameState.PLAYING;
+        gameState = States.GameStates.PLAYING;
         LOGGER.info("Game thread started");
     }
     

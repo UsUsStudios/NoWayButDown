@@ -15,8 +15,9 @@ public class GameRendering {
 			for (int col = 0; col < map.width(); col++) {
 				int tileID = map.layer1()[row][col];
 				Tile tile = MapTileHandler.tileTypes.get(tileID);
-				if (tile != null && tile.image != null) {
-					g.drawImage(tile.image, col * Game.tileSize, row * Game.tileSize, Game.tileSize, Game.tileSize, null);
+				if (tile != null && tile.image() != null) {
+					g.drawImage(tile.image().getImage(), col * Game.tileSize, row * Game.tileSize,
+							Game.tileSize, Game.tileSize, null);
 				}
 			}
 		}
@@ -24,8 +25,9 @@ public class GameRendering {
 			for (int col = 0; col < map.width(); col++) {
 				int tileID = map.layer2()[row][col];
 				Tile tile = MapTileHandler.tileTypes.get(tileID);
-				if (tile != null && tile.image != null) {
-					g.drawImage(tile.image, col * Game.tileSize, row * Game.tileSize, Game.tileSize, Game.tileSize, null);
+				if (tile != null && tile.image() != null) {
+					g.drawImage(tile.image().getImage(), col * Game.tileSize, row * Game.tileSize,
+							Game.tileSize, Game.tileSize, null);
 				}
 			}
 		}
@@ -33,8 +35,9 @@ public class GameRendering {
 			for (int col = 0; col < map.width(); col++) {
 				int tileID = map.layer3()[row][col];
 				Tile tile = MapTileHandler.tileTypes.get(tileID);
-				if (tile != null && tile.image != null) {
-					g.drawImage(tile.image, col * Game.tileSize, row * Game.tileSize, Game.tileSize, Game.tileSize, null);
+				if (tile != null && tile.image() != null) {
+					g.drawImage(tile.image().getImage(), col * Game.tileSize, row * Game.tileSize,
+							Game.tileSize, Game.tileSize, null);
 				}
 			}
 		}
