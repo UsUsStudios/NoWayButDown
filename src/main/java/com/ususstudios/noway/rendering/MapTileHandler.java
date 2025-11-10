@@ -197,7 +197,7 @@ public class MapTileHandler {
 				return bufferedReader.lines().toArray(String[]::new);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			Game.handleException(e);
 			return new String[0];
 		}
 	}

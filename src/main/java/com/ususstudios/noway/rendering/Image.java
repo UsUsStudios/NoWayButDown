@@ -70,8 +70,8 @@ public class Image implements Serializable {
 			
 			// If all checks have passed, then set the image
 			image = ImageIO.read(imageStream);
-		} catch (IOException | NullPointerException exception) {
-			exception.printStackTrace();
+		} catch (IOException | NullPointerException e) {
+			Game.handleException(e);
 		}
 
         /* Finally, deserialize the image and put it into the data
@@ -114,8 +114,8 @@ public class Image implements Serializable {
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			ImageIO.write(image, "png", byteArrayOutputStream); // You can use "jpg", "bmp", etc.
 			return byteArrayOutputStream.toByteArray();
-		} catch (IOException exception) {
-			exception.printStackTrace();
+		} catch (IOException e) {
+			Game.handleException(e);
 			return null;
 		}
 	}
@@ -123,8 +123,8 @@ public class Image implements Serializable {
 		try {
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
 			return ImageIO.read(byteArrayInputStream);
-		} catch (IOException exception) {
-			exception.printStackTrace();
+		} catch (IOException e) {
+			Game.handleException(e);
 			return null;
 		}
 	}

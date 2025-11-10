@@ -1,5 +1,6 @@
 package com.ususstudios.noway.main;
 
+import com.ususstudios.noway.QueueAppender;
 import com.ususstudios.noway.entity.Entity;
 import com.ususstudios.noway.entity.Player;
 import com.ususstudios.noway.rendering.MapTileHandler;
@@ -74,5 +75,10 @@ public class Game {
     public static void endGame() {
         running = false;
         LOGGER.info("Game ended");
+    }
+    
+    public static void handleException(Exception e) {
+        QueueAppender.printError(e);
+        running = false;
     }
 }
