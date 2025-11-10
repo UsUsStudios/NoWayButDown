@@ -204,7 +204,7 @@ public class MapTileHandler {
 		}
 		
 		Map mapObj = new Map(name, width, height, layer1, layer2, layer3);
-		maps.put(name, mapObj);
+		maps.put(fileName, mapObj);
 	}
 	
 	// Scale an image to the specified width and height

@@ -12,8 +12,11 @@ import java.awt.event.WindowEvent;
 public class Game {
     public static final Logger LOGGER = LoggerFactory.getLogger("NoWayButDown");
 	
+    // Game State
+    public static GameState gameState = GameState.NULL;
+    public static String currentMap = "main";
+    
     // Custom Classes
-    public static GameState gameState = GameState.PLAYING;
     public static GamePanel gamePanel;
     
 	public static boolean running = true;
@@ -51,6 +54,7 @@ public class Game {
         // Start game thread!
 	    Thread gameThread = new Thread(gamePanel, "gThread");
         gameThread.start();
+        gameState = GameState.PLAYING;
         LOGGER.info("Game thread started");
     }
     

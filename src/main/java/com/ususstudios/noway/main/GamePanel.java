@@ -43,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
 		super.paintComponent(g);
 		// Check the game state and call the appropriate draw method
 		switch (Game.gameState) {
-			case PLAYING -> GameRendering.drawPanel(g);
+			case PLAYING -> GameRendering.drawPlaying(g);
 		}
 	}
 }
