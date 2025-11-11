@@ -17,7 +17,7 @@ public class Player extends Mob {
 	public float cameraX, cameraY;
 	
 	public Player() {
-		super("Torgray", 0f, 0f, 36f, 48f);
+		super("Player", 0f, 0f, 36f, 48f);
 		
 		// Ajust spriteSheet properties
 		spriteSheet = Image.loadImage("entity/player/torgray_sheet");
@@ -46,26 +46,30 @@ public class Player extends Mob {
         Since the super class's update method isn't called, and the player is always on Screen, it doesn't update to false*/
 		onScreen = true;
 		
-		Game.LOGGER.info("Player loaded :D");
+		Game.LOGGER.info("Player loaded");
 	}
 	
 	@Override
 	public void update() {
+		// if (Game.random.nextFloat() > 0.5) properties.put("light_intensity", 0.8f * ((Main.game.random.nextFloat() - 0.5f) / 5f + 1));
 		HashMap<Integer, Boolean> keyMap = Game.inputHandler.keyMap;
+		StringBuilder newDirection = new StringBuilder();
+
+        /* Depending on the key pressed, append a newDirection with a direction.
+         * If the direction was appended more than once, append the direction with a space
+         this is to let the mob's update method know if the movement is diagonal */
+		if (keyMap.get(KeyEvent.VK_W)) newDirection.append("up");
+		if (keyMap.get(KeyEvent.VK_S)) newDirection.append(!newDirection.isEmpty() ? "" : "down");
+		if (keyMap.get(KeyEvent.VK_A)) newDirection.append(!newDirection.isEmpty() ? " left" : "left");
+		if (keyMap.get(KeyEvent.VK_D)) newDirection.append(!newDirection.isEmpty() ? " right" : "right");
 		
-		// Check if the player is moving or not to set its state
-		state = (keyMap.get(KeyEvent.VK_W) || keyMap.get(KeyEvent.VK_S) ||
-				keyMap.get(KeyEvent.VK_A) || keyMap.get(KeyEvent.VK_D)) ? States.MobStates.WALKING : States.MobStates.IDLE;
+		// If nothing was added to the StringBuilder, meaning the player isn't walking, change his state accordingly
+		if (newDirection.isEmpty()) state = States.MobStates.IDLE;
+		else state = States.MobStates.WALKING;
 		
-		// If the player is moving diagonally, reduce the movement speed to 1/1.4 of normal speed.
-		if ((keyMap.get(KeyEvent.VK_A) || keyMap.get(KeyEvent.VK_D)) &&
-				(keyMap.get(KeyEvent.VK_W) || keyMap.get(KeyEvent.VK_S))) {
-			tryMove((keyMap.get(KeyEvent.VK_D)?1:0)/1.4f - (keyMap.get(KeyEvent.VK_A)?1:0)/1.4f, 0);
-			tryMove(0, (keyMap.get(KeyEvent.VK_S)?1:0)/1.4f - (keyMap.get(KeyEvent.VK_W)?1:0)/1.4f);
-		} else {
-			tryMove((keyMap.get(KeyEvent.VK_D)?1:0) - (keyMap.get(KeyEvent.VK_A)?1:0), 0);
-			tryMove(0, (keyMap.get(KeyEvent.VK_S)?1:0) - (keyMap.get(KeyEvent.VK_W)?1:0));
-		}
+		// Set the direction to the final newDirection string and let the mod's update method do the rest
+		direction = newDirection.toString().trim();
+		super.update();
 		
 		// Modify the screenX and screenY depending on the size of the window
 		cameraX -= (cameraX - x) * 0.15f;
@@ -153,16 +157,6 @@ public class Player extends Mob {
 					Game.tileSize * eyesColumn + Game.tileSize,
 					Game.tileSize * eyesRow + Game.tileSize,
 					null);
-		}
-	}
-	
-	// Move in a direction, if you collide go back
-	private void tryMove(float x, float y) {
-		this.x += x * speed;
-		this.y += y * speed;
-		if (CollisionChecker.checkEntityColliding(this)) {
-			this.x -= x * speed;
-			this.y -= y * speed;
 		}
 	}
 }

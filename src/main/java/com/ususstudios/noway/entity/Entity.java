@@ -63,9 +63,9 @@ public class Entity {
 	 **/
 	public void draw(Graphics graphics) {
 		if (onScreen) {
-            /* If spriteSheets are disabled (spriteColumn = 100, spriteRow = 100), draw the currentImage normally.
+            /* If spriteSheets are disabled (spriteColumn = -1, spriteRow = -1), draw the currentImage normally.
              If not, use spriteColumn and spriteRow to figure out what part to draw. */
-			if (spriteColumn == 100 && spriteRow == 100) {
+			if (spriteColumn == -1 && spriteRow == -1) {
 				graphics.drawImage(currentImage.getImage(), Math.round(x - Game.player.cameraX + Game.screenWidth / 2f),
 						Math.round(y - Game.player.cameraY + Game.screenHeight / 2f), null);
 			} else {
