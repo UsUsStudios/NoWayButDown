@@ -32,7 +32,7 @@ public class Game {
     public static String FPS = "0.00";
     public static int screenWidth = 1100;
     public static int screenHeight = 700;
-    public static int tileSize = 32;
+    public static int tileSize = 48;
     
     public static void main(String[] args) {
         LOGGER.info("Program started");
@@ -61,6 +61,10 @@ public class Game {
         MapTileHandler.loadMaps();
         inputHandler = new InputHandler();
         jFrame.addKeyListener(inputHandler);
+        
+        // Load the player
+        player = new Player();
+        entities.add(player);
 	    
         // Start game thread!
 	    Thread gameThread = new Thread(gamePanel, "gThread");
@@ -70,6 +74,7 @@ public class Game {
     }
     
     public static void update() {
+        Game.entities.forEach(Entity::update);
     }
     
     public static void endGame() {

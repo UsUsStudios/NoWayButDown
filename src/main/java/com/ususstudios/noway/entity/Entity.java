@@ -23,14 +23,15 @@ public class Entity {
 	// Positions
 	public float x;
 	public float y;
-	public float width = 16;
-	public float height = 16;
+	public float width = Game.tileSize;
+	public float height = Game.tileSize;
 	
 	// Updating
 	/// Can the entity update while not being on the screen? If it's true, the {@code} onScreen} field will always be set to true inside the main update loop of the entity.
 	public boolean updateOffScreen = false;
 	/// Pretty self-explanatory. It's used to increase performance by not loading the entity while it's off-screen.
 	public boolean onScreen = false;
+	public boolean collision = true;
 	
 	// Other
 	public String name;

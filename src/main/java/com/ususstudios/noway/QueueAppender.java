@@ -5,6 +5,8 @@ import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.config.plugins.*;
+import org.apache.logging.log4j.core.layout.PatternLayout;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +30,17 @@ public class QueueAppender extends AbstractAppender {
 		}
 		self = this;
 	}
-
+	
+	@PluginFactory
+	public static QueueAppender createAppender(
+			@PluginAttribute("name") String name,
+			@PluginElement("Layout") Layout<? extends Serializable> layout,
+			@PluginElement("Filter") Filter filter) {
+		if (layout == null) {
+			layout = PatternLayout.createDefaultLayout();
+		}
+		return new QueueAppender(name, filter, layout, true);
+	}
 	
 	public static void printError(Exception e) {
 		System.err.println("\u001B[31mAn exception occurred: " + e.getMessage());

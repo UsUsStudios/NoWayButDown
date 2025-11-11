@@ -1,6 +1,6 @@
 package com.ususstudios.noway.entity;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
@@ -17,7 +17,7 @@ public class Player extends Mob {
 	public float cameraX, cameraY;
 	
 	public Player() {
-		super("Torgray", 0f, 0f, 12f, 16f);
+		super("Torgray", 0f, 0f, 36f, 48f);
 		
 		// Ajust spriteSheet properties
 		spriteSheet = Image.loadImage("entity/player/torgray_sheet");
@@ -36,8 +36,8 @@ public class Player extends Mob {
 		
 		// Set some properties
 		speed = 4;
-		x = Game.tileSize * 21; // Colum 21
-		y = Game.tileSize * 23; // Row 23
+		x = Game.tileSize * 22; // Colum 21
+		y = Game.tileSize * 21; // Row 23
 		cameraX = x;
 		cameraY = y;
 		updateOffScreen = true;
