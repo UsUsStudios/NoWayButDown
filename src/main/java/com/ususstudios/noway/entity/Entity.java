@@ -4,6 +4,7 @@ import com.ususstudios.noway.main.Game;
 import com.ususstudios.noway.rendering.Image;
 
 import java.awt.*;
+import java.util.Properties;
 
 /** Extend this class to create an Entity.
  * Think of an Entity like a simple object in a map that is rendered separately from tiles.
@@ -32,6 +33,8 @@ public class Entity {
 	/// Pretty self-explanatory. It's used to increase performance by not loading the entity while it's off-screen.
 	public boolean onScreen = false;
 	public boolean collision = true;
+	
+	public Properties properties = new Properties();
 	
 	// Other
 	public String name;

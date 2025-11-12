@@ -3,6 +3,7 @@ package com.ususstudios.noway.main;
 import com.ususstudios.noway.QueueAppender;
 import com.ususstudios.noway.entity.Entity;
 import com.ususstudios.noway.entity.Player;
+import com.ususstudios.noway.rendering.Darkness;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class Game {
     // Custom Classes
     public static GamePanel gamePanel;
     public static InputHandler inputHandler;
+    public static Darkness darkness;
     
     // Entities
     public static Player player;
@@ -61,10 +63,12 @@ public class Game {
         MapTileHandler.loadMaps();
         inputHandler = new InputHandler();
         jFrame.addKeyListener(inputHandler);
+        darkness = new Darkness();
         
         // Load the player
         player = new Player();
         entities.add(player);
+        darkness.addLightSource(player);
 	    
         // Start game thread!
 	    Thread gameThread = new Thread(gamePanel, "gThread");

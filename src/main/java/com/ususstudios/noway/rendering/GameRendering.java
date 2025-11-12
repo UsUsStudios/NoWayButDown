@@ -82,5 +82,7 @@ public class GameRendering {
 		);
 		
 		Game.entities.forEach(entity -> entity.draw(g));
+		
+		Game.darkness.draw(g);
 	}
 }
