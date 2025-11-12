@@ -7,6 +7,8 @@ import java.util.HashMap;
 import com.ususstudios.noway.main.Game;
 import com.ususstudios.noway.main.States;
 import com.ususstudios.noway.rendering.Image;
+import com.ususstudios.noway.rendering.Map;
+import com.ususstudios.noway.rendering.MapTileHandler;
 
 public class Player extends Mob {
 	public Image eyesSheet;
@@ -74,6 +76,15 @@ public class Player extends Mob {
 		// Modify the screenX and screenY depending on the size of the window
 		cameraX -= (cameraX - x) * 0.15f;
 		cameraY -= (cameraY - y) * 0.15f;
+		
+		// Clamp the camera to the map bounds
+		Map map = MapTileHandler.maps.get(Game.currentMap);
+		int maxCameraX = map.width() * Game.tileSize - Game.screenWidth / 2;
+		int maxCameraY = map.height() * Game.tileSize - Game.screenHeight / 2;
+		if (cameraX < Game.screenWidth / 2f) cameraX = Game.screenWidth / 2f;
+		if (cameraY < Game.screenHeight / 2f) cameraY = Game.screenHeight / 2f;
+		if (cameraX > maxCameraX) cameraX = maxCameraX;
+		if (cameraY > maxCameraY) cameraY = maxCameraY;
 	}
 	
 	@Override
