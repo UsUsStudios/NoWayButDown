@@ -63,6 +63,9 @@ public class Game {
         MapTileHandler.loadTiles();
         MapTileHandler.loadMaps();
         GameRendering.initialize();
+        Sound.loadLibrary();
+        
+        Sound.playMusic("Can't Go Up");
         darkness = new Darkness();
         inputHandler = new InputHandler();
         jFrame.addKeyListener(inputHandler);
