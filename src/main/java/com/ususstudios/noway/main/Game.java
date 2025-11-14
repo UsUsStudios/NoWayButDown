@@ -4,6 +4,7 @@ import com.ususstudios.noway.QueueAppender;
 import com.ususstudios.noway.entity.Entity;
 import com.ususstudios.noway.entity.Player;
 import com.ususstudios.noway.rendering.Darkness;
+import com.ususstudios.noway.rendering.GameRendering;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,9 +62,10 @@ public class Game {
         // Load everything we need
         MapTileHandler.loadTiles();
         MapTileHandler.loadMaps();
+        GameRendering.initialize();
+        darkness = new Darkness();
         inputHandler = new InputHandler();
         jFrame.addKeyListener(inputHandler);
-        darkness = new Darkness();
         
         // Load the player
         player = new Player();
@@ -73,7 +75,7 @@ public class Game {
         // Start game thread!
 	    Thread gameThread = new Thread(gamePanel, "gThread");
         gameThread.start();
-        gameState = States.GameStates.PLAYING;
+        gameState = States.GameStates.MAIN_MENU;
         LOGGER.info("Game thread started");
     }
     

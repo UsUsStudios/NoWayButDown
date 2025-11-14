@@ -2,9 +2,32 @@ package com.ususstudios.noway.rendering;
 
 import com.ususstudios.noway.main.Game;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.stream.IntStream;
 
 public class GameRendering {
+	static Font firaMedium;
+	static Font firaBold;
+	static Font firaRegular;
+	public static void initialize() {
+		// Load in the font
+		try {
+			firaMedium = getFont("FiraSans-Medium");
+			firaBold = getFont("FiraSans-Bold");
+			firaRegular = getFont("FiraSans-Regular");
+		} catch (FontFormatException | IOException e) {
+			Game.handleException(e);
+		}
+	}
+	
+	public static Font getFont(String name) throws FontFormatException, IOException {
+		InputStream inputStream = GameRendering.class.getResourceAsStream("/font/" + name + ".ttf");
+		assert inputStream != null;
+		return Font.createFont(Font.TRUETYPE_FONT, inputStream);
+	}
+	
 	public static void drawPlaying(Graphics g) {
 		float camX = Game.player.cameraX;
 		float camY = Game.player.cameraY;
@@ -84,5 +107,19 @@ public class GameRendering {
 		Game.entities.forEach(entity -> entity.draw(g));
 		
 		Game.darkness.draw(g);
+	}
+	
+	public static void drawTitle(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, Game.screenWidth, Game.screenHeight);
+		
+		g.setFont(firaBold.deriveFont(48f));
+		g.setColor(Color.WHITE);
+		drawCenteredString(g, "No Way But Down", Game.screenWidth / 2, 250);
+	}
+	
+	public static void drawCenteredString(Graphics g, String text, int x, int y) {
+		Rectangle2D r = g.getFontMetrics().getStringBounds(text, g);
+		g.drawString(text, x - (int) r.getWidth() / 2, y);
 	}
 }
