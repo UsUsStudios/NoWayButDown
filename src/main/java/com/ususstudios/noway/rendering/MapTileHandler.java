@@ -129,8 +129,12 @@ public class MapTileHandler {
 		// Get the basic map properties
 		String name = file.getString("name");
 		JSONArray map = file.getJSONArray("map");
-		int width = file.getInt("width");
-		int height = file.getInt("height");
+		JSONArray size = file.getJSONArray("size");
+		JSONArray spawn = file.getJSONArray("spawn");
+		int width = size.getInt(0);
+		int height = size.getInt(1);
+		int spawnX = spawn.getInt(0);
+		int spawnY = spawn.getInt(1);
 		
 		// Prepare the layers
 		JSONArray lay1 = map.getJSONArray(0);
@@ -182,7 +186,7 @@ public class MapTileHandler {
 			}
 		}
 		
-		Map mapObj = new Map(name, width, height, layer1, layer2, layer3);
+		Map mapObj = new Map(name, width, height, spawnX, spawnY, layer1, layer2, layer3);
 		maps.put(fileName, mapObj);
 	}
 	

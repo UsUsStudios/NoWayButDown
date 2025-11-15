@@ -6,7 +6,6 @@ import com.ususstudios.noway.entity.Player;
 import com.ususstudios.noway.rendering.Darkness;
 import com.ususstudios.noway.rendering.GameRendering;
 import com.ususstudios.noway.rendering.MapTileHandler;
-import com.ususstudios.noway.rendering.UI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.swing.*;
@@ -21,13 +20,12 @@ public class Game {
 	
     // Game State
     public static States.GameStates gameState = States.GameStates.NULL;
-    public static String currentMap = "main";
+    public static String currentMap = "";
     
     // Custom Classes
     public static GamePanel gamePanel;
     public static InputHandler inputHandler;
     public static Darkness darkness;
-    public static UI ui;
     
     // Entities
     public static Player player;
@@ -51,7 +49,7 @@ public class Game {
         Translations.loadFiles();
         
         // Set up the window
-        JFrame jFrame = new JFrame(Translations.translatableText(identifier, "title"));
+        JFrame jFrame = new JFrame(Translations.get(identifier, "title"));
         jFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -72,15 +70,14 @@ public class Game {
         
         Sound.playMusic("Can't Go Up");
         darkness = new Darkness();
-        ui = new UI();
         inputHandler = new InputHandler();
         jFrame.addKeyListener(inputHandler);
         
-        // Load the player
+        // Load the player and game
         player = new Player();
         entities.add(player);
         darkness.addLightSource(player);
-	    
+        
         // Start game thread!
 	    Thread gameThread = new Thread(gamePanel, "gThread");
         gameThread.start();
@@ -89,13 +86,20 @@ public class Game {
     }
     
     public static void update() {
-        ui.update();
-        Game.entities.forEach(Entity::update);
+        if (gameState == States.GameStates.PLAYING) Game.entities.forEach(Entity::update);
+        else GameRendering.updateUI();
     }
     
     public static void endGame() {
         running = false;
         LOGGER.info("Game ended");
+    }
+    
+    public static void loadMap(String map) {
+        currentMap = map;
+        player.setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
+        gameState = States.GameStates.PLAYING;
+        LOGGER.info("Map {} loaded", map);
     }
     
     public static void handleException(Exception e) {

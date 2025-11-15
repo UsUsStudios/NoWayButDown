@@ -8,11 +8,6 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 
 public class GamePanel extends JPanel implements Runnable {
-	public GamePanel() {
-		// Use vertical BoxLayout so UI.titleScreen components (rigid areas, centered labels) layout correctly.
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-	}
-	
 	// Game loop
 	@Override
 	public void run() {

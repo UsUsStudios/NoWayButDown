@@ -38,10 +38,6 @@ public class Player extends Mob {
 		
 		// Set some properties
 		speed = 4;
-		x = Game.tileSize * 22; // Colum 21
-		y = Game.tileSize * 21; // Row 23
-		cameraX = x;
-		cameraY = y;
 		updateOffScreen = true;
 
         /* Set onScreen to true, so the player can be drawn
@@ -49,6 +45,13 @@ public class Player extends Mob {
 		onScreen = true;
 		
 		Game.LOGGER.info("Player loaded");
+	}
+	
+	public void setPosition(float setX, float setY) {
+		x = Game.tileSize * setX;
+		y = Game.tileSize * setY;
+		cameraX = x;
+		cameraY = y;
 	}
 	
 	@Override

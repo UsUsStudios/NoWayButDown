@@ -1,7 +1,11 @@
 package com.ususstudios.noway.rendering;
 
 import com.ususstudios.noway.main.Game;
+import com.ususstudios.noway.main.Translations;
+
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.IntStream;
@@ -10,6 +14,11 @@ public class GameRendering {
 	static Font firaMedium;
 	static Font firaBold;
 	static Font firaRegular;
+	
+	// UI
+	public static int uiSelected = 0;
+	public static int uiMaxOptions = 2;
+	
 	public static void initialize() {
 		// Load in the font
 		try {
@@ -111,10 +120,52 @@ public class GameRendering {
 	public static void drawTitle(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, Game.screenWidth, Game.screenHeight);
+		
+		g.setFont(firaMedium.deriveFont(Font.BOLD, 100f));
+		g.setColor(new Color(60, 31, 193));
+		drawCenteredString(g, Translations.get(Game.identifier, "title"), Game.screenWidth / 2, 200);
+		
+		g.setFont(firaMedium.deriveFont(Font.BOLD, 60f));
+		g.setColor(Color.WHITE);
+		drawButton(g, "new_game", 400, 0);
+		drawButton(g, "load_game", 480, 1);
+		drawButton(g, "quit", 560, 2);
 	}
 	
-	// public static void drawCenteredString(Graphics g, String text, int x, int y) {
-	// 	Rectangle2D r = g.getFontMetrics().getStringBounds(text, g);
-	// 	g.drawString(text, x - (int) r.getWidth() / 2, y);
-	// }
+	/// Updates the UI elements via keyboard input
+	public static void updateUI() {
+		if (Game.inputHandler.keyMap.get(KeyEvent.VK_UP)) {
+			uiSelected--;
+			if (uiSelected < 0) uiSelected = 0;
+			Game.inputHandler.keyMap.put(KeyEvent.VK_UP, false);
+		}
+		if (Game.inputHandler.keyMap.get(KeyEvent.VK_DOWN)) {
+			uiSelected++;
+			if (uiSelected > uiMaxOptions) uiSelected = uiMaxOptions;
+			Game.inputHandler.keyMap.put(KeyEvent.VK_DOWN, false);
+		}
+		
+		if (Game.inputHandler.keyMap.get(KeyEvent.VK_ENTER)) {
+			switch (uiSelected) {
+				case 0 -> Game.loadMap("main");
+				case 1 -> {}
+				case 2 -> System.exit(0);
+			}
+		}
+	}
+	
+	public static void drawButton(Graphics g, String textName, int y, int i) {
+		drawCenteredString(g, Translations.get(Game.identifier, textName), Game.screenWidth / 2, y);
+		if (i == uiSelected) {
+			g.setFont(firaMedium.deriveFont(Font.BOLD, 60f));
+			Rectangle2D r = g.getFontMetrics().getStringBounds(Translations.get(Game.identifier, textName), g);
+			g.drawString(">", Game.screenWidth / 2 - (int) r.getWidth() / 2 - 80, y);
+			g.drawString("<", Game.screenWidth / 2 + (int) r.getWidth() / 2 + 60, y);
+		}
+	}
+	
+	public static void drawCenteredString(Graphics g, String text, int x, int y) {
+		Rectangle2D r = g.getFontMetrics().getStringBounds(text, g);
+		g.drawString(text, x - (int) r.getWidth() / 2, y);
+	}
 }

@@ -21,10 +21,8 @@ public class Translations {
      * @return The result of what's found in the translation file with the translation key.
      * If something is not found, it returns the {@code translationKey} for debugging.
      **/
-    public static String translatableText(String identifier, String key) {
+    public static String get(String identifier, String key) {
         // Firstly get the json file of the current language, and get translationKey by combining the caller and key strings
-        System.out.println(Game.language);
-        System.out.println(TRANSLATION_FILES);
         JSONObject languageFile = TRANSLATION_FILES.get(Game.language);
         String translationKey = identifier + ":" + key;
 
