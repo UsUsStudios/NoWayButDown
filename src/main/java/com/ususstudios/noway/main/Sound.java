@@ -1,10 +1,13 @@
 package com.ususstudios.noway.main;
 
+import com.ususstudios.noway.rendering.MapTileHandler;
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 public class Sound {
     public static final HashMap<String, URL> SOUND_LIBRARY = new HashMap<>();
@@ -15,7 +18,7 @@ public class Sound {
 
     public static void loadLibrary() {
         // Music
-        SOUND_LIBRARY.put("Can't Go Up", Sound.class.getResource("/sound/music/can't go up.wav"));
+	    SOUND_LIBRARY.put("Can't Go Up", Sound.class.getResource("/sound/music/can't go up.wav"));
         Game.LOGGER.info("Loaded all music files");
 
         // SFX
@@ -84,7 +87,54 @@ public class Sound {
 		music.play(idx);
 		music.loop(idx);
 	}
-
+	
+	/// Play randomly out of a set of songs for a given map
+	public static void playMapMusic(String mapName) {
+		new Thread(() -> {
+			try {
+				stopMusic();
+				List<Object> songNames = MapTileHandler.maps.get(mapName).songs();
+				if (!songNames.isEmpty()) {
+					while (Objects.equals(Game.currentMap, mapName)) {
+						// Pick a random song from the list
+						int idx = music.getFile((String) songNames.get(Game.random.nextInt(songNames.size())));
+						music.playBlocking(idx);
+						
+						Thread.sleep(Game.random.nextInt(10000) + 5000);
+					}
+					stopMusic();
+				}
+			} catch (InterruptedException e) {
+				Game.handleException(e);
+			}
+		}).start();
+	}
+	
+	/// Play a sound clip and block until it finishes
+	public void playBlocking(int idx) throws InterruptedException {
+		if (idx == -1) return;
+		
+		Clip clip = clips.get(idx);
+		if (clip == null) return;
+		
+		final Object lock = new Object();
+		
+		clip.addLineListener(event -> {
+			if (event.getType() == LineEvent.Type.STOP) {
+				synchronized (lock) {
+					lock.notify();
+				}
+			}
+		});
+		
+		synchronized (lock) {
+			clip.start();
+			lock.wait();  // blocks until STOP event fires
+		}
+		
+		clip.close();  // optional cleanup
+	}
+	
 	public static void stopMusic() {
 		if (!music.clips.isEmpty()) music.stop(0);
 	}

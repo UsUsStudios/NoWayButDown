@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Random;
 
 // Main game class
 public class Game {
@@ -22,15 +23,17 @@ public class Game {
     public static States.GameStates gameState = States.GameStates.NULL;
     public static String currentMap = "";
     
-    // Custom Classes
+    // Classes
     public static GamePanel gamePanel;
     public static InputHandler inputHandler;
     public static Darkness darkness;
+    public static Random random = new Random();
     
     // Entities
     public static Player player;
     public static ArrayList<Entity> entities = new ArrayList<>();
     
+    // Miscellaneous
 	public static boolean running = true;
     public static String FPS = "0.00";
     public static int screenWidth = 1100;
@@ -99,6 +102,7 @@ public class Game {
         currentMap = map;
         player.setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
         gameState = States.GameStates.PLAYING;
+        Sound.playMapMusic(currentMap);
         LOGGER.info("Map {} loaded", map);
     }
     
