@@ -2,7 +2,6 @@ package com.ususstudios.noway.rendering;
 
 import com.ususstudios.noway.main.Game;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.IntStream;
@@ -112,14 +111,10 @@ public class GameRendering {
 	public static void drawTitle(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, Game.screenWidth, Game.screenHeight);
-		
-		g.setFont(firaBold.deriveFont(48f));
-		g.setColor(Color.WHITE);
-		drawCenteredString(g, "No Way But Down", Game.screenWidth / 2, 250);
 	}
 	
-	public static void drawCenteredString(Graphics g, String text, int x, int y) {
-		Rectangle2D r = g.getFontMetrics().getStringBounds(text, g);
-		g.drawString(text, x - (int) r.getWidth() / 2, y);
-	}
+	// public static void drawCenteredString(Graphics g, String text, int x, int y) {
+	// 	Rectangle2D r = g.getFontMetrics().getStringBounds(text, g);
+	// 	g.drawString(text, x - (int) r.getWidth() / 2, y);
+	// }
 }

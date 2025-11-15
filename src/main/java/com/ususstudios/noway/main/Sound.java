@@ -19,6 +19,7 @@ public class Sound {
         Game.LOGGER.info("Loaded all music files");
 
         // SFX
+	    SOUND_LIBRARY.put("Cursor", Sound.class.getResource("/sound/sfx/cursor.wav"));
         Game.LOGGER.info("Loaded all SFX files");
     }
 

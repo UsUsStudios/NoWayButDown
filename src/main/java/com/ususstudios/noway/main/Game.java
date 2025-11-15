@@ -6,6 +6,7 @@ import com.ususstudios.noway.entity.Player;
 import com.ususstudios.noway.rendering.Darkness;
 import com.ususstudios.noway.rendering.GameRendering;
 import com.ususstudios.noway.rendering.MapTileHandler;
+import com.ususstudios.noway.rendering.UI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class Game {
     public static GamePanel gamePanel;
     public static InputHandler inputHandler;
     public static Darkness darkness;
+    public static UI ui;
     
     // Entities
     public static Player player;
@@ -36,11 +38,20 @@ public class Game {
     public static int screenWidth = 1100;
     public static int screenHeight = 700;
     public static int tileSize = 48;
+    public static String language = "english";
+    public static String identifier = "nowaybutdown";
     
     public static void main(String[] args) {
         LOGGER.info("Program started");
+        // Load everything we need
+        MapTileHandler.loadTiles();
+        MapTileHandler.loadMaps();
+        GameRendering.initialize();
+        Sound.loadLibrary();
+        Translations.loadFiles();
+        
         // Set up the window
-        JFrame jFrame = new JFrame("No Way But Down");
+        JFrame jFrame = new JFrame(Translations.translatableText(identifier, "title"));
         jFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -59,14 +70,9 @@ public class Game {
         
         jFrame.setVisible(true);
         
-        // Load everything we need
-        MapTileHandler.loadTiles();
-        MapTileHandler.loadMaps();
-        GameRendering.initialize();
-        Sound.loadLibrary();
-        
         Sound.playMusic("Can't Go Up");
         darkness = new Darkness();
+        ui = new UI();
         inputHandler = new InputHandler();
         jFrame.addKeyListener(inputHandler);
         
@@ -83,6 +89,7 @@ public class Game {
     }
     
     public static void update() {
+        ui.update();
         Game.entities.forEach(Entity::update);
     }
     

@@ -1,6 +1,7 @@
 package com.ususstudios.noway.rendering;
 
 import com.ususstudios.noway.main.Game;
+import com.ususstudios.noway.main.UtilityTool;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -115,10 +116,10 @@ public class MapTileHandler {
 	// Load a specific map from a JSON file
 	private static void loadMap(String fileName) {
 		Game.LOGGER.info("Loading map: {}", fileName);
-		JSONObject file = getJsonObject("/values/maps/" + fileName + ".json");
+		JSONObject file = UtilityTool.getJsonObject("/values/maps/" + fileName + ".json");
 		if (file == null) {
 			Game.LOGGER.error("Couldn't find /values/maps/{}.json", fileName);
-			file = getJsonObject("/values/maps/disabled.json");
+			file = UtilityTool.getJsonObject("/values/maps/disabled.json");
 			if (file == null) {
 				Game.LOGGER.error("Couldn't find /values/maps/disabled.json");
 				return;
@@ -199,28 +200,6 @@ public class MapTileHandler {
 		} catch (IOException e) {
 			Game.handleException(e);
 			return new String[0];
-		}
-	}
-	
-	// Read a JSON object from a file in the resources
-	public static JSONObject getJsonObject(String filePath) {
-		try (InputStream inputStream = MapTileHandler.class.getResourceAsStream(filePath)) {
-			if (inputStream == null) {
-				Game.LOGGER.error("Warning: \"{}\" is not a valid path.", filePath);
-				return null;
-			}
-			
-			try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-				StringBuilder stringBuilder = new StringBuilder();
-				String line;
-				while ((line = bufferedReader.readLine()) != null) {
-					stringBuilder.append(line);
-				}
-				
-				return new JSONObject(stringBuilder.toString());
-			}
-		} catch (IOException exception) {
-			throw new RuntimeException(exception);
 		}
 	}
 }
