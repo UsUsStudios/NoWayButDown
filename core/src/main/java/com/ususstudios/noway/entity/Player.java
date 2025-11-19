@@ -38,6 +38,8 @@ public class Player extends Mob {
 		// Set some properties
 		speed = 4;
 		updateOffScreen = true;
+        properties.put("light_radius", 125f);
+        properties.put("light_intensity", 0.8f);
 
         /* Set onScreen to true, so the player can be drawn
         Since the super class's update method isn't called, and the player is always on Screen, it doesn't update to false*/

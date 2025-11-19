@@ -53,7 +53,7 @@ public class Main extends ApplicationAdapter {
         // Load everything we need
         MapTileHandler.loadTiles();
         MapTileHandler.loadMaps();
-        GameRendering.initialize();
+        GameRendering.init();
         Sound.loadLibrary();
 
         Sound.playMusic("Can't Go Up");

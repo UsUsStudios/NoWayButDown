@@ -12,7 +12,6 @@ import com.ususstudios.noway.main.Translations;
 import com.badlogic.gdx.graphics.Color;
 import java.awt.*;
 import java.io.IOException;
-import java.util.stream.IntStream;
 
 public class GameRendering {
 	static BitmapFont firaMedium;
@@ -23,7 +22,7 @@ public class GameRendering {
 	public static int uiSelected = 0;
 	public static int uiMaxOptions = 2;
 
-	public static void initialize() {
+	public static void init() {
 		// Load in the fonts
 		try {
 			firaMedium = getFont("FiraSans-Medium");
@@ -44,81 +43,91 @@ public class GameRendering {
 	}
 
 	public static void drawPlaying() {
+        Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
+        Main.shapes.rect(0, 0, 10, 10);
+        Main.shapes.end();
 		float camX = Main.player.cameraX;
 		float camY = Main.player.cameraY;
 		int tileSize = Main.tileSize;
 
 		Map map = MapTileHandler.maps.get(Main.currentMap);
-		IntStream.range(0, map.height()).parallel().forEach(worldRow ->
-				IntStream.range(0, map.width()).parallel().forEach(worldCol -> {
-					int tileNumber = map.layer1()[worldRow][worldCol];
-					int worldX = worldCol * tileSize;
-					int worldY = worldRow * tileSize;
-					float screenX = worldX - camX + Main.screenWidth / 2f;
-					float screenY = worldY - camY + Main.screenHeight / 2f;
+        Main.batch.begin();
 
-					// Check if the tile is within the visible screen
-					if (worldX + tileSize > camX - Main.screenWidth / 2f &&
-							worldX - tileSize < camX + Main.screenWidth / 2f &&
-							worldY + tileSize > camY - Main.screenHeight / 2f &&
-							worldY - tileSize < camY + Main.screenHeight / 2f) {
-						Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
-                        Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
-					}
-				})
-		);
-		IntStream.range(0, map.height()).parallel().forEach(worldRow ->
-				IntStream.range(0, map.width()).parallel().forEach(worldCol -> {
-					int tileNumber = map.layer2()[worldRow][worldCol];
-					int worldX = worldCol * tileSize;
-					int worldY = worldRow * tileSize;
-					float screenX = worldX - camX + Main.screenWidth / 2f;
-					float screenY = worldY - camY + Main.screenHeight / 2f;
+        // Draw layer 1
+        for (int worldRow = 0; worldRow < map.height(); worldRow++) {
+            for (int worldCol = 0; worldCol < map.width(); worldCol++) {
+                int tileNumber = map.layer1()[worldRow][worldCol];
+                int worldX = worldCol * tileSize;
+                int worldY = worldRow * tileSize;
+                float screenX = worldX - camX + Main.screenWidth / 2f;
+                float screenY = worldY - camY + Main.screenHeight / 2f;
 
-					// Check if the tile is within the visible screen
-					if (worldX + tileSize > camX - Main.screenWidth / 2f &&
-							worldX - tileSize < camX + Main.screenWidth / 2f &&
-							worldY + tileSize > camY - Main.screenHeight / 2f &&
-							worldY - tileSize < camY + Main.screenHeight / 2f) {
-						Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
-                        Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
+                // Check if the tile is within the visible screen
+                if (worldX + tileSize > camX - Main.screenWidth / 2f &&
+                    worldX - tileSize < camX + Main.screenWidth / 2f &&
+                    worldY + tileSize > camY - Main.screenHeight / 2f &&
+                    worldY - tileSize < camY + Main.screenHeight / 2f) {
+                    Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
+                    Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
+                }
+            }
+        }
 
-						// g.setColor(new Color(255, 0, 0, 150));
-						// for (int x = 0; x < 5; x++) {
-						// 	for (int y = 0; y < 5; y++) {
-						// 		// Debugging collision points
-						// 		if (currentTile.collision()[x][y]) {
-						// 			int pointX = Math.round(screenX + (x * (tileSize / 5f)) + (tileSize / 10f));
-						// 			int pointY = Math.round(screenY + (y * (tileSize / 5f)) + (tileSize / 10f));
-						// 			g.fillOval(pointX, pointY, 5, 5);
-						// 		}
-						// 	}
-						// }
-					}
-				})
-		);
-		IntStream.range(0, map.height()).parallel().forEach(worldRow ->
-				IntStream.range(0, map.width()).parallel().forEach(worldCol -> {
-					int tileNumber = map.layer3()[worldRow][worldCol];
-					int worldX = worldCol * tileSize;
-					int worldY = worldRow * tileSize;
-					float screenX = worldX - camX + Main.screenWidth / 2f;
-					float screenY = worldY - camY + Main.screenHeight / 2f;
+        // Draw layer 2
+        for (int worldRow = 0; worldRow < map.height(); worldRow++) {
+            for (int worldCol = 0; worldCol < map.width(); worldCol++) {
+                int tileNumber = map.layer2()[worldRow][worldCol];
+                int worldX = worldCol * tileSize;
+                int worldY = worldRow * tileSize;
+                float screenX = worldX - camX + Main.screenWidth / 2f;
+                float screenY = worldY - camY + Main.screenHeight / 2f;
 
-					// Check if the tile is within the visible screen
-					if (worldX + tileSize > camX - Main.screenWidth / 2f &&
-							worldX - tileSize < camX + Main.screenWidth / 2f &&
-							worldY + tileSize > camY - Main.screenHeight / 2f &&
-							worldY - tileSize < camY + Main.screenHeight / 2f) {
-						Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
-                        Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
-					}
-				})
-		);
+                // Check if the tile is within the visible screen
+                if (worldX + tileSize > camX - Main.screenWidth / 2f &&
+                    worldX - tileSize < camX + Main.screenWidth / 2f &&
+                    worldY + tileSize > camY - Main.screenHeight / 2f &&
+                    worldY - tileSize < camY + Main.screenHeight / 2f) {
+                    Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
+                    Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
+
+                    // g.setColor(new Color(255, 0, 0, 150));
+                    // for (int x = 0; x < 5; x++) {
+                    // 	for (int y = 0; y < 5; y++) {
+                    // 		// Debugging collision points
+                    // 		if (currentTile.collision()[x][y]) {
+                    // 			int pointX = Math.round(screenX + (x * (tileSize / 5f)) + (tileSize / 10f));
+                    // 			int pointY = Math.round(screenY + (y * (tileSize / 5f)) + (tileSize / 10f));
+                    // 			g.fillOval(pointX, pointY, 5, 5);
+                    // 		}
+                    // 	}
+                    // }
+                }
+            }
+        }
+
+        // Draw layer 3
+        for (int worldRow = 0; worldRow < map.height(); worldRow++) {
+            for (int worldCol = 0; worldCol < map.width(); worldCol++) {
+                int tileNumber = map.layer3()[worldRow][worldCol];
+                int worldX = worldCol * tileSize;
+                int worldY = worldRow * tileSize;
+                float screenX = worldX - camX + Main.screenWidth / 2f;
+                float screenY = worldY - camY + Main.screenHeight / 2f;
+
+                // Check if the tile is within the visible screen
+                if (worldX + tileSize > camX - Main.screenWidth / 2f &&
+                    worldX - tileSize < camX + Main.screenWidth / 2f &&
+                    worldY + tileSize > camY - Main.screenHeight / 2f &&
+                    worldY - tileSize < camY + Main.screenHeight / 2f) {
+                    Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
+                    Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
+                }
+            }
+        }
 
 		Main.entities.forEach(Entity::draw);
 
-		Main.darkness.draw();
+        Main.darkness.draw();
 	}
 
 	public static void drawTitle() {

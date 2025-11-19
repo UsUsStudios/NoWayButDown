@@ -9,15 +9,13 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.entity.Entity;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Darkness {
 	/// Add entities that emit light here. These entities must have the "light_radius" and "light_intensity"
 	/// properties in the {@code properties} variable set to proper float values.
 	private final ArrayList<Entity> lightSources = new ArrayList<>();
-	public float ambientDarkness = 0.9f;  // How dark is it without lights (0.0 = no darkness, 1.0 = complete darkness)
+	public float ambientDarkness = 0.92f;  // How dark is it without lights (0.0 = no darkness, 1.0 = complete darkness)
     Texture radialLightTexture = createRadialLight(128);
 
     public static Texture createRadialLight(int radius) {
@@ -85,43 +83,55 @@ public class Darkness {
 
 	// Draws the darkness overlay
     public void draw() {
-        // 1. Create a framebuffer to draw darkness layer
+        // Save current batch state and end it
+        Main.batch.flush();
+        Main.batch.end();
+
+        // 1. Create FBO for darkness
         FrameBuffer darknessFbo = new FrameBuffer(Pixmap.Format.RGBA8888, Main.screenWidth, Main.screenHeight, false);
         darknessFbo.begin();
 
-        // 2. Clear framebuffer with ambient darkness
-        Gdx.gl.glClearColor(0f, 0f, 0f, ambientDarkness);
+        // Clear with black at full opacity
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // 3. Draw radial lights
+        // Start batch for drawing lights
         Main.batch.begin();
+
+        // Use blending that allows lights to "cut holes" in the darkness
+        Main.batch.setBlendFunction(GL20.GL_ZERO, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        // Draw all light sources
         for (Entity lightSource : lightSources) {
             int radius = Math.round((float) lightSource.properties.get("light_radius"));
             float intensity = ((Number) lightSource.properties.get("light_intensity")).floatValue();
             intensity = Math.max(0f, Math.min(1f, intensity));
 
-            // Calculate position relative to camera
             float x = lightSource.x - Main.player.cameraX + Main.screenWidth / 2f + 24 - radius;
             float y = lightSource.y - Main.player.cameraY + Main.screenHeight / 2f + 24 - radius;
 
-            // Assume you have a white radial gradient texture with alpha falloff
-            Texture lightTex = radialLightTexture;
             Main.batch.setColor(1f, 1f, 1f, intensity);
-            Main.batch.draw(lightTex, x, y, radius*2, radius*2);
+            Main.batch.draw(radialLightTexture, x, y, radius * 2, radius * 2);
         }
-        Main.batch.end();
 
+        Main.batch.end();
         darknessFbo.end();
 
-        // 4. Draw darkness layer over the scene
+        // 2. Draw the darkness overlay to the main scene
         Main.batch.begin();
+
+        // Use normal alpha blending but control overall darkness with color alpha
+        Main.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Main.batch.setColor(1f, 1f, 1f, ambientDarkness);
+
         TextureRegion darknessRegion = new TextureRegion(darknessFbo.getColorBufferTexture());
-        darknessRegion.flip(false, true); // FBO textures are flipped vertically
+        darknessRegion.flip(false, true);
+        Main.batch.draw(darknessRegion, 0, 0);
+
+        // Reset to normal settings
         Main.batch.setColor(1f, 1f, 1f, 1f);
-        Main.batch.draw(darknessRegion, 0, 0, Main.screenWidth, Main.screenHeight);
         Main.batch.end();
 
         darknessFbo.dispose();
     }
-
 }
