@@ -3,10 +3,8 @@ package com.ususstudios.noway;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.entity.Entity;
 import com.ususstudios.noway.entity.Player;
 import com.ususstudios.noway.main.*;
@@ -30,7 +28,6 @@ public class Main extends ApplicationAdapter {
     public static String currentMap = "";
 
     // Classes
-    public static InputHandler inputHandler;
     public static Darkness darkness;
     public static Random random = new Random();
 
@@ -40,7 +37,6 @@ public class Main extends ApplicationAdapter {
 
     // Miscellaneous
     public static boolean running = true;
-    public static String FPS = "0.00";
     public static int screenWidth = 1100;
     public static int screenHeight = 700;
     public static int tileSize = 48;
@@ -62,7 +58,6 @@ public class Main extends ApplicationAdapter {
 
         Sound.playMusic("Can't Go Up");
         darkness = new Darkness();
-        inputHandler = new InputHandler();
 
         // Load the player and game
         player = new Player();

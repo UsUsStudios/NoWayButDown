@@ -1,14 +1,13 @@
 package com.ususstudios.noway.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.States;
 import com.ususstudios.noway.rendering.Image;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.util.HashMap;
 
 public class Player extends Mob {
 	public Image eyesSheet;
@@ -57,16 +56,15 @@ public class Player extends Mob {
 	@Override
 	public void update() {
 		// if (Main.random.nextFloat() > 0.5) properties.put("light_intensity", 0.8f * ((Main.Main.random.nextFloat() - 0.5f) / 5f + 1));
-		HashMap<Integer, Boolean> keyMap = Main.inputHandler.keyMap;
 		StringBuilder newDirection = new StringBuilder();
 
         /* Depending on the key pressed, append a newDirection with a direction.
          * If the direction was appended more than once, append the direction with a space
          this is to let the mob's update method know if the movement is diagonal */
-		if (keyMap.get(KeyEvent.VK_W)) newDirection.append("up");
-		if (keyMap.get(KeyEvent.VK_S)) newDirection.append(!newDirection.isEmpty() ? "" : "down");
-		if (keyMap.get(KeyEvent.VK_A)) newDirection.append(!newDirection.isEmpty() ? " left" : "left");
-		if (keyMap.get(KeyEvent.VK_D)) newDirection.append(!newDirection.isEmpty() ? " right" : "right");
+		if (Gdx.input.isKeyPressed(Input.Keys.W)) newDirection.append("up");
+		if (Gdx.input.isKeyPressed(Input.Keys.S)) newDirection.append(!newDirection.isEmpty() ? "" : "down");
+		if (Gdx.input.isKeyPressed(Input.Keys.A)) newDirection.append(!newDirection.isEmpty() ? " left" : "left");
+		if (Gdx.input.isKeyPressed(Input.Keys.D)) newDirection.append(!newDirection.isEmpty() ? " right" : "right");
 
 		// If nothing was added to the StringBuilder, meaning the player isn't walking, change his state accordingly
 		if (newDirection.isEmpty()) state = States.MobStates.IDLE;

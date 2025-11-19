@@ -1,6 +1,7 @@
 package com.ususstudios.noway.rendering;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -10,7 +11,6 @@ import com.ususstudios.noway.entity.Entity;
 import com.ususstudios.noway.main.Translations;
 import com.badlogic.gdx.graphics.Color;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
@@ -22,6 +22,7 @@ public class GameRendering {
 	// UI
 	public static int uiSelected = 0;
 	public static int uiMaxOptions = 2;
+    static boolean cancelUp, cancelDown = false;
 
 	public static void initialize() {
 		// Load in the fonts
@@ -122,7 +123,6 @@ public class GameRendering {
 	}
 
 	public static void drawTitle() {
-        initialize();
         Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
         Main.shapes.setColor(Color.BLACK);
         Main.shapes.rect(0, 0, Main.screenWidth, Main.screenHeight);
@@ -130,6 +130,7 @@ public class GameRendering {
 
         Main.batch.begin();
         firaMedium.setColor(0.234375f, 0.12109375f, 0.75390625f, 1f);
+        firaMedium.getData().setScale(0.8f);
 		drawCenteredString(firaMedium, Translations.get(Main.identifier, "title"), Main.screenWidth / 2, 500);
 
         firaMedium.getData().setScale(0.5f);
@@ -142,18 +143,28 @@ public class GameRendering {
 
 	/// Updates the UI elements via keyboard input
 	public static void updateUI() {
-		if (Main.inputHandler.keyMap.get(KeyEvent.VK_UP)) {
-			uiSelected--;
-			if (uiSelected < 0) uiSelected = 0;
-			Main.inputHandler.keyMap.put(KeyEvent.VK_UP, false);
-		}
-		if (Main.inputHandler.keyMap.get(KeyEvent.VK_DOWN)) {
-			uiSelected++;
-			if (uiSelected > uiMaxOptions) uiSelected = uiMaxOptions;
-			Main.inputHandler.keyMap.put(KeyEvent.VK_DOWN, false);
-		}
+        // Input canceling so that you can't press and hold
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if (!cancelUp) {
+                uiSelected--;
+                if (uiSelected < 0) uiSelected = 0;
+                cancelUp = true; // mark that we've handled this key press
+            }
+        } else {
+            cancelUp = false; // key released, ready for next press
+        }
 
-		if (Main.inputHandler.keyMap.get(KeyEvent.VK_ENTER)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            if (!cancelDown) {
+                uiSelected++;
+                if (uiSelected > uiMaxOptions) uiSelected = uiMaxOptions;
+                cancelDown = true;
+            }
+        } else {
+            cancelDown = false;
+        }
+
+		if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
 			switch (uiSelected) {
 				case 0 -> Main.loadMap("main");
 				case 1 -> {}
