@@ -22,7 +22,6 @@ public class GameRendering {
 	// UI
 	public static int uiSelected = 0;
 	public static int uiMaxOptions = 2;
-    static boolean cancelUp, cancelDown = false;
 
 	public static void initialize() {
 		// Load in the fonts
@@ -144,27 +143,17 @@ public class GameRendering {
 	/// Updates the UI elements via keyboard input
 	public static void updateUI() {
         // Input canceling so that you can't press and hold
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if (!cancelUp) {
-                uiSelected--;
-                if (uiSelected < 0) uiSelected = 0;
-                cancelUp = true; // mark that we've handled this key press
-            }
-        } else {
-            cancelUp = false; // key released, ready for next press
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            uiSelected--;
+            if (uiSelected < 0) uiSelected = 0;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            if (!cancelDown) {
-                uiSelected++;
-                if (uiSelected > uiMaxOptions) uiSelected = uiMaxOptions;
-                cancelDown = true;
-            }
-        } else {
-            cancelDown = false;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            uiSelected++;
+            if (uiSelected > uiMaxOptions) uiSelected = uiMaxOptions;
         }
 
-		if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
 			switch (uiSelected) {
 				case 0 -> Main.loadMap("main");
 				case 1 -> {}
