@@ -43,94 +43,44 @@ public class GameRendering {
 	}
 
 	public static void drawPlaying() {
-        Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
-        Main.shapes.rect(0, 0, 10, 10);
-        Main.shapes.end();
-		float camX = Main.player.cameraX;
-		float camY = Main.player.cameraY;
-		int tileSize = Main.tileSize;
-
 		Map map = MapTileHandler.maps.get(Main.currentMap);
+        Main.batch.getProjectionMatrix().setToOrtho(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);
         Main.batch.begin();
 
-        // Draw layer 1
-        for (int worldRow = 0; worldRow < map.height(); worldRow++) {
-            for (int worldCol = 0; worldCol < map.width(); worldCol++) {
-                int tileNumber = map.layer1()[worldRow][worldCol];
-                int worldX = worldCol * tileSize;
-                int worldY = worldRow * tileSize;
-                float screenX = worldX - camX + Main.screenWidth / 2f;
-                float screenY = worldY - camY + Main.screenHeight / 2f;
-
-                // Check if the tile is within the visible screen
-                if (worldX + tileSize > camX - Main.screenWidth / 2f &&
-                    worldX - tileSize < camX + Main.screenWidth / 2f &&
-                    worldY + tileSize > camY - Main.screenHeight / 2f &&
-                    worldY - tileSize < camY + Main.screenHeight / 2f) {
-                    Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
-                    Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
-                }
-            }
-        }
-
-        // Draw layer 2
-        for (int worldRow = 0; worldRow < map.height(); worldRow++) {
-            for (int worldCol = 0; worldCol < map.width(); worldCol++) {
-                int tileNumber = map.layer2()[worldRow][worldCol];
-                int worldX = worldCol * tileSize;
-                int worldY = worldRow * tileSize;
-                float screenX = worldX - camX + Main.screenWidth / 2f;
-                float screenY = worldY - camY + Main.screenHeight / 2f;
-
-                // Check if the tile is within the visible screen
-                if (worldX + tileSize > camX - Main.screenWidth / 2f &&
-                    worldX - tileSize < camX + Main.screenWidth / 2f &&
-                    worldY + tileSize > camY - Main.screenHeight / 2f &&
-                    worldY - tileSize < camY + Main.screenHeight / 2f) {
-                    Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
-                    Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
-
-                    // g.setColor(new Color(255, 0, 0, 150));
-                    // for (int x = 0; x < 5; x++) {
-                    // 	for (int y = 0; y < 5; y++) {
-                    // 		// Debugging collision points
-                    // 		if (currentTile.collision()[x][y]) {
-                    // 			int pointX = Math.round(screenX + (x * (tileSize / 5f)) + (tileSize / 10f));
-                    // 			int pointY = Math.round(screenY + (y * (tileSize / 5f)) + (tileSize / 10f));
-                    // 			g.fillOval(pointX, pointY, 5, 5);
-                    // 		}
-                    // 	}
-                    // }
-                }
-            }
-        }
-
-        // Draw layer 3
-        for (int worldRow = 0; worldRow < map.height(); worldRow++) {
-            for (int worldCol = 0; worldCol < map.width(); worldCol++) {
-                int tileNumber = map.layer3()[worldRow][worldCol];
-                int worldX = worldCol * tileSize;
-                int worldY = worldRow * tileSize;
-                float screenX = worldX - camX + Main.screenWidth / 2f;
-                float screenY = worldY - camY + Main.screenHeight / 2f;
-
-                // Check if the tile is within the visible screen
-                if (worldX + tileSize > camX - Main.screenWidth / 2f &&
-                    worldX - tileSize < camX + Main.screenWidth / 2f &&
-                    worldY + tileSize > camY - Main.screenHeight / 2f &&
-                    worldY - tileSize < camY + Main.screenHeight / 2f) {
-                    Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
-                    Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
-                }
-            }
-        }
+        drawLayer(map, map.layer1());
+        drawLayer(map, map.layer2());
+        drawLayer(map, map.layer3());
 
 		Main.entities.forEach(Entity::draw);
 
         Main.darkness.draw();
 	}
 
-	public static void drawTitle() {
+    private static void drawLayer(Map map, int[][] layer) {
+        float camX = Main.player.cameraX;
+        float camY = Main.player.cameraY;
+        int tileSize = Main.tileSize;
+        for (int worldRow = 0; worldRow < map.height(); worldRow++) {
+            for (int worldCol = 0; worldCol < map.width(); worldCol++) {
+                int tileNumber = layer[worldRow][worldCol];
+                int worldX = worldCol * tileSize;
+                int worldY = worldRow * tileSize;
+                float screenX = worldX - camX + Main.screenWidth / 2f;
+                float screenY = worldY - camY + Main.screenHeight / 2f;
+
+                // Check if the tile is within the visible screen
+                if (worldX + tileSize > camX - Main.screenWidth / 2f &&
+                    worldX - tileSize < camX + Main.screenWidth / 2f &&
+                    worldY + tileSize > camY - Main.screenHeight / 2f &&
+                    worldY - tileSize < camY + Main.screenHeight / 2f) {
+                    Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
+                    Main.batch.draw(currentTile.image().getTexture(), Math.round(screenX), Math.round(screenY));
+                }
+            }
+        }
+    }
+
+    public static void drawTitle() {
         Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
         Main.shapes.setColor(Color.BLACK);
         Main.shapes.rect(0, 0, Main.screenWidth, Main.screenHeight);

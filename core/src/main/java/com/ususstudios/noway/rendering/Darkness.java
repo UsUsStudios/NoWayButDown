@@ -125,7 +125,6 @@ public class Darkness {
         Main.batch.setColor(1f, 1f, 1f, ambientDarkness);
 
         TextureRegion darknessRegion = new TextureRegion(darknessFbo.getColorBufferTexture());
-        darknessRegion.flip(false, true);
         Main.batch.draw(darknessRegion, 0, 0);
 
         // Reset to normal settings
