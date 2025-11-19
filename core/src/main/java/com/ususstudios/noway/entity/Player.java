@@ -164,7 +164,7 @@ public class Player extends Mob {
             // Draw a subregion from eyes sprite sheet
             Texture texture = eyesSheet.getTexture();
             int srcX = Main.tileSize * eyesColumn;
-            int srcY = Main.tileSize * eyesRow;
+            int srcY = Main.tileSize * (1 - eyesRow);
 
             Main.batch.draw(texture,
                 Math.round(screenX),        // dest x

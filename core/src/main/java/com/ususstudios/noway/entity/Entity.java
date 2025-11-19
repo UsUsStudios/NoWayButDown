@@ -3,7 +3,6 @@ package com.ususstudios.noway.entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.rendering.Image;
-import java.awt.*;
 import java.util.Properties;
 
 /** Extend this class to create an Entity.
@@ -80,12 +79,13 @@ public class Entity {
             int srcY = Main.tileSize * spriteRow;
 
             Main.batch.draw(texture,
-                Math.round(screenX),                   // dest x
-                Math.round(screenY),                   // dest y
+                Math.round(screenX),                    // dest x
+                Math.round(screenY),                    // dest y
                 Main.tileSize,                          // dest width
                 Main.tileSize,                          // dest height
                 srcX,                                   // src x
-                srcY,                                   // src y
+                texture.getWidth() - srcY,              // src y  I don't know why it's width instead of height...
+                                                                  // if it works don't touch it
                 Main.tileSize,                          // src width
                 Main.tileSize,                          // src height
                 false,                                  // flipX
