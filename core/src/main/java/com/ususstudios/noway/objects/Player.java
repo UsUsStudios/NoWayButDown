@@ -1,4 +1,4 @@
-package com.ususstudios.noway.entity;
+package com.ususstudios.noway.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

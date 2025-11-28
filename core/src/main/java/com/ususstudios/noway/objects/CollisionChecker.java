@@ -1,12 +1,12 @@
-package com.ususstudios.noway.entity;
+package com.ususstudios.noway.objects;
 
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 
 public class CollisionChecker {
-	// Check if two entities are colliding
-	public static boolean check2EntityCollision(Entity a, Entity b) {
+	// Check if two objects are colliding
+	public static boolean check2EntityCollision(GameObject a, GameObject b) {
 		float aLeft = a.x;
 		float aTop = a.y;
 		float aRight = a.x + a.width;
@@ -42,9 +42,9 @@ public class CollisionChecker {
 		return false;
 	}
 
-	// Check if entity collides with any other entity or any tile on layer2
+	// Check if objects collides with any other objects or any tile on layer2
 	public static boolean checkEntityColliding(Entity e) {
-		for (Entity other : Main.entities) {
+		for (GameObject other : Main.objects) {
 			if (other != e && other.collision) {
 				if (check2EntityCollision(e, other)) return true;
 			}

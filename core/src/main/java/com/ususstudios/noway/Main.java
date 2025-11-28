@@ -5,15 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.ususstudios.noway.entity.Entity;
-import com.ususstudios.noway.entity.Player;
+import com.ususstudios.noway.objects.GameObject;
+import com.ususstudios.noway.objects.Player;
 import com.ususstudios.noway.main.*;
 import com.ususstudios.noway.rendering.Darkness;
 import com.ususstudios.noway.rendering.GameRendering;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -33,7 +32,7 @@ public class Main extends ApplicationAdapter {
 
     // Entities
     public static Player player;
-    public static ArrayList<Entity> entities = new ArrayList<>();
+    public static ArrayList<GameObject> objects = new ArrayList<>();
 
     // Miscellaneous
     public static boolean running = true;
@@ -61,7 +60,7 @@ public class Main extends ApplicationAdapter {
 
         // Load the player and game
         player = new Player();
-        entities.add(player);
+        objects.add(player);
         darkness.addLightSource(player);
 
         // Start!
@@ -84,7 +83,7 @@ public class Main extends ApplicationAdapter {
     }
 
     public static void update() {
-        if (gameState == States.GameStates.PLAYING) Main.entities.forEach(Entity::update);
+        if (gameState == States.GameStates.PLAYING) Main.objects.forEach(GameObject::update);
         else GameRendering.updateUI();
     }
 

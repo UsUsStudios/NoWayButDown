@@ -1,4 +1,4 @@
-package com.ususstudios.noway.entity;
+package com.ususstudios.noway.objects;
 
 import com.ususstudios.noway.main.States;
 import com.ususstudios.noway.rendering.Image;
@@ -18,7 +18,7 @@ public class Mob extends Entity {
 	public String direction = "down";
 
 	// Properties
-	/// How much is added to the entity's X and Y values every update when they move
+	/// How much is added to the objects's X and Y values every update when they move
 	public float speed = 1;
 	///  How much does the draw method have to wait before continuing an animation
 	public int animationSpeed = 10;
@@ -78,8 +78,8 @@ public class Mob extends Entity {
 				}
 			}
 
-            /* Apply the movement to the entity’s position individually.
-             * If moving in one direction collides. If it does, undo the movement, so the entity remains in a valid position.
+            /* Apply the movement to the objects’s position individually.
+             * If moving in one direction collides. If it does, undo the movement, so the objects remains in a valid position.
              * This will make it so if you are moving diagonally, and you only collide with something on the X axis, you will still move on the Y.
               The movement also offsets are scaled by the movementSpeed to produce smooth movement.*/
 

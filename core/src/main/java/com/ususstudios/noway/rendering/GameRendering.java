@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ususstudios.noway.Main;
-import com.ususstudios.noway.entity.Entity;
 import com.ususstudios.noway.main.Translations;
 import com.badlogic.gdx.graphics.Color;
+import com.ususstudios.noway.objects.GameObject;
 import java.awt.*;
 import java.io.IOException;
 
@@ -51,7 +51,7 @@ public class GameRendering {
         drawLayer(map, map.layer2());
         drawLayer(map, map.layer3());
 
-		Main.entities.forEach(Entity::draw);
+		Main.objects.forEach(GameObject::draw);
 
         Main.darkness.draw();
 	}

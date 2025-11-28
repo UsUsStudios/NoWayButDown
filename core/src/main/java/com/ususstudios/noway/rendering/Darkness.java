@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import com.ususstudios.noway.Main;
-import com.ususstudios.noway.entity.Entity;
+import com.ususstudios.noway.objects.Entity;
 import java.util.ArrayList;
 
 public class Darkness {
-	/// Add entities that emit light here. These entities must have the "light_radius" and "light_intensity"
+	/// Add objects that emit light here. These objects must have the "light_radius" and "light_intensity"
 	/// properties in the {@code properties} variable set to proper float values.
 	private final ArrayList<Entity> lightSources = new ArrayList<>();
 	public float ambientDarkness = 0.92f;  // How dark is it without lights (0.0 = no darkness, 1.0 = complete darkness)
