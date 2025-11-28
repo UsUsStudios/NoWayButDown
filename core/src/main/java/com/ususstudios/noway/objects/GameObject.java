@@ -33,9 +33,9 @@ public class GameObject {
      **/
     public void update() {
         // Check if the objects is on the screen using the player's camera position
-        onScreen = x + Main.tileSize > Main.player.cameraX + Main.screenWidth / 2f &&
-            x - Main.tileSize < Main.player.cameraX + Main.screenWidth / 2f &&
-            y + Main.tileSize > Main.player.cameraY + Main.screenHeight / 2f &&
-            y - Main.tileSize < Main.player.cameraY + Main.screenHeight / 2f || updateOffScreen;
+        onScreen = x + width > Main.player.cameraX + Main.screenWidth / 2f &&
+            x - width < Main.player.cameraX + Main.screenWidth / 2f &&
+            y + height > Main.player.cameraY + Main.screenHeight / 2f &&
+            y - height < Main.player.cameraY + Main.screenHeight / 2f || updateOffScreen;
     }
 }
