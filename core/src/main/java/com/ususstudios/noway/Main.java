@@ -46,9 +46,9 @@ public class Main extends ApplicationAdapter {
     // This is run when the window is created
     @Override
     public void create() {
+        LOGGER.info("Program started");
         batch = new SpriteBatch();
         shapes = new ShapeRenderer();
-        LOGGER.info("Program started");
 
         // Load everything we need
         MapTileHandler.loadTiles();
