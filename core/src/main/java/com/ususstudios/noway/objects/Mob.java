@@ -18,7 +18,7 @@ public class Mob extends Entity {
 	public String direction = "down";
 
 	// Properties
-	/// How much is added to the objects's X and Y values every update when they move
+	/// How much is added to the objects' X and Y values every update when they move
 	public float speed = 1;
 	///  How much does the draw method have to wait before continuing an animation
 	public int animationSpeed = 10;

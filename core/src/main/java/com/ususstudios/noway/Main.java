@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ususstudios.noway.objects.GameObject;
-import com.ususstudios.noway.objects.Player;
+import com.ususstudios.noway.objects.custom.Player;
 import com.ususstudios.noway.main.*;
 import com.ususstudios.noway.rendering.Darkness;
 import com.ususstudios.noway.rendering.GameRendering;
