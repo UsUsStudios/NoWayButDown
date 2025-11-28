@@ -1,5 +1,6 @@
 package com.ususstudios.noway.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.ususstudios.noway.main.States;
 import com.ususstudios.noway.rendering.Image;
 import java.util.HashMap;
@@ -63,6 +64,7 @@ public class Mob extends Entity {
              * 2 directions mean that the mob is going diagonally, which means they are going diagonally
              Diagonal movement makes the mob faster, so we decrease the speed accordingly*/
 			float movementSpeed = direction.contains(" ") ? speed / 1.4f : speed;
+            movementSpeed *= Gdx.graphics.getDeltaTime();
 
 			// Initialize movement offsets for both X and Y axes that will store the movement direction.
 			float moveX = 0f;

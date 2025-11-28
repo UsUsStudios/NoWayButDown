@@ -1,11 +1,31 @@
 package com.ususstudios.noway.objects;
 
 import com.ususstudios.noway.Main;
+import com.ususstudios.noway.objects.custom.Gatekeeper;
+import com.ususstudios.noway.objects.custom.Player;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 /** Extend this class to create a GameObject.
  * A GameObject is anything that has a position and size, and has an update function.
  */
 public class GameObject {
+    // This is for storing the names of all the object types so I don't have to reference the class path in map files
+    private static final HashMap<String, Class<? extends GameObject>> objectNames = new HashMap<>();
+    public static GameObject createGameObject(String name) {
+        try {
+            return objectNames.get(name).getConstructor().newInstance();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            Main.handleException(e);
+            return new GameObject();
+        }
+    }
+    public static void registerGameObjectTypes() {
+        objectNames.put("Gatekeeper", Gatekeeper.class);
+        objectNames.put("Player", Player.class);
+}
+
     // Positions
     public float x;
     public float y;
@@ -19,6 +39,11 @@ public class GameObject {
     /// Pretty self-explanatory. It's used to increase performance by not loading the objects while it's off-screen.
     public boolean onScreen = false;
 
+
+    public void setPosition(float setX, float setY) {
+        x = Main.tileSize * setX;
+        y = Main.tileSize * setY;
+    }
 
     /// Called in the main draw method to draw the objects. Not all objects need to have this.
     public void draw() {}

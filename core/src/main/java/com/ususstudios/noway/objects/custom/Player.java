@@ -37,7 +37,7 @@ public class Player extends Mob {
 		counters.put("eyes_blink", 0);
 
 		// Set some properties
-		speed = 4;
+		speed = 200;
 		updateOffScreen = true;
         properties.put("light_radius", 125f);
         properties.put("light_intensity", 0.8f);
@@ -49,9 +49,9 @@ public class Player extends Mob {
 		Main.LOGGER.info("Player loaded");
 	}
 
+    @Override
 	public void setPosition(float setX, float setY) {
-		x = Main.tileSize * setX;
-		y = Main.tileSize * setY;
+		super.setPosition(setX, setY);
 		cameraX = x;
 		cameraY = y;
 	}

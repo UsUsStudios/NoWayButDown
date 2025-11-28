@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.ususstudios.noway.objects.Entity;
 import com.ususstudios.noway.objects.GameObject;
 import com.ususstudios.noway.objects.custom.Player;
 import com.ususstudios.noway.main.*;
@@ -54,14 +55,19 @@ public class Main extends ApplicationAdapter {
         MapTileHandler.loadMaps();
         GameRendering.init();
         Sound.loadLibrary();
+        GameObject.registerGameObjectTypes();
 
         Sound.playMusic("Can't Go Up");
         darkness = new Darkness();
 
         // Load the player and game
-        player = new Player();
+        player = (Player) GameObject.createGameObject("Player");
         objects.add(player);
         darkness.addLightSource(player);
+        Entity keeper = (Entity) GameObject.createGameObject("Gatekeeper");
+        keeper.setPosition(23, 24);
+        objects.add(keeper);
+        darkness.addLightSource(keeper);
 
         // Start!
         gameState = States.GameStates.MAIN_MENU;
