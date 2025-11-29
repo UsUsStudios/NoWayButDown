@@ -21,7 +21,7 @@ public class Player extends Mob {
 	public Player() {
 		super("Player", 0f, 0f, 36f, 48f);
 
-		// Ajust spriteSheet properties
+		// Adjust spriteSheet properties
 		spriteSheet = Image.loadImage("entity/player/torgray_sheet");
 		spriteRow = 0;
 		spriteColumn = 0;
@@ -31,6 +31,7 @@ public class Player extends Mob {
 		// Load the eye sheet
 		eyesSheet = Image.loadImage("entity/eyes_sheet");
 		eyesSheet.scaleImage(Main.tileSize * 5, Main.tileSize * 2);
+        Main.LOGGER.info("{}", eyesSheet.getTexture().getTextureData().getHeight());
 
 		// Add counters
 		counters.put("eyes_idle", 0);

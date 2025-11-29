@@ -71,13 +71,14 @@ public class Main extends ApplicationAdapter {
 
         // Start!
         gameState = States.GameStates.MAIN_MENU;
-        LOGGER.info("Game thread started");
+        LOGGER.info("Game started");
     }
 
     // This is run every frame
     @Override
     public void render() {
         update();
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -85,6 +86,7 @@ public class Main extends ApplicationAdapter {
         switch (gameState) {
             case PLAYING -> GameRendering.drawPlaying();
             case MAIN_MENU -> GameRendering.drawTitle();
+            case NULL -> GameRendering.drawSplash();
         }
     }
 

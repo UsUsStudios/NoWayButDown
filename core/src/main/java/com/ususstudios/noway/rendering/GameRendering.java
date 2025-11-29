@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.Translations;
 import com.badlogic.gdx.graphics.Color;
@@ -81,10 +81,7 @@ public class GameRendering {
     }
 
     public static void drawTitle() {
-        Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
-        Main.shapes.setColor(Color.BLACK);
-        Main.shapes.rect(0, 0, Main.screenWidth, Main.screenHeight);
-        Main.shapes.end();
+        ScreenUtils.clear(Color.BLACK);
 
         Main.batch.begin();
         firaMedium.setColor(0.234375f, 0.12109375f, 0.75390625f, 1f);
@@ -98,6 +95,10 @@ public class GameRendering {
 		drawButton("quit", 140, 2);
         Main.batch.end();
 	}
+
+    public static void drawSplash() {
+        ScreenUtils.clear(Color.BLACK);
+    }
 
 	/// Updates the UI elements via keyboard input
 	public static void updateUI() {
