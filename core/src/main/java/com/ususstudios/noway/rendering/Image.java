@@ -21,8 +21,8 @@ public class Image implements Serializable {
 
     private final byte[] data;
     private transient Texture image;
-    private int width = 16;
-    private int height = 16;
+    private int width;
+    private int height;
 
     /** Loads an image from either a cache or creates an entirely new one.
      * If you are loading an entirely new image, it will create a new instance of this class.
@@ -59,12 +59,16 @@ public class Image implements Serializable {
         if (imageName.isEmpty()) {
             image = new Texture(Gdx.files.internal("drawable/disabled.png"));
             data = serializeImage(image);
+            width = image.getWidth();
+            height = image.getHeight();
             return;
         }
         if (file == null) {
             Main.LOGGER.warn("{} is not a valid member of \"/drawable/\". ", imageName);
             image = new Texture(Gdx.files.internal("drawable/disabled.png"));
             data = serializeImage(image);
+            width = image.getWidth();
+            height = image.getHeight();
             return;
         }
 
@@ -72,8 +76,10 @@ public class Image implements Serializable {
         image = new Texture(file);
 
         /* Finally, deserialize the image and put it into the data
-        Since buffered image is not Serializable, it's not saved when the game is saved, so we must use data to load it*/
+        Since a texture is not Serializable, it's not saved when the game is saved, so we must use data to load it*/
         data = serializeImage(image);
+        width = image.getWidth();
+        height = image.getHeight();
     }
 
     /** @return A texture that is stored in instances the {@link Image} class.

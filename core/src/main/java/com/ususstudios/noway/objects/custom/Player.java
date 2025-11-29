@@ -30,8 +30,8 @@ public class Player extends Mob {
 
 		// Load the eye sheet
 		eyesSheet = Image.loadImage("entity/eyes_sheet");
-		eyesSheet.scaleImage(Main.tileSize * 5, Main.tileSize * 2);
-        Main.LOGGER.info("{}", eyesSheet.getTexture().getTextureData().getHeight());
+		// eyesSheet.scaleImage(Main.tileSize * 5, Main.tileSize * 2);
+        // idk why but this causes issues and the code works without it
 
 		// Add counters
 		counters.put("eyes_idle", 0);
