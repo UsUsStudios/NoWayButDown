@@ -2,9 +2,9 @@ package com.ususstudios.noway;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.objects.Entity;
 import com.ususstudios.noway.objects.GameObject;
 import com.ususstudios.noway.objects.custom.Player;
@@ -24,8 +24,9 @@ public class Main extends ApplicationAdapter {
     public static final Logger LOGGER = LoggerFactory.getLogger("NoWayButDown");
 
     // Game State
-    public static States.GameStates gameState = States.GameStates.NULL;
+    public static States.GameStates gameState = States.GameStates.SPLASH;
     public static String currentMap = "";
+    public static float transitionAlpha = 0;
 
     // Classes
     public static Darkness darkness;
@@ -56,8 +57,6 @@ public class Main extends ApplicationAdapter {
         GameRendering.init();
         Sound.loadLibrary();
         GameObject.registerGameObjectTypes();
-
-        Sound.playMusic("Can't Go Up");
         darkness = new Darkness();
 
         // Load the player and game
@@ -70,7 +69,24 @@ public class Main extends ApplicationAdapter {
         darkness.addLightSource(keeper);
 
         // Start!
-        gameState = States.GameStates.MAIN_MENU;
+        new Thread(() -> {
+            try {
+                while (transitionAlpha < 1) {
+                    System.out.println(transitionAlpha);
+                    transitionAlpha += Gdx.graphics.getDeltaTime() * 0.0005f;
+                }
+                Thread.sleep(1500);
+                while (transitionAlpha > 0) {
+                    System.out.println(transitionAlpha);
+                    transitionAlpha -= Gdx.graphics.getDeltaTime() * 0.0005f;
+                }
+                Thread.sleep(500);
+                Sound.playMusic("Can't Go Up");
+                gameState = States.GameStates.MAIN_MENU;
+            } catch (InterruptedException e) {
+                handleException(e);
+            }
+        }).start();
         LOGGER.info("Game started");
     }
 
@@ -79,14 +95,13 @@ public class Main extends ApplicationAdapter {
     public void render() {
         update();
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(0, 0, 0, 1);
 
         // Check the game state and call the appropriate draw method
         switch (gameState) {
             case PLAYING -> GameRendering.drawPlaying();
             case MAIN_MENU -> GameRendering.drawTitle();
-            case NULL -> GameRendering.drawSplash();
+            case SPLASH -> GameRendering.drawSplash();
         }
     }
 
@@ -110,7 +125,7 @@ public class Main extends ApplicationAdapter {
         player.setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
         gameState = States.GameStates.PLAYING;
         Sound.playMapMusic(currentMap);
-        LOGGER.info("Map {} loaded", map);
+        LOGGER.info("Map '{}' loaded", map);
     }
 
     public static void handleException(Exception e) {

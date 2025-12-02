@@ -97,7 +97,16 @@ public class GameRendering {
 	}
 
     public static void drawSplash() {
-        ScreenUtils.clear(Color.BLACK);
+        Main.batch.begin();
+        Main.batch.enableBlending();
+        Color c = Main.batch.getColor();
+        Main.batch.setColor(c.r, c.g, c.b, Main.transitionAlpha);
+        Main.batch.draw(Image.loadImage("ususlogo").getTexture(), 125, 150, 400, 400);
+
+        firaMedium.setColor(0.15f, 0.15f, 0.75f, Main.transitionAlpha);
+        firaMedium.getData().setScale(0.75f);
+        firaMedium.draw(Main.batch, "UsUsStudios", 460, 450);
+        Main.batch.end();
     }
 
 	/// Updates the UI elements via keyboard input
