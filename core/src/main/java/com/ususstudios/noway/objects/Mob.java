@@ -26,6 +26,9 @@ public class Mob extends Entity {
 	/// How many rows for animation does your sprite sheet have
 	public int animationFrames = 3;
 
+    public int mainCol = 0;
+    public int mainRow = 0;
+
 	public Mob(String name, float spawnX, float spawnY) {
 		// Pass on all the arguments because this class is meant to be extended
 		super(name, spawnX, spawnY);
@@ -103,8 +106,8 @@ public class Mob extends Entity {
 
 			// If the counter hits the goal, reset the mob's sprite to their main one
 			if (counters.get("sprite_idle") >= animationSpeed * 2) {
-				spriteColumn = 1;
-				spriteRow = 1;
+				spriteColumn = mainCol;
+				spriteRow = mainRow;
 
 				// Reset The counter
 				counters.put("sprite_idle", 0);

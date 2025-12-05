@@ -19,6 +19,9 @@ public class Entity extends GameObject {
 	public int spriteColumn = -1;
 	/// If there's a sprite sheet, this is the row where the sprite would be pulled from. Set to -1 to disable it.
 	public int spriteRow = -1;
+    /// How much to scale the image before it's drawn?
+    public int scaleX = 1;
+    public int scaleY = 1;
 
 	public Properties properties = new Properties();
 
@@ -69,8 +72,8 @@ public class Entity extends GameObject {
             Main.batch.draw(texture,
                 Math.round(screenX),                    // dest x
                 Math.round(screenY),                    // dest y
-                Main.tileSize,                          // dest width
-                Main.tileSize,                          // dest height
+                Main.tileSize * scaleX,                 // dest width
+                Main.tileSize * scaleY,                 // dest height
                 srcX,                                   // src x
                 texture.getWidth() - srcY,              // src y  I don't know why it's width instead of height...
                                                                   // if it works don't touch it

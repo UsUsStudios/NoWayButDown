@@ -8,14 +8,14 @@ public class CollisionChecker {
 	// Check if two objects are colliding
 	public static boolean check2EntityCollision(GameObject a, GameObject b) {
 		float aLeft = a.x;
-		float aTop = a.y;
+		float aTop = a.y - a.height / 2;
 		float aRight = a.x + a.width;
-		float aBottom = a.y + a.height;
+		float aBottom = a.y + a.height / 2;
 
 		float bLeft = b.x;
-		float bTop = b.y;
+		float bTop = b.y - b.height / 2;
 		float bRight = b.x + b.width;
-		float bBottom = b.y + b.height;
+		float bBottom = b.y + b.height / 2;
 
 		return aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop;
 	}
@@ -34,7 +34,7 @@ public class CollisionChecker {
 
 					float px = x + i * cellW + cellW / 2f;
 					float py = y + j * cellH + cellH / 2f;
-					if (Math.abs(px - e.x) <= halfW && Math.abs(py - e.y) <= halfH) return true;
+					if (Math.abs(px - e.x) <= halfW && Math.abs(py - (e.y + halfW + 10)) <= halfH) return true;
 				}
 			}
 		}

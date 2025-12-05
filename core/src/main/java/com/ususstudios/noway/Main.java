@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.ususstudios.noway.objects.Entity;
 import com.ususstudios.noway.objects.GameObject;
 import com.ususstudios.noway.objects.custom.Player;
 import com.ususstudios.noway.main.*;
@@ -63,21 +62,15 @@ public class Main extends ApplicationAdapter {
         player = (Player) GameObject.createGameObject("Player");
         objects.add(player);
         darkness.addLightSource(player);
-        Entity keeper = (Entity) GameObject.createGameObject("Gatekeeper");
-        keeper.setPosition(23, 24);
-        objects.add(keeper);
-        darkness.addLightSource(keeper);
 
         // Start!
         new Thread(() -> {
             try {
                 while (transitionAlpha < 1) {
-                    System.out.println(transitionAlpha);
                     transitionAlpha += Gdx.graphics.getDeltaTime() * 0.0005f;
                 }
                 Thread.sleep(1500);
                 while (transitionAlpha > 0) {
-                    System.out.println(transitionAlpha);
                     transitionAlpha -= Gdx.graphics.getDeltaTime() * 0.0005f;
                 }
                 Thread.sleep(500);
