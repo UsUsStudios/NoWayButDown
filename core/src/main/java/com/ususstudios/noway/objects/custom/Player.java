@@ -2,8 +2,6 @@ package com.ususstudios.noway.objects.custom;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.States;
 import com.ususstudios.noway.objects.Mob;
@@ -92,15 +90,5 @@ public class Player extends Mob {
     @Override
     public void draw() {
         super.draw();
-        Main.batch.end();
-
-        Main.shapes.begin(ShapeRenderer.ShapeType.Line);
-        Main.shapes.setColor(Color.RED);
-        float screenX = x + colX - Main.player.cameraX + Main.screenWidth / 2f;
-        float screenY = y + colY - Main.player.cameraY + Main.screenHeight / 2f;
-        Main.shapes.rect(screenX, Main.screenHeight - screenY - height, width, height);
-        Main.shapes.end();
-
-        Main.batch.begin();
     }
 }

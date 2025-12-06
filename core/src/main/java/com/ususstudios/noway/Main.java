@@ -125,6 +125,8 @@ public class Main extends ApplicationAdapter {
             GameObject obj = GameObject.createGameObject(MapTileHandler.maps.get(map).objectNames().get(i));
             obj.setPosition(MapTileHandler.maps.get(map).objectPos().get(i));
             obj.properties = MapTileHandler.maps.get(map).objectProperties().get(i);
+            obj.setup();
+            System.out.println(obj.properties);
             Main.objects.add(obj);
         }
 

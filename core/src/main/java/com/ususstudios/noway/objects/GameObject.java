@@ -47,6 +47,11 @@ public class GameObject {
         objectNames.put("SoundTrigger", SoundTrigger.class);
     }
 
+    public void setup() {
+        if (properties.containsKey("width")) width = (int) properties.get("width");
+        if (properties.containsKey("height")) height = (int) properties.get("height");
+    }
+
     public void setPosition(float setX, float setY) {
         x = Main.tileSize * setX;
         y = Main.tileSize * setY;
