@@ -1,6 +1,8 @@
 package com.ususstudios.noway.objects;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.rendering.Image;
 
@@ -78,6 +80,20 @@ public class Entity extends GameObject {
                 Main.tileSize,                          // src height
                 false,                                  // flipX
                 false);                                 // flipY
+        }
+
+        if (Main.debugMode) {
+            // Draw hitbox
+            Main.batch.end();
+
+            Main.shapes.begin(ShapeRenderer.ShapeType.Line);
+            Main.shapes.setColor(Color.RED);
+            screenX = x + colX - Main.player.cameraX + Main.screenWidth / 2f;
+            screenY = y + colY - Main.player.cameraY + Main.screenHeight / 2f;
+            Main.shapes.rect(screenX, Main.screenHeight - screenY - height, width, height);
+            Main.shapes.end();
+
+            Main.batch.begin();
         }
     }
 }

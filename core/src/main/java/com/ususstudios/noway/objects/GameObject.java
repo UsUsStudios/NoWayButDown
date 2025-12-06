@@ -22,8 +22,8 @@ public class GameObject {
     public float x;
     public float y;
     public float colX = 0;
-    public float colY = 0;
-    public float width = Main.tileSize;
+    public float colY = 0;               // The offset where the object's collision rect begins
+    public float width = Main.tileSize;  // The size of the object's collision rect
     public float height = Main.tileSize;
 
     // Updating

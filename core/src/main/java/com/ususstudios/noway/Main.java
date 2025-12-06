@@ -1,6 +1,8 @@
 package com.ususstudios.noway;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -25,6 +27,7 @@ public class Main extends ApplicationAdapter {
     public static States.GameStates gameState = States.GameStates.SPLASH;
     public static String currentMap = "";
     public static double transitionAlpha = 0;
+    public static boolean debugMode = false;
 
     // Classes
     public static Darkness darkness;
@@ -89,6 +92,7 @@ public class Main extends ApplicationAdapter {
     // This is run every frame
     @Override
     public void render() {
+        update();
         ScreenUtils.clear(0, 0, 0, 1);
 
         // Check the game state and call the appropriate draw method
@@ -97,10 +101,11 @@ public class Main extends ApplicationAdapter {
             case MAIN_MENU -> GameRendering.drawTitle();
             case SPLASH -> GameRendering.drawSplash();
         }
-        update();
     }
 
     public static void update() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) debugMode = !debugMode;
+
         if (gameState == States.GameStates.PLAYING) Main.objects.forEach(GameObject::update);
         else GameRendering.updateUI();
     }

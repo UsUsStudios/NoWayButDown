@@ -28,7 +28,7 @@ public class Player extends Mob {
         animationSpeed = 10;
         animationFrames = 4;
 		speed = 150;
-        colX = 10f;
+        colX = 9f;
         colY = 10f;
         width = 30;
         height = 80;

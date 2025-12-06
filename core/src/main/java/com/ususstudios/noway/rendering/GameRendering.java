@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.Translations;
@@ -53,8 +54,58 @@ public class GameRendering {
 
 		Main.objects.forEach(GameObject::draw);
 
-        Main.darkness.draw();
+        if (!Main.debugMode) {
+            Main.darkness.draw();
+            return;
+        }
+        Main.batch.end();
+
+        // Draw debug collisions
+        Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
+        Main.shapes.setColor(Color.BLUE);
+        float camX = Main.player.cameraX;
+        float camY = Main.player.cameraY;
+        int tileSize = Main.tileSize;
+        for (int worldRow = 0; worldRow < map.height(); worldRow++) {
+            for (int worldCol = 0; worldCol < map.width(); worldCol++) {
+                int tileNumber = map.layer2()[worldRow][worldCol];
+                int worldX = worldCol * tileSize;
+                int worldY = worldRow * tileSize;
+                float screenX = worldX - camX + Main.screenWidth / 2f;
+                float screenY = worldY - camY + Main.screenHeight / 2f;
+
+                // Check if the tile is within the visible screen
+                if (worldX + tileSize > camX - Main.screenWidth / 2f &&
+                    worldX - tileSize < camX + Main.screenWidth / 2f &&
+                    worldY + tileSize > camY - Main.screenHeight / 2f &&
+                    worldY - tileSize < camY + Main.screenHeight / 2f) {
+                    Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
+                    drawBlockCollision(currentTile.collision(), screenX, screenY);
+                }
+            }
+        }
+        Main.shapes.end();
 	}
+
+    public static void drawBlockCollision(boolean[][] collisionPoints, float x, float y) {
+        float mar = 2f; // margin to not draw on the edges
+        if (collisionPoints == null || collisionPoints.length == 0 || collisionPoints[0].length == 0) return;
+
+        int gridCols = collisionPoints.length;        // number of columns in provided collision grid
+        int gridRows = collisionPoints[0].length;     // number of rows in provided collision grid
+        float cellW = Main.tileSize / (float) gridCols;
+        float cellH = Main.tileSize / (float) gridRows;
+
+        for (int i = 0; i < gridCols; i++) {
+            for (int j = 0; j < gridRows; j++) {
+                if (collisionPoints[i][j]) {
+                    float cellX = x + i * cellW; // tile cell top-left X
+                    float cellY = y + j * cellH; // tile cell top-left Y
+                    Main.shapes.rect(cellX-mar+3, Main.screenHeight-cellY-cellH-mar+3, cellW-mar, cellH-mar);
+                }
+            }
+        }
+    }
 
     private static void drawLayer(Map map, int[][] layer) {
         float camX = Main.player.cameraX;
