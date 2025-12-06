@@ -1,18 +1,38 @@
 package com.ususstudios.noway.objects;
 
 import com.ususstudios.noway.Main;
+import com.ususstudios.noway.main.UtilityTool;
 import com.ususstudios.noway.objects.custom.Gatekeeper;
 import com.ususstudios.noway.objects.custom.Player;
+import com.ususstudios.noway.objects.custom.SoundTrigger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.Properties;
 
 /** Extend this class to create a GameObject.
  * A GameObject is anything that has a position and size, and has an update function.
  */
 public class GameObject {
-    // This is for storing the names of all the object types so I don't have to reference the class path in map files
+    // This is for storing the names of all the object types, so I don't have to reference the class path in map files
     private static final HashMap<String, Class<? extends GameObject>> objectNames = new HashMap<>();
+    public Properties properties = new Properties();
+
+    // Positions
+    public float x;
+    public float y;
+    public float colX = 0;
+    public float colY = 0;
+    public float width = Main.tileSize;
+    public float height = Main.tileSize;
+
+    // Updating
+    public boolean collision = true;
+    /// Can the objects update while not being on the screen? If it's true, the {@code} onScreen} field will always be set to true inside the main update loop of the objects.
+    public boolean updateOffScreen = false;
+    /// Pretty self-explanatory. It's used to increase performance by not loading the objects while it's off-screen.
+    public boolean onScreen = false;
+
     public static GameObject createGameObject(String name) {
         try {
             return objectNames.get(name).getConstructor().newInstance();
@@ -24,25 +44,16 @@ public class GameObject {
     public static void registerGameObjectTypes() {
         objectNames.put("Gatekeeper", Gatekeeper.class);
         objectNames.put("Player", Player.class);
-}
-
-    // Positions
-    public float x;
-    public float y;
-    public float width = Main.tileSize;
-    public float height = Main.tileSize;
-
-    // Updating
-    public boolean collision = true;
-    /// Can the objects update while not being on the screen? If it's true, the {@code} onScreen} field will always be set to true inside the main update loop of the objects.
-    public boolean updateOffScreen = false;
-    /// Pretty self-explanatory. It's used to increase performance by not loading the objects while it's off-screen.
-    public boolean onScreen = false;
-
+        objectNames.put("SoundTrigger", SoundTrigger.class);
+    }
 
     public void setPosition(float setX, float setY) {
         x = Main.tileSize * setX;
         y = Main.tileSize * setY;
+    }
+
+    public void setPosition(UtilityTool.Tuple<Float, Float> pos) {
+        setPosition(pos.x(), pos.y());
     }
 
     /// Called in the main draw method to draw the objects. Not all objects need to have this.

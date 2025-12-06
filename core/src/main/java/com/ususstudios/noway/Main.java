@@ -1,7 +1,6 @@
 package com.ususstudios.noway;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -25,7 +24,7 @@ public class Main extends ApplicationAdapter {
     // Game State
     public static States.GameStates gameState = States.GameStates.SPLASH;
     public static String currentMap = "";
-    public static float transitionAlpha = 0;
+    public static double transitionAlpha = 0;
 
     // Classes
     public static Darkness darkness;
@@ -67,11 +66,13 @@ public class Main extends ApplicationAdapter {
         new Thread(() -> {
             try {
                 while (transitionAlpha < 1) {
-                    transitionAlpha += Gdx.graphics.getDeltaTime() * 0.0005f;
+                    Thread.sleep(10);
+                    transitionAlpha += 0.007f;
                 }
                 Thread.sleep(1500);
                 while (transitionAlpha > 0) {
-                    transitionAlpha -= Gdx.graphics.getDeltaTime() * 0.0005f;
+                    Thread.sleep(10);
+                    transitionAlpha -= 0.007f;
                 }
                 Thread.sleep(500);
                 Sound.playMusic("Can't Go Up");
@@ -79,15 +80,15 @@ public class Main extends ApplicationAdapter {
             } catch (InterruptedException e) {
                 handleException(e);
             }
-        }).start();
+        });  // .start();
+
+        gameState = States.GameStates.MAIN_MENU;
         LOGGER.info("Game started");
     }
 
     // This is run every frame
     @Override
     public void render() {
-        update();
-
         ScreenUtils.clear(0, 0, 0, 1);
 
         // Check the game state and call the appropriate draw method
@@ -96,6 +97,7 @@ public class Main extends ApplicationAdapter {
             case MAIN_MENU -> GameRendering.drawTitle();
             case SPLASH -> GameRendering.drawSplash();
         }
+        update();
     }
 
     public static void update() {
@@ -118,6 +120,14 @@ public class Main extends ApplicationAdapter {
         player.setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
         gameState = States.GameStates.PLAYING;
         Sound.playMapMusic(currentMap);
+
+        for (int i = 0; i < MapTileHandler.maps.get(map).objectNames().size(); i++) {
+            GameObject obj = GameObject.createGameObject(MapTileHandler.maps.get(map).objectNames().get(i));
+            obj.setPosition(MapTileHandler.maps.get(map).objectPos().get(i));
+            obj.properties = MapTileHandler.maps.get(map).objectProperties().get(i);
+            Main.objects.add(obj);
+        }
+
         LOGGER.info("Map '{}' loaded", map);
     }
 

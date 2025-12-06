@@ -3,7 +3,6 @@ package com.ususstudios.noway.objects;
 import com.badlogic.gdx.graphics.Texture;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.rendering.Image;
-import java.util.Properties;
 
 /** Extend this class to create an Entity.
  * Think of an Entity like a simple object in a map that is rendered separately from tiles.
@@ -22,8 +21,6 @@ public class Entity extends GameObject {
     /// How much to scale the image before it's drawn?
     public int scaleX = 1;
     public int scaleY = 1;
-
-	public Properties properties = new Properties();
 
 	// Other
 	public String name;

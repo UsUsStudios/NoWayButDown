@@ -83,7 +83,7 @@ public class Mob extends Entity {
 				}
 			}
 
-            /* Apply the movement to the objects’s position individually.
+            /* Apply the movement to the object's position individually.
              * If moving in one direction collides. If it does, undo the movement, so the objects remains in a valid position.
              * This will make it so if you are moving diagonally, and you only collide with something on the X axis, you will still move on the Y.
               The movement also offsets are scaled by the movementSpeed to produce smooth movement.*/

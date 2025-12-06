@@ -8,7 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.*;
 
 // Loads maps and tile types
 public class MapTileHandler {
@@ -187,7 +187,25 @@ public class MapTileHandler {
 			}
 		}
 
-		Map mapObj = new Map(name, width, height, spawnX, spawnY, layer1, layer2, layer3, songs.toList());
+        JSONArray objects = file.getJSONArray("objects");
+        List<String> objectNames = new ArrayList<>();
+        List<UtilityTool.Tuple<Float, Float>> objectPos = new ArrayList<>();
+        List<Properties> objectProperties = new ArrayList<>();
+        for (int i = 0; i < objects.length(); i++) {
+            JSONArray object = objects.getJSONArray(i);
+            objectNames.add(object.getString(0));
+            objectPos.add(new UtilityTool.Tuple<>(object.getFloat(1), object.getFloat(2)));
+            Properties properties = new Properties();
+            JSONObject propertiesArr = object.getJSONObject(3);
+            for (Iterator<String> it = propertiesArr.keys(); it.hasNext(); ) {
+                String key = it.next();
+                properties.put(key, propertiesArr.get(key));
+            }
+            objectProperties.add(properties);
+        }
+
+		Map mapObj = new Map(name, width, height, spawnX, spawnY, layer1, layer2, layer3,
+            songs.toList(), objectNames, objectPos, objectProperties);
 		maps.put(fileName, mapObj);
 	}
 

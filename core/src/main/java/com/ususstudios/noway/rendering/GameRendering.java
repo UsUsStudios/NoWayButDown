@@ -100,10 +100,10 @@ public class GameRendering {
         Main.batch.begin();
         Main.batch.enableBlending();
         Color c = Main.batch.getColor();
-        Main.batch.setColor(c.r, c.g, c.b, Main.transitionAlpha);
+        Main.batch.setColor(c.r, c.g, c.b, (float) Main.transitionAlpha);
         Main.batch.draw(Image.loadImage("ususlogo").getTexture(), 125, 150, 400, 400);
 
-        firaMedium.setColor(0.15f, 0.15f, 0.75f, Main.transitionAlpha);
+        firaMedium.setColor(0.15f, 0.15f, 0.75f, (float) Main.transitionAlpha);
         firaMedium.getData().setScale(0.75f);
         firaMedium.draw(Main.batch, "UsUsStudios", 460, 450);
         Main.batch.end();

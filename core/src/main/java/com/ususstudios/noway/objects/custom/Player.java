@@ -2,6 +2,8 @@ package com.ususstudios.noway.objects.custom;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.States;
 import com.ususstudios.noway.objects.Mob;
@@ -13,7 +15,7 @@ public class Player extends Mob {
 	public float cameraX, cameraY;
 
 	public Player() {
-		super("Player", 0f, 0f, 36f, 48f);
+		super("Player", 0f, 0f);
 
 		// Adjust spriteSheet properties
 		spriteSheet = Image.loadImage("entity/player/player");
@@ -28,7 +30,10 @@ public class Player extends Mob {
         animationSpeed = 10;
         animationFrames = 4;
 		speed = 150;
-        height = Main.tileSize * 1.5f;
+        colX = 10f;
+        colY = 10f;
+        width = 30;
+        height = 80;
         mainRow = 1;
         mainCol = 0;
 		updateOffScreen = true;
@@ -83,4 +88,19 @@ public class Player extends Mob {
 		if (cameraX > maxCameraX) cameraX = maxCameraX;
 		if (cameraY > maxCameraY) cameraY = maxCameraY;
 	}
+
+    @Override
+    public void draw() {
+        super.draw();
+        Main.batch.end();
+
+        Main.shapes.begin(ShapeRenderer.ShapeType.Line);
+        Main.shapes.setColor(Color.RED);
+        float screenX = x + colX - Main.player.cameraX + Main.screenWidth / 2f;
+        float screenY = y + colY - Main.player.cameraY + Main.screenHeight / 2f;
+        Main.shapes.rect(screenX, Main.screenHeight - screenY - height, width, height);
+        Main.shapes.end();
+
+        Main.batch.begin();
+    }
 }
