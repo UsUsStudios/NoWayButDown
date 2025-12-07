@@ -1,3 +1,4 @@
+// What are you doing, looking through my horrible code? You do not belong here.
 package com.ususstudios.noway;
 
 import com.badlogic.gdx.ApplicationAdapter;

@@ -1,0 +1,4 @@
+<factorypath>
+    <factorypathentry kind="EXTJAR" id="/home/ususstudios/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.24.1/7ebeb12c20606373005af4232cd0ecca72613dda/log4j-api-2.24.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="/home/ususstudios/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.24.1/c85285146f28d8c8962384f786e2dff04172fb43/log4j-core-2.24.1.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>
