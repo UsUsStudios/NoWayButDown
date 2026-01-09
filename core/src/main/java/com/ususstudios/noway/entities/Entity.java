@@ -1,10 +1,18 @@
-package com.ususstudios.noway.objects;
+package com.ususstudios.noway.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ususstudios.noway.Main;
+import com.ususstudios.noway.main.UtilityTool;
+import com.ususstudios.noway.entities.custom.Gatekeeper;
+import com.ususstudios.noway.entities.custom.Player;
+import com.ususstudios.noway.entities.custom.SoundTrigger;
 import com.ususstudios.noway.rendering.Image;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Properties;
 
 /** Extend this class to create an Entity.
  * Think of an Entity like a simple object in a map that is rendered separately from tiles.
@@ -13,8 +21,27 @@ import com.ususstudios.noway.rendering.Image;
  * There are many extensions of this class such as mobs that, well, extend the possibilities of objects.
  * Mobs, for instance, are living beings that can walk around and talk.
  **/
-public class Entity extends GameObject {
-	/// The image that is drawn at the objects's location to represent the objects.
+public class Entity {
+    // This is for storing the names of all the object types, so I don't have to reference the class path in map files
+    private static final HashMap<String, Class<? extends Entity>> objectNames = new HashMap<>();
+    public Properties properties = new Properties();
+
+    // Positions
+    public float x;
+    public float y;
+    public float colX = 0;
+    public float colY = 0;               // The offset where the object's collision rect begins
+    public float width = Main.tileSize;  // The size of the object's collision rect
+    public float height = Main.tileSize;
+
+    // Updating
+    public boolean collision = true;
+    /// Can the objects update while not being on the screen? If it's true, the {@code} onScreen} field will always be set to true inside the main update loop of the objects.
+    public boolean updateOffScreen = false;
+    /// Pretty self-explanatory. It's used to increase performance by not loading the objects while it's off-screen.
+    public boolean onScreen = false;
+
+    /// The image that is drawn at the objects's location to represent the objects.
 	public Image currentImage = Image.loadImage("disabled");
 	/// If there's a sprite sheet, this is the colum where the sprite would be pulled from. Set to -1 to disable it.
 	public int spriteColumn = -1;
@@ -26,6 +53,20 @@ public class Entity extends GameObject {
 
 	// Other
 	public String name;
+
+    public static Entity createGameObject(String name) {
+        try {
+            return objectNames.get(name).getConstructor().newInstance();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            Main.handleException(e);
+            return new Entity("", 0, 0);
+        }
+    }
+    public static void registerGameObjectTypes() {
+        objectNames.put("Gatekeeper", Gatekeeper.class);
+        objectNames.put("Player", Player.class);
+        objectNames.put("SoundTrigger", SoundTrigger.class);
+    }
 
 	public Entity(String name, float spawnX, float spawnY) {
 		this.name = name;
@@ -41,7 +82,21 @@ public class Entity extends GameObject {
 		this.height = height;
 	}
 
-	/** Called in the main draw method to draw the objects.
+    public void setup() {
+        if (properties.containsKey("width")) width = (int) properties.get("width");
+        if (properties.containsKey("height")) height = (int) properties.get("height");
+    }
+
+    public void setPosition(float setX, float setY) {
+        x = Main.tileSize * setX;
+        y = Main.tileSize * setY;
+    }
+
+    public void setPosition(UtilityTool.Tuple<Float, Float> pos) {
+        setPosition(pos.x(), pos.y());
+    }
+
+	/** Called in the main draw method to draw the entities.
 	 * The objects must be in a certain Hashmap in Main.game (depending on their type) to be drawn.
 	 * For instance, a normal objects would have to be in the {@code} objects} array list to draw.
 	 * Remove the objects from the array list if you stopped using it to stop drawing it.
@@ -50,7 +105,6 @@ public class Entity extends GameObject {
 	 * Use {@code} updateOffScreen} if you want to disable this.
 	 * <p>
 	 **/
-    @Override
     public void draw() {
         if (!onScreen) return;
 
@@ -95,5 +149,21 @@ public class Entity extends GameObject {
 
             Main.batch.begin();
         }
+    }
+
+    /** Called in the main update loop to update the objects.
+     * The objects must be in a certain Hashmap in Main (depending on their type) to be updated.
+     * For instance, a normal objects would have to be in the {@code} objects} array list to update.
+     * Remove the objects from the array list if you stopped using it to stop updating it.
+     * <p>
+     * For performance, everything is behind an if statement with {@code} onScreen} to only update when the objects is on screen.
+     * Use {@code} updateOffScreen} if you want to disable this.
+     **/
+    public void update() {
+        // Check if the objects is on the screen using the player's camera position
+        onScreen = x + width > Main.player.cameraX + Main.screenWidth / 2f &&
+            x - width < Main.player.cameraX + Main.screenWidth / 2f &&
+            y + height > Main.player.cameraY + Main.screenHeight / 2f &&
+            y - height < Main.player.cameraY + Main.screenHeight / 2f || updateOffScreen;
     }
 }

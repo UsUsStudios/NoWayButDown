@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import com.ususstudios.noway.Main;
-import com.ususstudios.noway.objects.Entity;
+import com.ususstudios.noway.entities.Entity;
 import java.util.ArrayList;
 
 public class Darkness {

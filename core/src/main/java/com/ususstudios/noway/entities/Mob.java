@@ -1,4 +1,4 @@
-package com.ususstudios.noway.objects;
+package com.ususstudios.noway.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.ususstudios.noway.main.States;

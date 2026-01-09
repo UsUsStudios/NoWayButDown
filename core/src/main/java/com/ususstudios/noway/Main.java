@@ -7,8 +7,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.ususstudios.noway.objects.GameObject;
-import com.ususstudios.noway.objects.custom.Player;
+import com.ususstudios.noway.entities.Entity;
+import com.ususstudios.noway.entities.custom.Player;
 import com.ususstudios.noway.main.*;
 import com.ususstudios.noway.rendering.Darkness;
 import com.ususstudios.noway.rendering.GameRendering;
@@ -36,7 +36,7 @@ public class Main extends ApplicationAdapter {
 
     // Entities
     public static Player player;
-    public static ArrayList<GameObject> objects = new ArrayList<>();
+    public static ArrayList<Entity> entities = new ArrayList<>();
 
     // Miscellaneous
     public static boolean running = true;
@@ -58,12 +58,12 @@ public class Main extends ApplicationAdapter {
         MapTileHandler.loadMaps();
         GameRendering.init();
         Sound.loadLibrary();
-        GameObject.registerGameObjectTypes();
+        Entity.registerGameObjectTypes();
         darkness = new Darkness();
 
         // Load the player and game
-        player = (Player) GameObject.createGameObject("Player");
-        objects.add(player);
+        player = (Player) Entity.createGameObject("Player");
+        entities.add(player);
         darkness.addLightSource(player);
 
         // Start!
@@ -107,7 +107,7 @@ public class Main extends ApplicationAdapter {
     public static void update() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) debugMode = !debugMode;
 
-        if (gameState == States.GameStates.PLAYING) Main.objects.forEach(GameObject::update);
+        if (gameState == States.GameStates.PLAYING) Main.entities.forEach(Entity::update);
         else GameRendering.updateUI();
     }
 
@@ -128,12 +128,12 @@ public class Main extends ApplicationAdapter {
         Sound.playMapMusic(currentMap);
 
         for (int i = 0; i < MapTileHandler.maps.get(map).objectNames().size(); i++) {
-            GameObject obj = GameObject.createGameObject(MapTileHandler.maps.get(map).objectNames().get(i));
-            obj.setPosition(MapTileHandler.maps.get(map).objectPos().get(i));
-            obj.properties = MapTileHandler.maps.get(map).objectProperties().get(i);
-            obj.setup();
-            System.out.println(obj.properties);
-            Main.objects.add(obj);
+            Entity entity = Entity.createGameObject(MapTileHandler.maps.get(map).objectNames().get(i));
+            entity.setPosition(MapTileHandler.maps.get(map).objectPos().get(i));
+            entity.properties = MapTileHandler.maps.get(map).objectProperties().get(i);
+            entity.setup();
+            System.out.println(entity.properties);
+            Main.entities.add(entity);
         }
 
         LOGGER.info("Map '{}' loaded", map);

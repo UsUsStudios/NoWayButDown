@@ -1,13 +1,14 @@
-package com.ususstudios.noway.objects;
+package com.ususstudios.noway.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ususstudios.noway.Main;
 
-public abstract class Trigger extends GameObject {
+public abstract class Trigger extends Entity {
     public boolean triggered = false;
 
-    public Trigger() {
+    public Trigger(String name, float x, float y) {
+        super(name, x, y);
         collision = false;
         updateOffScreen = true;
     }

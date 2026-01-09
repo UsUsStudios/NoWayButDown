@@ -1,10 +1,10 @@
-package com.ususstudios.noway.objects.custom;
+package com.ususstudios.noway.entities.custom;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.States;
-import com.ususstudios.noway.objects.Mob;
+import com.ususstudios.noway.entities.Mob;
 import com.ususstudios.noway.rendering.Image;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;

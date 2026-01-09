@@ -10,7 +10,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.Translations;
 import com.badlogic.gdx.graphics.Color;
-import com.ususstudios.noway.objects.GameObject;
+import com.ususstudios.noway.entities.Entity;
+
 import java.awt.*;
 import java.io.IOException;
 
@@ -52,7 +53,7 @@ public class GameRendering {
         drawLayer(map, map.layer2());
         drawLayer(map, map.layer3());
 
-		Main.objects.forEach(GameObject::draw);
+		Main.entities.forEach(Entity::draw);
 
         if (!Main.debugMode) {
             Main.darkness.draw();
