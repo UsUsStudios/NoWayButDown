@@ -10,8 +10,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.Translations;
 import com.badlogic.gdx.graphics.Color;
-import com.ususstudios.noway.entities.Entity;
-
 import java.awt.*;
 import java.io.IOException;
 
@@ -53,19 +51,17 @@ public class GameRendering {
         drawLayer(map, map.layer2());
         drawLayer(map, map.layer3());
 
-		Main.entities.forEach(Entity::draw);
+        Main.batch.end();
 
         if (!Main.debugMode) {
-            Main.darkness.draw();
             return;
         }
-        Main.batch.end();
 
         // Draw debug collisions
         Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
         Main.shapes.setColor(Color.BLUE);
-        float camX = Main.player.cameraX;
-        float camY = Main.player.cameraY;
+        float camX = 23 * Main.tileSize;  // TODO: tie to player
+        float camY = 21 * Main.tileSize;
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
@@ -109,8 +105,8 @@ public class GameRendering {
     }
 
     private static void drawLayer(Map map, int[][] layer) {
-        float camX = Main.player.cameraX;
-        float camY = Main.player.cameraY;
+        float camX = 23 * Main.tileSize;  // TODO: tie to player
+        float camY = 21 * Main.tileSize;
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {

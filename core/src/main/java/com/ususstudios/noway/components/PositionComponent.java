@@ -1,0 +1,11 @@
+package com.ususstudios.noway.components;
+
+public class PositionComponent implements Component {
+    public double x;
+    public double y;
+
+    public PositionComponent(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+}
