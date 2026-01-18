@@ -3,6 +3,7 @@ package com.ususstudios.noway.main;
 import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import java.util.*;
+import com.ususstudios.noway.Main;
 
 public class World {
     private final Map<Integer, List<Component>> entities = new HashMap<>();
@@ -24,46 +25,29 @@ public class World {
     }
 
     public List<Integer> query(Class<? extends Component>... types) {
-        List<Integer> result = new ArrayList<>();
-        for (int entity : entities.keySet()) {
-            boolean match = true;
-
-            for (Class<? extends Component> type : types) {
-                if (!entities.get(entity).contains(type)) {
-                    match = false;
-                    break;
-                }
-            }
-
-            if (match) result.add(entity);
-        }
-
-        return result;
+        // Return all the entities that have all the components in the list
+        return entities.keySet().stream().filter(e -> {
+                // Test if the list has all the components in the list
+                return entities.get(e).stream().filter(c ->
+                        Arrays.asList(types).contains(c.getClass()))
+                    .distinct().count() == types.length;
+            }).toList();
     }
 
-    public List<Integer> query(Class<? extends Component> type) {
-        List<Integer> result = new ArrayList<>();
-        for (int entity : entities.keySet()) {
-            if (!entities.get(entity).contains(type))
-                result.add(entity);
-        }
-
-        return result;
-    }
-
-    public <T extends Component> T getEntityComponent(int id, Class<T> type) {
+    public <T extends Component> Optional<T> getEntityComponent(int id, Class<T> type) {
         List<Component> entity = entities.get(id);
-        if (entity.contains(type)) {
-            for (Component element : entity) {
-                if (type.isInstance(element)) {
-                    return (T) element;
-                }
+        for (Component element : entity) {
+            if (type.isInstance(element)) {
+                return Optional.of((T) element);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public void update() {
+        // Main.LOGGER.info(java.util.stream.Stream.of(updateSystems, renderSystems)
+        //             .flatMap(List::stream)
+        //             .collect(java.util.stream.Collectors.toList()).toString());
         for (ECSSystem system : updateSystems) {
             system.process(this);
         }

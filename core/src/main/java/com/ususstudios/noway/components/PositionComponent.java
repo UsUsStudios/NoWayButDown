@@ -1,10 +1,10 @@
 package com.ususstudios.noway.components;
 
 public class PositionComponent implements Component {
-    public double x;
-    public double y;
+    public float x;
+    public float y;
 
-    public PositionComponent(double x, double y) {
+    public PositionComponent(float x, float y) {
         this.x = x;
         this.y = y;
     }

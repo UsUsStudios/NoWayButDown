@@ -60,8 +60,8 @@ public class GameRendering {
         // Draw debug collisions
         Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
         Main.shapes.setColor(Color.BLUE);
-        float camX = 23 * Main.tileSize;  // TODO: tie to player
-        float camY = 21 * Main.tileSize;
+        float camX = Main.cameraX;
+        float camY = Main.cameraY;
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
@@ -105,8 +105,8 @@ public class GameRendering {
     }
 
     private static void drawLayer(Map map, int[][] layer) {
-        float camX = 23 * Main.tileSize;  // TODO: tie to player
-        float camY = 21 * Main.tileSize;
+        float camX = Main.cameraX;
+        float camY = Main.cameraY;
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {

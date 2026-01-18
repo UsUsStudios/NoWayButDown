@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.main.*;
 import com.ususstudios.noway.rendering.GameRendering;
 import com.ususstudios.noway.rendering.MapTileHandler;
+import com.ususstudios.noway.components.*;
+import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
@@ -32,6 +34,9 @@ public class Main extends ApplicationAdapter {
 
     // Entities
     public static World world = new World();
+    public static float cameraX = 0;
+    public static float cameraY = 0;
+    public static int playerId = 0;
 
     // Miscellaneous
     public static boolean running = true;
@@ -53,6 +58,7 @@ public class Main extends ApplicationAdapter {
         MapTileHandler.loadMaps();
         GameRendering.init();
         Sound.loadLibrary();
+        setupECSWorld();
 
         // Start!
         new Thread(() -> {
@@ -107,6 +113,14 @@ public class Main extends ApplicationAdapter {
         GameRendering.dispose();
         running = false;
         LOGGER.info("Game ended");
+    }
+
+    public static void setupECSWorld() {
+        playerId = world.createEntity(new PlayerComponent(0, 0, 1));
+
+        world.addUpdateSystem(new PlayerSystem());
+
+        world.addRenderSystem(new SpritesheetSystem());
     }
 
     public static void loadMap(String map) {
