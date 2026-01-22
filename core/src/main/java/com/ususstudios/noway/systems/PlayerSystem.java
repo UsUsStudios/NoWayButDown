@@ -10,7 +10,6 @@ import com.badlogic.gdx.Input;
 public class PlayerSystem implements ECSSystem {
     @Override
     public void process(World world) {
-        Main.LOGGER.info(world.query(PlayerComponent.class).toString());
         for (Integer entity : world.query(PlayerComponent.class)) {
             PlayerComponent c = world.getEntityComponent(entity, PlayerComponent.class).get();
 
@@ -75,13 +74,14 @@ public class PlayerSystem implements ECSSystem {
     		Main.cameraY -= (Main.cameraY - c.y) * 0.15f;
 
 	    	// Clamp the camera to the map bounds
-    		Map map = MapTileHandler.maps.get(Main.currentMap);
-		    int maxCameraX = map.width() * Main.tileSize - Main.screenWidth / 2;
-	    	int maxCameraY = map.height() * Main.tileSize - Main.screenHeight / 2;
-    		if (Main.cameraX < Main.screenWidth / 2f) Main.cameraX = Main.screenWidth / 2f;
-		    if (Main.cameraY < Main.screenHeight / 2f) Main.cameraY = Main.screenHeight / 2f;
-	    	if (Main.cameraX > maxCameraX) Main.cameraX = maxCameraX;
-    		if (Main.cameraY > maxCameraY) Main.cameraY = maxCameraY;
+    		//Map map = MapTileHandler.maps.get(Main.currentMap);
+		    //int maxCameraX = map.width() * Main.tileSize - Main.screenWidth / 2;
+	    	//int maxCameraY = map.height() * Main.tileSize - Main.screenHeight / 2;
+    		//if (Main.cameraX < Main.screenWidth / 2f) Main.cameraX = Main.screenWidth / 2f;
+		    //if (Main.cameraY < Main.screenHeight / 2f) Main.cameraY = Main.screenHeight / 2f;
+	    	//if (Main.cameraX > maxCameraX) Main.cameraX = maxCameraX;
+    		//if (Main.cameraY > maxCameraY) Main.cameraY = maxCameraY;
+            Main.LOGGER.info(Main.cameraX + ", " + Main.cameraY);
         }
     }
 }

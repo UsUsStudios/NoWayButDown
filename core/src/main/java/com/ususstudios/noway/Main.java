@@ -116,7 +116,7 @@ public class Main extends ApplicationAdapter {
     }
 
     public static void setupECSWorld() {
-        playerId = world.createEntity(new PlayerComponent(0, 0, 1));
+        playerId = world.createEntity(new PlayerComponent(0, 0, 300));
 
         world.addUpdateSystem(new PlayerSystem());
 
