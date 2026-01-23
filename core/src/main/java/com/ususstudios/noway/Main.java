@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.main.*;
-import com.ususstudios.noway.rendering.GameRendering;
-import com.ususstudios.noway.rendering.MapTileHandler;
+import com.ususstudios.noway.rendering.*;
 import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
@@ -96,6 +95,8 @@ public class Main extends ApplicationAdapter {
             case MAIN_MENU -> GameRendering.drawTitle();
             case SPLASH -> GameRendering.drawSplash();
         }
+
+        world.render();
     }
 
     public static void update() {
@@ -116,7 +117,8 @@ public class Main extends ApplicationAdapter {
     }
 
     public static void setupECSWorld() {
-        playerId = world.createEntity(new PlayerComponent(0, 0, 300));
+        playerId = world.createEntity(new PlayerComponent(300), new PositionComponent(-1, -1),
+                new SpritesheetComponent(Image.loadImage("entity/player/player"), 1, 1, 1, 1));
 
         world.addUpdateSystem(new PlayerSystem());
 
@@ -125,7 +127,8 @@ public class Main extends ApplicationAdapter {
 
     public static void loadMap(String map) {
         currentMap = map;
-        // TODO: player.setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
+        world.getEntityComponent(playerId, PositionComponent.class).get()
+            .setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
         gameState = States.GameStates.PLAYING;
         Sound.playMapMusic(currentMap);
 

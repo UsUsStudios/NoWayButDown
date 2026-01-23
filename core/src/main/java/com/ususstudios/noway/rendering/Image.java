@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class Image implements Serializable {
     private static final HashMap<String, Image> imageCache = new HashMap<>();
 
-    private final byte[] data;
+    public final byte[] data;
     private transient Texture image;
     private int width;
     private int height;

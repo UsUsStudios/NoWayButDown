@@ -6,7 +6,7 @@ import java.util.*;
 import com.ususstudios.noway.Main;
 
 public class World {
-    private final Map<Integer, List<Component>> entities = new HashMap<>();
+    public final Map<Integer, List<Component>> entities = new HashMap<>();
     private final List<ECSSystem> updateSystems = new ArrayList<>();
     private final List<ECSSystem> renderSystems = new ArrayList<>();
     private int nextId = 0;
@@ -21,7 +21,7 @@ public class World {
 
     public int createEntity(Component... components) {
         entities.put(nextId, new ArrayList<Component>(Arrays.asList(components)));
-        return ++nextId;
+        return nextId++;
     }
 
     public List<Integer> query(Class<? extends Component>... types) {
@@ -36,6 +36,7 @@ public class World {
 
     public <T extends Component> Optional<T> getEntityComponent(int id, Class<T> type) {
         List<Component> entity = entities.get(id);
+        if (entity == null) return Optional.empty();
         for (Component element : entity) {
             if (type.isInstance(element)) {
                 return Optional.of((T) element);
@@ -45,15 +46,17 @@ public class World {
     }
 
     public void update() {
-        // Main.LOGGER.info(java.util.stream.Stream.of(updateSystems, renderSystems)
-        //             .flatMap(List::stream)
-        //             .collect(java.util.stream.Collectors.toList()).toString());
         for (ECSSystem system : updateSystems) {
             system.process(this);
         }
 
+    }
+
+    public void render() {
+        Main.batch.begin();
         for (ECSSystem system : renderSystems) {
             system.process(this);
         }
+        Main.batch.end();
     }
 }
