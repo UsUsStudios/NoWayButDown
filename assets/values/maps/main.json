@@ -1,9 +1,33 @@
 {
   "name": "Main (Test Map)",
-  "size": [50, 50],
-  "spawn": [23, 21],
+  "size": [
+    50,
+    50
+  ],
+  "spawn": [
+    23,
+    21
+  ],
   "songs": [],
-  "objects": [],
+  "entities": [
+    [
+      [
+        "com.ususstudios.noway.components.PositionComponent",
+        21,
+        21
+      ],
+      [
+        "com.ususstudios.noway.components.SpritesheetComponent",
+        "entity/npc/gatekeeper_sheet",
+        0,
+        0,
+        3,
+        4,
+        1,
+        1
+      ]
+    ]
+  ],
   "map": [
     [
       "12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12",

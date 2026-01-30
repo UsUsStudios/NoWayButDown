@@ -14,6 +14,7 @@ import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -117,7 +118,7 @@ public class Main extends ApplicationAdapter {
     }
 
     public static void setupECSWorld() {
-        playerId = world.createEntity(new PlayerComponent(300), new PositionComponent(0, 0),
+        playerId = world.createEntity(new PlayerComponent(300), new PositionComponent(0f, 0f),
                 new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, 1f, 2f));
 
         world.addUpdateSystem(new PlayerSystem());
@@ -132,6 +133,9 @@ public class Main extends ApplicationAdapter {
         gameState = States.GameStates.PLAYING;
         Sound.playMapMusic(currentMap);
 
+        for (List<Component> entity : MapTileHandler.maps.get(map).entities()) {
+            world.createEntity(entity.toArray(new Component[entity.size()]));
+        }
         //for (int i = 0; i < MapTileHandler.maps.get(map).objectNames().size(); i++) {
         //    Entity entity = Entity.createGameObject(MapTileHandler.maps.get(map).objectNames().get(i));
         //    entity.setPosition(MapTileHandler.maps.get(map).objectPos().get(i));

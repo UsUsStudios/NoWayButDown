@@ -7,9 +7,9 @@ public class SpritesheetComponent implements Component {
     /// The sheet used for animations for the entity.
     public Image spriteSheet;
 
-    /// This is the colum where the sprite would be pulled from. Set to -1 to disable it.
+    /// This is the colum where the sprite would be pulled from.
     public int column;
-    /// This is the row where the sprite would be pulled from. Set to -1 to disable it.
+    /// This is the row where the sprite would be pulled from.
     public int row;
 
     /// By how much to scale the image before drawing

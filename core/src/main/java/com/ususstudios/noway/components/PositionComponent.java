@@ -6,17 +6,12 @@ public class PositionComponent implements Component {
     public float x;
     public float y;
 
-    public PositionComponent(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
-
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
-    public PositionComponent(int x, int y) {
+    public PositionComponent(float x, float y) {
         this.x = x * Main.tileSize;
         this.y = y * Main.tileSize;
     }
