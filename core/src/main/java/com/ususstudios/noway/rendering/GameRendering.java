@@ -105,8 +105,8 @@ public class GameRendering {
     }
 
     private static void drawLayer(Map map, int[][] layer) {
-        float camX = Main.cameraX;
-        float camY = Main.cameraY;
+        float camX = Main.cameraX + Main.tileSize / 2;
+        float camY = Main.cameraY + Main.tileSize / 2;  // Slight adjustment to center the player on a block
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
