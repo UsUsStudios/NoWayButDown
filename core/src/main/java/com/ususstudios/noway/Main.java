@@ -13,7 +13,6 @@ import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -136,14 +135,6 @@ public class Main extends ApplicationAdapter {
         for (List<Component> entity : MapTileHandler.maps.get(map).entities()) {
             world.createEntity(entity.toArray(new Component[entity.size()]));
         }
-        //for (int i = 0; i < MapTileHandler.maps.get(map).objectNames().size(); i++) {
-        //    Entity entity = Entity.createGameObject(MapTileHandler.maps.get(map).objectNames().get(i));
-        //    entity.setPosition(MapTileHandler.maps.get(map).objectPos().get(i));
-        //    entity.properties = MapTileHandler.maps.get(map).objectProperties().get(i);
-        //    entity.setup();
-        //    System.out.println(entity.properties);
-        //    Main.entities.add(entity);
-        //}
 
         LOGGER.info("Map '{}' loaded", map);
     }
