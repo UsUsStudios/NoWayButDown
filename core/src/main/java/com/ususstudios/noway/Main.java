@@ -118,7 +118,8 @@ public class Main extends ApplicationAdapter {
 
     public static void setupECSWorld() {
         playerId = world.createEntity(new PlayerComponent(300), new PositionComponent(0f, 0f),
-                new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, 1f, 2f));
+                new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, 1f, 2f),
+                new CollisionComponent(1.5f, 1.5f, 0f, 0f));
 
         world.addUpdateSystem(new PlayerSystem());
 

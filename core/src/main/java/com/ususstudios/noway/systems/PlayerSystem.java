@@ -1,6 +1,7 @@
 package com.ususstudios.noway.systems;
 
 import com.ususstudios.noway.main.*;
+import com.ususstudios.noway.rendering.CollisionChecker;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import com.ususstudios.noway.components.*;
@@ -63,11 +64,11 @@ public class PlayerSystem implements ECSSystem {
 
     			// First, X
 	    		pc.x += moveX * movementSpeed;
-		    	// if (CollisionChecker.checkEntityColliding(this)) x -= moveX * movementSpeed;
+		    	if (CollisionChecker.checkEntityCollision(entity)) pc.x -= moveX * movementSpeed;
 
     			// Then, Y
 	    		pc.y += moveY * movementSpeed;
-		    	// if (CollisionChecker.checkEntityColliding(this)) y -= moveY * movementSpeed;
+		    	if (CollisionChecker.checkEntityCollision(entity)) pc.y -= moveY * movementSpeed;
             }
 
 
