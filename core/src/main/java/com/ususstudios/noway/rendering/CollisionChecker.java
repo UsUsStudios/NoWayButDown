@@ -30,6 +30,36 @@ public class CollisionChecker {
         return aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop;
     }
 
+        public static boolean checkBlockCollision(Integer entity, boolean[][] collisionPoints, float x, float y) {
+        // Make sure the entites have the necessary components
+        if (!Main.world.getEntityComponent(entity, PositionComponent.class).isPresent()) return false;
+        if (!Main.world.getEntityComponent(entity, CollisionComponent.class).isPresent()) return false;
+
+        // Declare the components
+        CollisionComponent component = Main.world.getEntityComponent(entity, CollisionComponent.class).get();
+        PositionComponent positionComponent = Main.world.getEntityComponent(entity, PositionComponent.class).get();
+
+        int gridX = collisionPoints.length;      // number of columns in collision grid
+        int gridY = collisionPoints[0].length;   // number of rows in collision grid
+        float cellW = Main.tileSize / (float) gridX;
+        float cellH = Main.tileSize / (float) gridY;
+
+        for (int i = 0; i < gridX; i++) {
+            for (int j = 0; j < gridY; j++) {
+                if (collisionPoints[i][j]) {
+                    float halfW = component.width / 2f;
+                    float halfH = component.height / 2f;
+
+                    float px = x + i * cellW + cellW / 2f;
+                    float py = y + j * cellH + cellH / 2f;
+                    if (Math.abs(px - positionComponent.x) <= halfW && Math.abs(py - positionComponent.y) <= halfH) return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     // Check if entity collides with any other entity or any tile on layer2
     public static boolean checkEntityCollision(Integer entity) {
         for (Integer other : Main.world.query(CollisionComponent.class, PositionComponent.class)) {
@@ -41,25 +71,23 @@ public class CollisionChecker {
         if (!Main.world.getEntityComponent(entity, PlayerComponent.class).isPresent())
             if (check2EntitiesCollision(entity, Main.playerId)) return true;
 
-        //Map map = TileSystem.maps.get(Main.world.currentMap);
-        //if (map == null) return false;
+        Map map = MapTileHandler.maps.get(Main.currentMap);
+        if (map == null) return false;
 
-        //for (int row = 0; row < map.y(); row++) {
-        //    for (int col = 0; col < map.x(); col++) {
-        //        int tileNumber = map.foreground().get(new TileSystem.Pair(col, row));
-        //        var tile = TileSystem.tileTypes.get(tileNumber);
-        //        if (tile == null) continue;
+        for (int row = 0; row < map.height(); row++) {
+            for (int col = 0; col < map.width(); col++) {
+                int tileNumber = map.layer2()[col][row];
+                var tile = MapTileHandler.tileTypes.get(tileNumber);
+                if (tile == null) continue;
 
-        //        boolean[][] collisionPoints = tile.collision();
-        //        int worldX = col * Main.tileSize - Main.tileSize / 2; // tile top-left X
-        //        int worldY = row * Main.tileSize - Main.tileSize / 2; // tile top-left Y
+                boolean[][] collisionPoints = tile.collision();
+                int worldX = col * Main.tileSize - Main.tileSize / 2; // tile top-left X
+                int worldY = row * Main.tileSize - Main.tileSize / 2; // tile top-left Y
 
-        //        if (checkBlockCollision(entity, collisionPoints, worldX, worldY)) return true;
-        //    }
-        //}
+                if (checkBlockCollision(entity, collisionPoints, worldX, worldY)) return true;
+            }
+        }
 
         return false;
     }
-
-
 }
