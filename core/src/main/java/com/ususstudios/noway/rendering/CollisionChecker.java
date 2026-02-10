@@ -1,5 +1,7 @@
 package com.ususstudios.noway.rendering;
 
+import java.util.Arrays;
+
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.components.*;
 
@@ -19,18 +21,18 @@ public class CollisionChecker {
 
         float aLeft = pcA.x + cA.offX;
         float aTop = pcA.y + cA.offY;
-        float aRight = pcA.x + cA.width;
-        float aBottom = pcA.y + cA.height;
+        float aRight = pcA.x + cA.offX + cA.width;
+        float aBottom = pcA.y + cA.offY + cA.height;
 
         float bLeft = pcB.x + cB.offX;
         float bTop = pcB.y + cB.offY;
-        float bRight = pcB.x + cB.width;
-        float bBottom = pcB.y + cB.height;
+        float bRight = pcB.x + cB.offX + cB.width;
+        float bBottom = pcB.y + cB.offY + cB.height;
 
         return aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop;
     }
 
-        public static boolean checkBlockCollision(Integer entity, boolean[][] collisionPoints, float x, float y) {
+    public static boolean checkBlockCollision(Integer entity, boolean[][] collisionPoints, float x, float y) {
         // Make sure the entites have the necessary components
         if (!Main.world.getEntityComponent(entity, PositionComponent.class).isPresent()) return false;
         if (!Main.world.getEntityComponent(entity, CollisionComponent.class).isPresent()) return false;
@@ -74,19 +76,19 @@ public class CollisionChecker {
         Map map = MapTileHandler.maps.get(Main.currentMap);
         if (map == null) return false;
 
-        for (int row = 0; row < map.height(); row++) {
-            for (int col = 0; col < map.width(); col++) {
-                int tileNumber = map.layer2()[col][row];
-                var tile = MapTileHandler.tileTypes.get(tileNumber);
-                if (tile == null) continue;
+        //for (int row = 0; row < map.height(); row++) {
+        //    for (int col = 0; col < map.width(); col++) {
+        //        int tileNumber = map.layer2()[col][row];
+        //        var tile = MapTileHandler.tileTypes.get(tileNumber);
+        //        if (tile == null) continue;
 
-                boolean[][] collisionPoints = tile.collision();
-                int worldX = col * Main.tileSize - Main.tileSize / 2; // tile top-left X
-                int worldY = row * Main.tileSize - Main.tileSize / 2; // tile top-left Y
+        //        boolean[][] collisionPoints = tile.collision();
+        //        int worldX = col * Main.tileSize - Main.tileSize / 2; // tile top-left X
+        //        int worldY = row * Main.tileSize - Main.tileSize / 2; // tile top-left Y
 
-                if (checkBlockCollision(entity, collisionPoints, worldX, worldY)) return true;
-            }
-        }
+        //        if (checkBlockCollision(entity, collisionPoints, worldX, worldY)) return true;
+        //    }
+        //}
 
         return false;
     }

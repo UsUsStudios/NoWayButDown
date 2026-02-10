@@ -1,5 +1,7 @@
 package com.ususstudios.noway.components;
 
+import java.math.BigDecimal;
+
 import com.ususstudios.noway.main.States;
 
 public class PlayerComponent implements Component {
@@ -7,7 +9,7 @@ public class PlayerComponent implements Component {
 	public String direction = "down";
     public float speed;
 
-    public PlayerComponent(float speed) {
-        this.speed = speed;
+    public PlayerComponent(BigDecimal speed) {
+        this.speed = speed.floatValue();
     }
 }

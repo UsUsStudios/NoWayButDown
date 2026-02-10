@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class SpritesheetSystem implements ECSSystem {
     @Override
     public void process(World world) {
+        Main.batch.begin();
         for (Integer entity : world.query(SpritesheetComponent.class, PositionComponent.class)) {
             PositionComponent positionComponent = world.getEntityComponent(entity, PositionComponent.class).get();
 
@@ -28,5 +29,6 @@ public class SpritesheetSystem implements ECSSystem {
                 // Flip X and Y
                 false, true);
         }
+        Main.batch.end();
     }
 }

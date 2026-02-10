@@ -1,5 +1,6 @@
 package com.ususstudios.noway.components;
 
+import java.math.BigDecimal;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.rendering.*;
 
@@ -16,13 +17,26 @@ public class SpritesheetComponent implements Component {
     public float scaleX;
     public float scaleY;
 
-    public SpritesheetComponent(String spriteSheetName, int column, int row, int sizeX, int sizeY, float scaleX, float scaleY) {
+    public SpritesheetComponent(String spriteSheetName, Integer column, Integer row,
+            Integer sizeX, Integer sizeY, BigDecimal scaleX, BigDecimal scaleY) {
         spriteSheet = Image.loadImage(spriteSheetName);
         spriteSheet.scaleImage(sizeX * Main.tileSize, sizeY * Main.tileSize);
 
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
+        this.scaleX = scaleX.floatValue();
+        this.scaleY = scaleY.floatValue();
         this.column = column;
         this.row = row;
     }
+
+    public SpritesheetComponent(String spriteSheetName, Integer column, Integer row,
+            Integer sizeX, Integer sizeY, Integer scaleX, Integer scaleY) {
+        spriteSheet = Image.loadImage(spriteSheetName);
+        spriteSheet.scaleImage(sizeX * Main.tileSize, sizeY * Main.tileSize);
+
+        this.scaleX = scaleX.floatValue();
+        this.scaleY = scaleY.floatValue();
+        this.column = column;
+        this.row = row;
+    }
+
 }

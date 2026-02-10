@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
@@ -204,12 +205,20 @@ public class MapTileHandler {
                     Main.handleException(e);
                 }
 
-                if (componentClass.getDeclaredConstructors().length != 1) {
-                    throw new IllegalStateException(
-                        "Expected exactly one constructor in " + componentClass.getName()
-                    );
-                }
+                Class<?>[] parameterTypes = componentArray
+                    .toList()
+                    .subList(1, componentArray.length())
+                    .stream()
+                    .map(Object::getClass)
+                    .toArray(Class<?>[]::new);
+
                 Constructor constructor = componentClass.getDeclaredConstructors()[0];
+                try {
+                    constructor = componentClass.getConstructor(parameterTypes);
+                } catch (NoSuchMethodException e) {
+                    Main.handleException(e);
+                    System.exit(0);
+                }
 
                 try {
                     Component component = (Component) constructor.newInstance(componentArray

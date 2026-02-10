@@ -53,10 +53,8 @@ public class World {
     }
 
     public void render() {
-        Main.batch.begin();
         for (ECSSystem system : renderSystems) {
             system.process(this);
         }
-        Main.batch.end();
     }
 }

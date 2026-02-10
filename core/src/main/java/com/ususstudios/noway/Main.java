@@ -13,6 +13,8 @@ import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 
@@ -117,13 +119,15 @@ public class Main extends ApplicationAdapter {
     }
 
     public static void setupECSWorld() {
-        playerId = world.createEntity(new PlayerComponent(300), new PositionComponent(0f, 0f),
-                new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, 1f, 2f),
-                new CollisionComponent(1.5f, 1.5f, 0f, 0f));
+        playerId = world.createEntity(new PlayerComponent(BigDecimal.valueOf(300)),
+                new PositionComponent(BigDecimal.valueOf(0f), BigDecimal.valueOf(0f)),
+                new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, BigDecimal.valueOf(1f), BigDecimal.valueOf(2f)),
+                new CollisionComponent(BigDecimal.valueOf(0.4f), BigDecimal.valueOf(1.4f), BigDecimal.valueOf(0.3f), BigDecimal.valueOf(0.4f)));
 
         world.addUpdateSystem(new PlayerSystem());
 
         world.addRenderSystem(new SpritesheetSystem());
+        world.addRenderSystem(new CollisionDrawingSystem());
     }
 
     public static void loadMap(String map) {

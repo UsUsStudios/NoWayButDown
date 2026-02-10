@@ -44,7 +44,7 @@ public class QueueAppender extends AbstractAppender {
 	}
 
 	public static void printError(Exception e) {
-		System.err.println("\u001B[31mAn exception occurred: " + e.getMessage());
+		System.err.println("\u001B[31m" + e.getClass().getName() + ": " + e.getMessage());
 		if (self.fileWriter != null) {
 			self.fileWriter.print("An exception occurred: ");
 			self.fileWriter.flush();
