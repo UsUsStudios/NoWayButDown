@@ -4,10 +4,13 @@ import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.UtilityTool;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.ususstudios.noway.components.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 // Loads maps and tile types
@@ -187,25 +190,53 @@ public class MapTileHandler {
 			}
 		}
 
-        JSONArray objects = file.getJSONArray("objects");
-        List<String> objectNames = new ArrayList<>();
-        List<UtilityTool.Tuple<Float, Float>> objectPos = new ArrayList<>();
-        List<Properties> objectProperties = new ArrayList<>();
-        for (int i = 0; i < objects.length(); i++) {
-            JSONArray object = objects.getJSONArray(i);
-            objectNames.add(object.getString(0));
-            objectPos.add(new UtilityTool.Tuple<>(object.getFloat(1), object.getFloat(2)));
-            Properties properties = new Properties();
-            JSONObject propertiesArr = object.getJSONObject(3);
-            for (Iterator<String> it = propertiesArr.keys(); it.hasNext(); ) {
-                String key = it.next();
-                properties.put(key, propertiesArr.get(key));
+        JSONArray entitiesArray = file.getJSONArray("entities");
+        ArrayList<List<Component>> entities = new ArrayList<>();
+        for (int i = 0; i < entitiesArray.length(); i++) {
+            JSONArray entityArray = entitiesArray.getJSONArray(i);
+            ArrayList<Component> entity = new ArrayList<>();
+            for (int j = 0; j < entityArray.length(); j++) {
+                JSONArray componentArray = entityArray.getJSONArray(j);
+                Class componentClass = Component.class;
+                try {
+                    componentClass = Class.forName(componentArray.getString(0));
+                } catch (ClassNotFoundException e) {
+                    Main.LOGGER.error("Class not found: " + componentArray.getString(0));
+                    Main.handleException(e);
+                }
+
+                Class<?>[] parameterTypes = componentArray
+                    .toList()
+                    .subList(1, componentArray.length())
+                    .stream()
+                    .map(Object::getClass)
+                    .toArray(Class<?>[]::new);
+
+                Constructor constructor = componentClass.getDeclaredConstructors()[0];
+                try {
+                    constructor = componentClass.getConstructor(parameterTypes);
+                } catch (NoSuchMethodException e) {
+                    Main.handleException(e);
+                    System.exit(0);
+                }
+
+                try {
+                    Component component = (Component) constructor.newInstance(componentArray
+                            .toList()
+                            .subList(1, componentArray.length())
+                            .toArray());
+                    entity.add(component);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                    Main.handleException(e);
+                }
             }
-            objectProperties.add(properties);
+            entities.add(entity);
         }
 
 		Map mapObj = new Map(name, width, height, spawnX, spawnY, layer1, layer2, layer3,
-            songs.toList(), objectNames, objectPos, objectProperties);
+            songs.toList(), entities);
 		maps.put(fileName, mapObj);
 	}
 

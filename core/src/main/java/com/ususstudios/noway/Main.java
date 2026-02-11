@@ -7,15 +7,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.ususstudios.noway.entities.Entity;
-import com.ususstudios.noway.entities.custom.Player;
 import com.ususstudios.noway.main.*;
-import com.ususstudios.noway.rendering.Darkness;
-import com.ususstudios.noway.rendering.GameRendering;
-import com.ususstudios.noway.rendering.MapTileHandler;
+import com.ususstudios.noway.rendering.*;
+import com.ususstudios.noway.components.*;
+import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Random;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -31,12 +30,13 @@ public class Main extends ApplicationAdapter {
     public static boolean debugMode = false;
 
     // Classes
-    public static Darkness darkness;
     public static Random random = new Random();
 
     // Entities
-    public static Player player;
-    public static ArrayList<Entity> entities = new ArrayList<>();
+    public static World world = new World();
+    public static float cameraX = 0;
+    public static float cameraY = 0;
+    public static int playerId = 0;
 
     // Miscellaneous
     public static boolean running = true;
@@ -58,13 +58,7 @@ public class Main extends ApplicationAdapter {
         MapTileHandler.loadMaps();
         GameRendering.init();
         Sound.loadLibrary();
-        Entity.registerGameObjectTypes();
-        darkness = new Darkness();
-
-        // Load the player and game
-        player = (Player) Entity.createGameObject("Player");
-        entities.add(player);
-        darkness.addLightSource(player);
+        setupECSWorld();
 
         // Start!
         new Thread(() -> {
@@ -97,8 +91,14 @@ public class Main extends ApplicationAdapter {
         ScreenUtils.clear(0, 0, 0, 1);
 
         // Check the game state and call the appropriate draw method
+        if (gameState == States.GameStates.PLAYING) {
+            GameRendering.drawPlaying();
+        }
+
+        world.render();
+
+        // Draw UI based on game state
         switch (gameState) {
-            case PLAYING -> GameRendering.drawPlaying();
             case MAIN_MENU -> GameRendering.drawTitle();
             case SPLASH -> GameRendering.drawSplash();
         }
@@ -107,7 +107,7 @@ public class Main extends ApplicationAdapter {
     public static void update() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) debugMode = !debugMode;
 
-        if (gameState == States.GameStates.PLAYING) Main.entities.forEach(Entity::update);
+        if (gameState == States.GameStates.PLAYING) world.update();
         else GameRendering.updateUI();
     }
 
@@ -121,19 +121,27 @@ public class Main extends ApplicationAdapter {
         LOGGER.info("Game ended");
     }
 
+    public static void setupECSWorld() {
+        playerId = world.createEntity(new PlayerComponent(BigDecimal.valueOf(300)),
+                new PositionComponent(BigDecimal.valueOf(0f), BigDecimal.valueOf(0f)),
+                new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, BigDecimal.valueOf(1f), BigDecimal.valueOf(2f)),
+                new CollisionComponent(BigDecimal.valueOf(0.4f), BigDecimal.valueOf(1.4f), BigDecimal.valueOf(0.3f), BigDecimal.valueOf(0.4f)));
+
+        world.addUpdateSystem(new PlayerSystem());
+
+        world.addRenderSystem(new SpritesheetSystem());
+        world.addRenderSystem(new CollisionDrawingSystem());
+    }
+
     public static void loadMap(String map) {
         currentMap = map;
-        player.setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
+        world.getEntityComponent(playerId, PositionComponent.class).get()
+            .setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
         gameState = States.GameStates.PLAYING;
         Sound.playMapMusic(currentMap);
 
-        for (int i = 0; i < MapTileHandler.maps.get(map).objectNames().size(); i++) {
-            Entity entity = Entity.createGameObject(MapTileHandler.maps.get(map).objectNames().get(i));
-            entity.setPosition(MapTileHandler.maps.get(map).objectPos().get(i));
-            entity.properties = MapTileHandler.maps.get(map).objectProperties().get(i);
-            entity.setup();
-            System.out.println(entity.properties);
-            Main.entities.add(entity);
+        for (List<Component> entity : MapTileHandler.maps.get(map).entities()) {
+            world.createEntity(entity.toArray(new Component[entity.size()]));
         }
 
         LOGGER.info("Map '{}' loaded", map);

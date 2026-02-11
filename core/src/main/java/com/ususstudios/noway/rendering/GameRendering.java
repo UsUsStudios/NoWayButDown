@@ -10,8 +10,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.Translations;
 import com.badlogic.gdx.graphics.Color;
-import com.ususstudios.noway.entities.Entity;
-
 import java.awt.*;
 import java.io.IOException;
 
@@ -53,19 +51,17 @@ public class GameRendering {
         drawLayer(map, map.layer2());
         drawLayer(map, map.layer3());
 
-		Main.entities.forEach(Entity::draw);
+        Main.batch.end();
 
         if (!Main.debugMode) {
-            Main.darkness.draw();
             return;
         }
-        Main.batch.end();
 
         // Draw debug collisions
         Main.shapes.begin(ShapeRenderer.ShapeType.Filled);
         Main.shapes.setColor(Color.BLUE);
-        float camX = Main.player.cameraX;
-        float camY = Main.player.cameraY;
+        float camX = Main.cameraX;
+        float camY = Main.cameraY;
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
@@ -100,8 +96,8 @@ public class GameRendering {
         for (int i = 0; i < gridCols; i++) {
             for (int j = 0; j < gridRows; j++) {
                 if (collisionPoints[i][j]) {
-                    float cellX = x + i * cellW; // tile cell top-left X
-                    float cellY = y + j * cellH; // tile cell top-left Y
+                    float cellX = x + i * cellW - Main.tileSize / 2f; // tile cell top-left X
+                    float cellY = y + j * cellH - Main.tileSize / 2f; // tile cell top-left Y
                     Main.shapes.rect(cellX-mar+3, Main.screenHeight-cellY-cellH-mar+3, cellW-mar, cellH-mar);
                 }
             }
@@ -109,8 +105,8 @@ public class GameRendering {
     }
 
     private static void drawLayer(Map map, int[][] layer) {
-        float camX = Main.player.cameraX;
-        float camY = Main.player.cameraY;
+        float camX = Main.cameraX + Main.tileSize / 2;
+        float camY = Main.cameraY + Main.tileSize / 2;  // Slight adjustment to center the player on a block
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
