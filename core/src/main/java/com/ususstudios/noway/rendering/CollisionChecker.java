@@ -1,7 +1,5 @@
 package com.ususstudios.noway.rendering;
 
-import java.util.Arrays;
-
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.components.*;
 
@@ -38,8 +36,8 @@ public class CollisionChecker {
         if (!Main.world.getEntityComponent(entity, CollisionComponent.class).isPresent()) return false;
 
         // Declare the components
-        CollisionComponent component = Main.world.getEntityComponent(entity, CollisionComponent.class).get();
-        PositionComponent positionComponent = Main.world.getEntityComponent(entity, PositionComponent.class).get();
+        CollisionComponent c = Main.world.getEntityComponent(entity, CollisionComponent.class).get();
+        PositionComponent pc = Main.world.getEntityComponent(entity, PositionComponent.class).get();
 
         int gridX = collisionPoints.length;      // number of columns in collision grid
         int gridY = collisionPoints[0].length;   // number of rows in collision grid
@@ -49,12 +47,20 @@ public class CollisionChecker {
         for (int i = 0; i < gridX; i++) {
             for (int j = 0; j < gridY; j++) {
                 if (collisionPoints[i][j]) {
-                    float halfW = component.width / 2f;
-                    float halfH = component.height / 2f;
+                    float px = x + i * cellW;
+                    float py = y + j * cellH;
 
-                    float px = x + i * cellW + cellW / 2f;
-                    float py = y + j * cellH + cellH / 2f;
-                    if (Math.abs(px - positionComponent.x) <= halfW && Math.abs(py - positionComponent.y) <= halfH) return true;
+                    float aLeft = pc.x + c.offX;
+                    float aTop = pc.y + c.offY;
+                    float aRight = pc.x + c.offX + c.width;
+                    float aBottom = pc.y + c.offY + c.height;
+
+                    float bLeft = px + Main.tileSize * 2f;
+                    float bTop = py - Main.tileSize * 2f;
+                    float bRight = px + cellW + Main.tileSize * 2f;
+                    float bBottom = py + cellH - Main.tileSize * 2f;
+
+                    if (aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop) return true;
                 }
             }
         }
@@ -76,19 +82,19 @@ public class CollisionChecker {
         Map map = MapTileHandler.maps.get(Main.currentMap);
         if (map == null) return false;
 
-        //for (int row = 0; row < map.height(); row++) {
-        //    for (int col = 0; col < map.width(); col++) {
-        //        int tileNumber = map.layer2()[col][row];
-        //        var tile = MapTileHandler.tileTypes.get(tileNumber);
-        //        if (tile == null) continue;
+        for (int row = 0; row < map.height(); row++) {
+            for (int col = 0; col < map.width(); col++) {
+                int tileNumber = map.layer2()[col][row];
+                var tile = MapTileHandler.tileTypes.get(tileNumber);
+                if (tile == null) continue;
 
-        //        boolean[][] collisionPoints = tile.collision();
-        //        int worldX = col * Main.tileSize - Main.tileSize / 2; // tile top-left X
-        //        int worldY = row * Main.tileSize - Main.tileSize / 2; // tile top-left Y
+                boolean[][] collisionPoints = tile.collision();
+                int worldX = col * Main.tileSize; // tile top-left X
+                int worldY = row * Main.tileSize; // tile top-left Y
 
-        //        if (checkBlockCollision(entity, collisionPoints, worldX, worldY)) return true;
-        //    }
-        //}
+                if (checkBlockCollision(entity, collisionPoints, worldX, worldY)) return true;
+            }
+        }
 
         return false;
     }

@@ -96,8 +96,8 @@ public class GameRendering {
         for (int i = 0; i < gridCols; i++) {
             for (int j = 0; j < gridRows; j++) {
                 if (collisionPoints[i][j]) {
-                    float cellX = x + i * cellW; // tile cell top-left X
-                    float cellY = y + j * cellH; // tile cell top-left Y
+                    float cellX = x + i * cellW - Main.tileSize / 2f; // tile cell top-left X
+                    float cellY = y + j * cellH - Main.tileSize / 2f; // tile cell top-left Y
                     Main.shapes.rect(cellX-mar+3, Main.screenHeight-cellY-cellH-mar+3, cellW-mar, cellH-mar);
                 }
             }

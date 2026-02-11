@@ -13,7 +13,6 @@ import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
@@ -92,13 +91,17 @@ public class Main extends ApplicationAdapter {
         ScreenUtils.clear(0, 0, 0, 1);
 
         // Check the game state and call the appropriate draw method
-        switch (gameState) {
-            case PLAYING -> GameRendering.drawPlaying();
-            case MAIN_MENU -> GameRendering.drawTitle();
-            case SPLASH -> GameRendering.drawSplash();
+        if (gameState == States.GameStates.PLAYING) {
+            GameRendering.drawPlaying();
         }
 
         world.render();
+
+        // Draw UI based on game state
+        switch (gameState) {
+            case MAIN_MENU -> GameRendering.drawTitle();
+            case SPLASH -> GameRendering.drawSplash();
+        }
     }
 
     public static void update() {

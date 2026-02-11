@@ -9,32 +9,7 @@
     21
   ],
   "songs": [],
-  "entities": [
-    [
-      [
-        "com.ususstudios.noway.components.PositionComponent",
-        21,
-        21
-      ],
-      [
-        "com.ususstudios.noway.components.SpritesheetComponent",
-        "entity/npc/gatekeeper_sheet",
-        0,
-        0,
-        3,
-        4,
-        1,
-        1
-      ],
-      [
-        "com.ususstudios.noway.components.CollisionComponent",
-        0.6,
-        1.001,
-        0.2,
-        0.001
-      ]
-    ]
-  ],
+  "entities": [],
   "map": [
     [
       "12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12 12",
