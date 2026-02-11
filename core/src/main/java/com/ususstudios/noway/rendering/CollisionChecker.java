@@ -55,10 +55,12 @@ public class CollisionChecker {
                     float aRight = pc.x + c.offX + c.width;
                     float aBottom = pc.y + c.offY + c.height;
 
-                    float bLeft = px + Main.tileSize * 2f;
-                    float bTop = py - Main.tileSize * 2f;
-                    float bRight = px + cellW + Main.tileSize * 2f;
-                    float bBottom = py + cellH - Main.tileSize * 2f;
+                    // "oh but usus why are you flipping the x and y axes"
+                    // I have no fucking idea
+                    float bLeft = py;
+                    float bTop = px;
+                    float bRight = py + cellW;
+                    float bBottom = px + cellH;
 
                     if (aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop) return true;
                 }
