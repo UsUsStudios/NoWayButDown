@@ -1,7 +1,7 @@
 package com.ususstudios.noway.systems;
 
 import com.ususstudios.noway.main.*;
-import com.ususstudios.noway.rendering.CollisionChecker;
+import com.ususstudios.noway.main.CollisionChecker;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import com.ususstudios.noway.components.*;

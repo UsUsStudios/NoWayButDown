@@ -10,6 +10,13 @@ public class CollisionComponent implements Component {
     public float offX;
     public float offY;
 
+    public CollisionComponent(float width, float height, float offX, float offY) {
+        this.width = (int) (width * Main.tileSize);
+        this.height = (int) (height * Main.tileSize);
+        this.offX = offX * Main.tileSize;
+        this.offY = offY * Main.tileSize;
+    }
+
     public CollisionComponent(BigDecimal width, BigDecimal height, BigDecimal offX, BigDecimal offY) {
         this.width = (int) (width.floatValue() * Main.tileSize);
         this.height = (int) (height.floatValue() * Main.tileSize);
@@ -23,5 +30,4 @@ public class CollisionComponent implements Component {
         this.offX = offX.floatValue() * Main.tileSize;
         this.offY = offY.floatValue() * Main.tileSize;
     }
-
 }

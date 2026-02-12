@@ -9,6 +9,10 @@ public class PlayerComponent implements Component {
 	public String direction = "down";
     public float speed;
 
+    public PlayerComponent(float speed) {
+        this.speed = speed;
+    }
+
     public PlayerComponent(BigDecimal speed) {
         this.speed = speed.floatValue();
     }

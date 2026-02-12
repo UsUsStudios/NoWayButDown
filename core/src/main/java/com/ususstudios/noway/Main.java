@@ -122,15 +122,16 @@ public class Main extends ApplicationAdapter {
     }
 
     public static void setupECSWorld() {
-        playerId = world.createEntity(new PlayerComponent(BigDecimal.valueOf(300)),
-                new PositionComponent(BigDecimal.valueOf(0f), BigDecimal.valueOf(0f)),
-                new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, BigDecimal.valueOf(1f), BigDecimal.valueOf(2f)),
-                new CollisionComponent(BigDecimal.valueOf(0.4f), BigDecimal.valueOf(1.4f), BigDecimal.valueOf(0.3f), BigDecimal.valueOf(0.4f)));
+        playerId = world.createEntity(new PlayerComponent(300), new PositionComponent(0f, 0f),
+                new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, 1f, 2f),
+                new CollisionComponent(0.4f, 1.4f, 0.3f, 0.4f),
+                new LightSourceComponent(0.8f, 125f, 0.1f, -.5f * Main.tileSize, -.2f * Main.tileSize));
 
         world.addUpdateSystem(new PlayerSystem());
 
         world.addRenderSystem(new SpritesheetSystem());
         world.addRenderSystem(new CollisionDrawingSystem());
+        world.addRenderSystem(new DarknessSystem());
     }
 
     public static void loadMap(String map) {

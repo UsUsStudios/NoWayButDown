@@ -13,6 +13,11 @@ public class PositionComponent implements Component {
         this.y = y * Main.tileSize;
     }
 
+    public PositionComponent(float x, float y) {
+        this.x = x * Main.tileSize;
+        this.y = y * Main.tileSize;
+    }
+
     public PositionComponent(BigDecimal x, BigDecimal y) {
         this.x = x.floatValue() * Main.tileSize;
         this.y = y.floatValue() * Main.tileSize;

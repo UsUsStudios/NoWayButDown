@@ -18,6 +18,17 @@ public class SpritesheetComponent implements Component {
     public float scaleY;
 
     public SpritesheetComponent(String spriteSheetName, Integer column, Integer row,
+            Integer sizeX, Integer sizeY, float scaleX, float scaleY) {
+        spriteSheet = Image.loadImage(spriteSheetName);
+        spriteSheet.scaleImage(sizeX * Main.tileSize, sizeY * Main.tileSize);
+
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        this.column = column;
+        this.row = row;
+    }
+
+    public SpritesheetComponent(String spriteSheetName, Integer column, Integer row,
             Integer sizeX, Integer sizeY, BigDecimal scaleX, BigDecimal scaleY) {
         spriteSheet = Image.loadImage(spriteSheetName);
         spriteSheet.scaleImage(sizeX * Main.tileSize, sizeY * Main.tileSize);
@@ -38,5 +49,4 @@ public class SpritesheetComponent implements Component {
         this.column = column;
         this.row = row;
     }
-
 }
