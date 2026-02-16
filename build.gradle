@@ -15,6 +15,7 @@ buildscript {
 allprojects {
   apply plugin: 'eclipse'
   apply plugin: 'idea'
+  apply plugin: 'java'
 
   // This allows you to "Build and run using IntelliJ IDEA", an option in IDEA's Settings.
   idea {
@@ -46,6 +47,10 @@ configure(subprojects) {
     fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.sort().each {
       assetsFile.append(it + "\n")
     }
+  }
+  tasks.register('genData', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.ususstudios.noway.datagen.DataGeneration'
   }
   processResources.dependsOn 'generateAssetList'
 
