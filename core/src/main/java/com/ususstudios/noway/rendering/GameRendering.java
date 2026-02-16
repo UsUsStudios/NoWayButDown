@@ -65,7 +65,7 @@ public class GameRendering {
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
-                int tileNumber = map.layer2()[worldRow][worldCol];
+                String tileNumber = map.layer2()[worldRow][worldCol];
                 int worldX = worldCol * tileSize;
                 int worldY = worldRow * tileSize;
                 float screenX = worldX - camX + Main.screenWidth / 2f;
@@ -104,13 +104,13 @@ public class GameRendering {
         }
     }
 
-    private static void drawLayer(Map map, int[][] layer) {
-        float camX = Main.cameraX + Main.tileSize / 2;
-        float camY = Main.cameraY + Main.tileSize / 2;  // Slight adjustment to center the player on a block
+    private static void drawLayer(Map map, String[][] layer) {
+        float camX = Main.cameraX + Main.tileSize / 2f;
+        float camY = Main.cameraY + Main.tileSize / 2f;  // Slight adjustment to center the player on a block
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
-                int tileNumber = layer[worldRow][worldCol];
+                String tileNumber = layer[worldRow][worldCol];
                 int worldX = worldCol * tileSize;
                 int worldY = worldRow * tileSize;
                 float screenX = worldX - camX + Main.screenWidth / 2f;

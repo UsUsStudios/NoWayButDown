@@ -9,77 +9,76 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
 // Loads maps and tile types
 public class MapTileHandler {
 	public static HashMap<String, Map> maps = new HashMap<>();
-	public static HashMap<Integer, Tile> tileTypes = new HashMap<>();
+	public static HashMap<String, Tile> tileTypes = new HashMap<>();
 
 	// Register all the tile types used in the game
 	public static void loadTiles() {
-		registerTile(0, "nothing", "00000/00000/00000/00000/00000");
+		registerTile("AA", "nothing", "00000/00000/00000/00000/00000");
 
 		// Grass
-		registerTile(10, "grass/grass_1", "00000/00000/00000/00000/00000");
-		registerTile(11, "grass/grass_2", "00000/00000/00000/00000/00000");
+		registerTile("AB", "grass/grass_1", "00000/00000/00000/00000/00000");
+		registerTile("AC", "grass/grass_2", "00000/00000/00000/00000/00000");
 
 		// Water
-		registerTile(12, "water/water", "00000/00000/00000/00000/00000");
-		registerTile(13, "water/white_line_water", "00000/00000/00000/00000/00000");
-		registerTile(14, "water/water_corner_1", "00000/01111/01111/01111/01111");
-		registerTile(19, "water/water_corner_2", "01111/01111/01111/01111/00000");
-		registerTile(16, "water/water_corner_3", "00000/11110/11110/11110/11110");
-		registerTile(21, "water/water_corner_4", "11110/11110/11110/11110/00000");
-		registerTile(20, "water/water_edge_1", "11111/11111/11111/11111/00000");
-		registerTile(18, "water/water_edge_2", "11110/11110/11110/11110/11110");
-		registerTile(15, "water/water_edge_3", "00000/11111/11111/11111/11111");
-		registerTile(17, "water/water_edge_4", "01111/01111/01111/01111/01111");
-		registerTile(22, "water/water_outer_corner_1", "11111/11111/11111/11111/11110");
-		registerTile(23, "water/water_outer_corner_2", "11111/11111/11111/11111/01111");
-		registerTile(24, "water/water_outer_corner_3", "11110/11111/11111/11111/11111");
-		registerTile(25, "water/water_outer_corner_4", "01111/11111/11111/11111/11111");
+		registerTile("AD", "water/water", "00000/00000/00000/00000/00000");
+		registerTile("AE", "water/white_line_water", "00000/00000/00000/00000/00000");
+		registerTile("AF", "water/water_corner_1", "00000/01111/01111/01111/01111");
+		registerTile("AG", "water/water_corner_2", "01111/01111/01111/01111/00000");
+		registerTile("AH", "water/water_corner_3", "00000/11110/11110/11110/11110");
+		registerTile("AI", "water/water_corner_4", "11110/11110/11110/11110/00000");
+		registerTile("AJ", "water/water_edge_1", "11111/11111/11111/11111/00000");
+		registerTile("AK", "water/water_edge_2", "11110/11110/11110/11110/11110");
+		registerTile("AL", "water/water_edge_3", "00000/11111/11111/11111/11111");
+		registerTile("AM", "water/water_edge_4", "01111/01111/01111/01111/01111");
+		registerTile("AN", "water/water_outer_corner_1", "11111/11111/11111/11111/11110");
+		registerTile("AO", "water/water_outer_corner_2", "11111/11111/11111/11111/01111");
+		registerTile("AP", "water/water_outer_corner_3", "11110/11111/11111/11111/11111");
+		registerTile("AQ", "water/water_outer_corner_4", "01111/11111/11111/11111/11111");
 
 		// Path
-		registerTile(26, "path/path", "00000/00000/00000/00000/00000");
-		registerTile(27, "path/path_corner_1", "00000/00000/00000/00000/00000");
-		registerTile(28, "path/path_edge_1", "00000/00000/00000/00000/00000");
-		registerTile(29, "path/path_corner_2", "00000/00000/00000/00000/00000");
-		registerTile(30, "path/path_edge_4", "00000/00000/00000/00000/00000");
-		registerTile(31, "path/path_edge_2", "00000/00000/00000/00000/00000");
-		registerTile(32, "path/path_corner_3", "00000/00000/00000/00000/00000");
-		registerTile(33, "path/path_edge_3", "00000/00000/00000/00000/00000");
-		registerTile(34, "path/path_corner_4", "00000/00000/00000/00000/00000");
-		registerTile(35, "path/path_outer_corner_1", "00000/00000/00000/00000/00000");
-		registerTile(36, "path/path_outer_corner_2", "00000/00000/00000/00000/00000");
-		registerTile(37, "path/path_outer_corner_3", "00000/00000/00000/00000/00000");
-		registerTile(38, "path/path_outer_corner_4", "00000/00000/00000/00000/00000");
+		registerTile("AR", "path/path", "00000/00000/00000/00000/00000");
+		registerTile("AS", "path/path_corner_1", "00000/00000/00000/00000/00000");
+		registerTile("AT", "path/path_edge_1", "00000/00000/00000/00000/00000");
+		registerTile("AU", "path/path_corner_2", "00000/00000/00000/00000/00000");
+		registerTile("AV", "path/path_edge_4", "00000/00000/00000/00000/00000");
+		registerTile("AW", "path/path_edge_2", "00000/00000/00000/00000/00000");
+		registerTile("AX", "path/path_corner_3", "00000/00000/00000/00000/00000");
+		registerTile("AY", "path/path_edge_3", "00000/00000/00000/00000/00000");
+		registerTile("AZ", "path/path_corner_4", "00000/00000/00000/00000/00000");
+		registerTile("Aa", "path/path_outer_corner_1", "00000/00000/00000/00000/00000");
+		registerTile("Ab", "path/path_outer_corner_2", "00000/00000/00000/00000/00000");
+		registerTile("Ac", "path/path_outer_corner_3", "00000/00000/00000/00000/00000");
+		registerTile("Ad", "path/path_outer_corner_4", "00000/00000/00000/00000/00000");
 
 		// Building Stuff
-		registerTile(39, "floor", "00000/00000/00000/00000/00000");
-		registerTile(40, "planks", "11111/11111/11111/11111/11111");
+		registerTile("Ae", "floor", "00000/00000/00000/00000/00000");
+		registerTile("Af", "planks", "11111/11111/11111/11111/11111");
 
 		// Tree
-		registerTile(41, "tree/tree", "01110/11111/11111/11111/01110");
+		registerTile("Ag", "tree/tree", "01110/11111/11111/11111/01110");
 
 		// Event Tiles
-		registerTile(42, "path/path_pit", "00000/00000/00000/00000/00000");
-		registerTile(43, "grass/grass_pit", "00000/00000/00000/00000/00000");
-		registerTile(44, "grass/grass_healing", "00000/00000/00000/00000/00000");
-		registerTile(45, "coiner's_hut", "00000/00000/00000/00000/00000");
+		registerTile("Ah", "path/path_pit", "00000/00000/00000/00000/00000");
+		registerTile("Ai", "grass/grass_pit", "00000/00000/00000/00000/00000");
+		registerTile("Aj", "grass/grass_healing", "00000/00000/00000/00000/00000");
+		registerTile("Ak", "coiner's_hut", "00000/00000/00000/00000/00000");
 
 		// Dark Tiles
-		registerTile(46, "tree/dark_tree", "11111/11111/11111/11111/11111");
-		registerTile(47, "grass/dark_grass", "00000/00000/00000/00000/00000");
+		registerTile("Al","tree/dark_tree", "11111/11111/11111/11111/11111");
+		registerTile("Am","grass/dark_grass", "00000/00000/00000/00000/00000");
 
-		registerTile(48, "tunnel_door", "00000/00000/00000/00000/00000");
+    	registerTile("An","tunnel_door", "00000/00000/00000/00000/00000");
 		Main.LOGGER.info("Loaded {} tile images", tileTypes.size());
 	}
 
-	// Registers a tile type with the given ID, image name, and collision property
-	public static void registerTile(int i, String imageName, String collision) {
+	// Registers a tile type with the given ID (in 2-digit Base64), image name, and collision property
+	public static void registerTile(String id, String imageName, String collision) {
 		// Create a new tile and add it to the tileTypes HashMap, set its collision, and load the image
 		boolean[][] collisionArray = new boolean[5][5];
 		for (int row = 0; row < collision.split("/").length; row++) {
@@ -93,7 +92,7 @@ public class MapTileHandler {
 
 		// Register the tile
 		Tile tile = new Tile(image, collisionArray);
-		tileTypes.put(i, tile);
+		tileTypes.put(id, tile);
 	}
 
 	// Load all map files from the resources/values/maps/ directory
@@ -142,16 +141,14 @@ public class MapTileHandler {
 
 		// Prepare the layers
 		JSONArray lay1 = map.getJSONArray(0);
-		int[][] layer1 = new int[height][width];
-		int[][] layer2 = new int[height][width];
-		int[][] layer3 = new int[height][width];
+		String[][] layer1 = new String[height][width];
+		String[][] layer2 = new String[height][width];
+		String[][] layer3 = new String[height][width];
 
 		// Load layer 1
 		for (int y = 0; y < height; y++) {
 			String[] row = lay1.getString(y).split(" ");
-			for (int x = 0; x < width; x++) {
-				layer1[y][x] = Integer.parseInt(row[x]);
-			}
+            System.arraycopy(row, 0, layer1[y], 0, width);
 		}
 
 		if (map.length() > 1) {
@@ -159,24 +156,20 @@ public class MapTileHandler {
 			JSONArray lay2 = map.getJSONArray(1);
 			for (int y = 0; y < height; y++) {
 				String[] row = lay2.getString(y).split(" ");
-				for (int x = 0; x < width; x++) {
-					layer2[y][x] = Integer.parseInt(row[x]);
-				}
+                System.arraycopy(row, 0, layer2[y], 0, width);
 			}
 			if (map.length() > 2) {
 				// Load layer 3
 				JSONArray lay3 = map.getJSONArray(2);
 				for (int y = 0; y < height; y++) {
 					String[] row = lay3.getString(y).split(" ");
-					for (int x = 0; x < width; x++) {
-						layer3[y][x] = Integer.parseInt(row[x]);
-					}
+                    System.arraycopy(row, 0, layer3[y], 0, width);
 				}
 			} else {
 				// Load empty layer 3
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
-						layer3[y][x] = 0;
+						layer3[y][x] = "AA";
 					}
 				}
 			}
@@ -184,8 +177,8 @@ public class MapTileHandler {
 			// Load empty layer 2 and 3
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					layer2[y][x] = 0;
-					layer3[y][x] = 0;
+					layer2[y][x] = "AA";
+					layer3[y][x] = "AA";
 				}
 			}
 		}
@@ -227,8 +220,6 @@ public class MapTileHandler {
                             .toArray());
                     entity.add(component);
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
                     Main.handleException(e);
                 }
             }

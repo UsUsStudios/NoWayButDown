@@ -1,11 +1,9 @@
 package com.ususstudios.noway.rendering;
 
-import com.ususstudios.noway.main.UtilityTool.Tuple;
 import com.ususstudios.noway.components.*;
 import java.util.List;
-import java.util.Properties;
 
 // Record for storing map data
 public record Map(String name, int width, int height, int spawnX, int spawnY,
-                  int[][] layer1, int[][] layer2, int[][] layer3, List<Object> songs,
+                  String[][] layer1, String[][] layer2, String[][] layer3, List<Object> songs,
                   List<List<Component>> entities) {}

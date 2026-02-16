@@ -5,13 +5,15 @@ import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 
+import java.util.Objects;
+
 public class CollisionChecker {
     public static boolean check2EntitiesCollision(int entityA, int entityB) {
         // Make sure the entites have the necessary components
-        if (!Main.world.getEntityComponent(entityA, PositionComponent.class).isPresent() ||
-                !Main.world.getEntityComponent(entityB, PositionComponent.class).isPresent()) return false;
-        if (!Main.world.getEntityComponent(entityA, CollisionComponent.class).isPresent() ||
-                !Main.world.getEntityComponent(entityB, CollisionComponent.class).isPresent()) return false;
+        if (Main.world.getEntityComponent(entityA, PositionComponent.class).isEmpty() ||
+            Main.world.getEntityComponent(entityB, PositionComponent.class).isEmpty()) return false;
+        if (Main.world.getEntityComponent(entityA, CollisionComponent.class).isEmpty() ||
+            Main.world.getEntityComponent(entityB, CollisionComponent.class).isEmpty()) return false;
 
         // Declare components
         CollisionComponent cA = Main.world.getEntityComponent(entityA, CollisionComponent.class).get();
@@ -34,8 +36,8 @@ public class CollisionChecker {
 
     public static boolean checkBlockCollision(Integer entity, boolean[][] collisionPoints, float x, float y) {
         // Make sure the entites have the necessary components
-        if (!Main.world.getEntityComponent(entity, PositionComponent.class).isPresent()) return false;
-        if (!Main.world.getEntityComponent(entity, CollisionComponent.class).isPresent()) return false;
+        if (Main.world.getEntityComponent(entity, PositionComponent.class).isEmpty()) return false;
+        if (Main.world.getEntityComponent(entity, CollisionComponent.class).isEmpty()) return false;
 
         // Declare the components
         CollisionComponent c = Main.world.getEntityComponent(entity, CollisionComponent.class).get();
@@ -59,12 +61,10 @@ public class CollisionChecker {
 
                     // "oh but usus why are you flipping the x and y axes"
                     // I have no fucking idea
-                    float bLeft = py;
-                    float bTop = px;
                     float bRight = py + cellW;
                     float bBottom = px + cellH;
 
-                    if (aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop) return true;
+                    if (aLeft < bRight && aRight > py && aTop < bBottom && aBottom > px) return true;
                 }
             }
         }
@@ -75,12 +75,12 @@ public class CollisionChecker {
     // Check if entity collides with any other entity or any tile on layer2
     public static boolean checkEntityCollision(Integer entity) {
         for (Integer other : Main.world.query(CollisionComponent.class, PositionComponent.class)) {
-            if (other != entity)
+            if (!Objects.equals(other, entity))
                 if (check2EntitiesCollision(entity, other)) return true;
         }
 
         // Check collision with player too (if it's not the player)
-        if (!Main.world.getEntityComponent(entity, PlayerComponent.class).isPresent())
+        if (Main.world.getEntityComponent(entity, PlayerComponent.class).isEmpty())
             if (check2EntitiesCollision(entity, Main.playerId)) return true;
 
         Map map = MapTileHandler.maps.get(Main.currentMap);
@@ -88,7 +88,7 @@ public class CollisionChecker {
 
         for (int row = 0; row < map.height(); row++) {
             for (int col = 0; col < map.width(); col++) {
-                int tileNumber = map.layer2()[col][row];
+                String tileNumber = map.layer2()[col][row];
                 var tile = MapTileHandler.tileTypes.get(tileNumber);
                 if (tile == null) continue;
 
