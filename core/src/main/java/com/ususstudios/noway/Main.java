@@ -56,7 +56,7 @@ public class Main extends ApplicationAdapter {
         MapTileHandler.loadTiles();
         MapTileHandler.loadMaps();
         GameRendering.init();
-        Sound.loadLibrary();
+        SoundManager.loadLibrary();
         setupECSWorld();
 
         // Start!
@@ -73,7 +73,7 @@ public class Main extends ApplicationAdapter {
                     transitionAlpha -= 0.007f;
                 }
                 Thread.sleep(500);
-                Sound.playMusic("Can't Go Up");
+                SoundManager.playMusic("Can't Go Up", true, false);
                 gameState = States.GameStates.MAIN_MENU;
             } catch (InterruptedException e) {
                 handleException(e);
@@ -138,7 +138,7 @@ public class Main extends ApplicationAdapter {
         world.getEntityComponent(playerId, PositionComponent.class).get()
             .setPosition(MapTileHandler.maps.get(map).spawnX(), MapTileHandler.maps.get(map).spawnY());
         gameState = States.GameStates.PLAYING;
-        Sound.playMapMusic(currentMap);
+        SoundManager.playMapMusic(currentMap);
 
         for (List<Component> entity : MapTileHandler.maps.get(map).entities()) {
             world.createEntity(entity.toArray(new Component[entity.size()]));
