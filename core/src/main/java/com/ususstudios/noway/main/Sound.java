@@ -15,16 +15,17 @@ public class Sound {
     public static final HashMap<String, URL> SOUND_LIBRARY = new HashMap<>();
     ArrayList<Clip> clips = new ArrayList<>();
     FloatControl floatControl;
-    int volumeScale = 3;
+    int volumeScale = 2;
     float volume;
 
     public static void loadLibrary() {
         // Music
-	    SOUND_LIBRARY.put("Can't Go Up", Sound.class.getResource("/sound/music/can't go up.wav"));
+        SOUND_LIBRARY.put("Can't Go Up", Sound.class.getResource("/sound/music/can't go up.wav"));
+        SOUND_LIBRARY.put("Neverending Maze", Sound.class.getResource("/sound/music/neverending maze.wav"));
         Main.LOGGER.info("Loaded all music files");
 
         // SFX
-	    SOUND_LIBRARY.put("Cursor", Sound.class.getResource("/sound/sfx/cursor.wav"));
+        SOUND_LIBRARY.put("Cursor", Sound.class.getResource("/sound/sfx/cursor.wav"));
         Main.LOGGER.info("Loaded all SFX files");
     }
 
@@ -102,7 +103,7 @@ public class Sound {
 						int idx = music.getFile((String) songNames.get(Main.random.nextInt(songNames.size())));
 						music.playBlocking(idx);
 
-						Thread.sleep(Main.random.nextInt(10000) + 5000);
+						Thread.sleep(Main.random.nextInt(20_000) + 20_000);
 					}
 					stopMusic();
 				}

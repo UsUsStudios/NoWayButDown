@@ -14,7 +14,7 @@ import org.json.JSONObject;
 public class MapGeneration {
     public static void generate() {
         generateMap("main", "Main (Test Map)", 50, 50, 23, 21,
-                new String[0], new ArrayList<>(),
+                new String[]{"Neverending Maze"}, new ArrayList<>(),
                 new ArrayList<>(){{
                     add(new String[]{
       "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",

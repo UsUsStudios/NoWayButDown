@@ -62,11 +62,12 @@ public class Main extends ApplicationAdapter {
         // Start!
         new Thread(() -> {
             try {
+                gameState = States.GameStates.SPLASH;
                 while (transitionAlpha < 1) {
                     Thread.sleep(10);
                     transitionAlpha += 0.007f;
                 }
-                Thread.sleep(1500);
+                // Thread.sleep(1500);
                 while (transitionAlpha > 0) {
                     Thread.sleep(10);
                     transitionAlpha -= 0.007f;
@@ -77,9 +78,8 @@ public class Main extends ApplicationAdapter {
             } catch (InterruptedException e) {
                 handleException(e);
             }
-        });  // .start();
+        }).start();
 
-        gameState = States.GameStates.MAIN_MENU;
         LOGGER.info("Game started");
     }
 
@@ -94,7 +94,7 @@ public class Main extends ApplicationAdapter {
             GameRendering.drawPlaying();
         }
 
-        world.render();
+        if (gameState != States.GameStates.SPLASH) world.render();
 
         // Draw UI based on game state
         switch (gameState) {

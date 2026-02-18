@@ -146,6 +146,7 @@ public class GameRendering {
 
     public static void drawSplash() {
         Main.batch.begin();
+        Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
         Main.batch.enableBlending();
         Color c = Main.batch.getColor();
         Main.batch.setColor(c.r, c.g, c.b, (float) Main.transitionAlpha);
