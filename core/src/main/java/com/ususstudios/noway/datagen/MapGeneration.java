@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.ususstudios.noway.components.*;
 
 /**
  * MapGeneration is an API for generating map JSONs.
@@ -14,7 +15,14 @@ import org.json.JSONObject;
 public class MapGeneration {
     public static void generate() {
         generateMap("main", "Main (Test Map)", 50, 50, 23, 21,
-                new String[]{"Neverending Maze"}, new ArrayList<>(),
+                new String[]{"Neverending Maze"},
+                new ArrayList<>(){{
+                    add(new HashMap<Class<? extends Component>, Object[]>(){{
+                        put(PositionComponent.class, new Object[]{ 21, 21 });
+                        put(SpritesheetComponent.class, new Object[]{ "entity/npc/gatekeeper_sheet", 0, 0, 3, 4, 1, 1 });
+                        put(CollisionComponent.class, new Object[]{ 0.6, 1.0001f, 0.2, 0.0001f });
+                    }});
+                }},
                 new ArrayList<>(){{
                     add(new String[]{
       "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
@@ -176,7 +184,7 @@ public class MapGeneration {
     }
 
     public static void generateMap(String filename, String name, int sizeX, int sizeY, int spawnX, int spawnY,
-            String[] songs, List<HashMap<String, List<Object>>> entities, List<String[]> mapLayers) {
+            String[] songs, List<HashMap<Class<? extends Component>, Object[]>> entities, List<String[]> mapLayers) {
         JSONObject object = new JSONObject();
 
         object.put("name", name);
@@ -184,17 +192,19 @@ public class MapGeneration {
         object.put("spawn", new int[]{spawnX, spawnY});
         object.put("songs", songs);
         JSONArray entitiesArray = new JSONArray();
-        for (HashMap<String, List<Object>> e : entities) {
+        for (HashMap<Class<? extends Component>, Object[]> e : entities) {
             JSONArray entity = new JSONArray();
-            for (HashMap.Entry entry : e.entrySet()) {
+            for (HashMap.Entry<Class<? extends Component>, Object[]> entry : e.entrySet()) {
                 JSONArray comp = new JSONArray();
-                comp.put(entry.getKey());
-                comp.put(entry.getValue());
+                comp.put(entry.getKey().getName());
+                for (Object arg : entry.getValue()) {
+                    comp.put(arg);
+                }
                 entity.put(comp);
             }
             entitiesArray.put(entity);
         }
-        object.put("entities", entities);
+        object.put("entities", entitiesArray);
 
         object.put("map", mapLayers);
 
