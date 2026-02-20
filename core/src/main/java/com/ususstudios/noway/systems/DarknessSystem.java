@@ -54,6 +54,9 @@ public class DarknessSystem implements ECSSystem {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // make it lighter in debug mode
+        if (Main.debugMode) ambientDarkness *= 0.625f;
+
         // Start batch for drawing lights
         Main.batch.begin();
 
@@ -93,6 +96,9 @@ public class DarknessSystem implements ECSSystem {
         Main.batch.setColor(1f, 1f, 1f, 1f);
 
         Main.batch.end();
+
+        // make it lighter in debug mode
+        if (Main.debugMode) ambientDarkness *= 1.6f;
 
         darknessFbo.dispose();
     }

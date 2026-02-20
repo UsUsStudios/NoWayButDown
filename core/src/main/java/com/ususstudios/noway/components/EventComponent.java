@@ -1,6 +1,7 @@
 package com.ususstudios.noway.components;
 
 import java.util.HashMap;
+import com.ususstudios.noway.main.SoundManager;
 
 /**
  * An Event is a component that can be called by systems to execute arbitrary code.
@@ -21,5 +22,13 @@ public class EventComponent implements Component {
     // TODO: Figure out if this should be in a thread
     public void call(String eventName) {
         events.get(eventName).run();
+    }
+
+
+
+
+    // EXTRA EVENT TYPES: used because I can't extend this class because the query method won't identify it
+    public EventComponent(String eventName, String soundName) {
+        this(eventName, () -> { SoundManager.playSFX(soundName); } );
     }
 }

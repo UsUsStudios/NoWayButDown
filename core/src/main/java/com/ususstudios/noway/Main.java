@@ -127,9 +127,11 @@ public class Main extends ApplicationAdapter {
                 new LightSourceComponent(0.8f, 125f, 0.1f, -.5f * Main.tileSize, -.2f * Main.tileSize));
 
         world.addUpdateSystem(new PlayerSystem());
+        world.addUpdateSystem(new TriggerSystem());
 
         world.addRenderSystem(new SpritesheetSystem());
         world.addRenderSystem(new CollisionDrawingSystem());
+        world.addRenderSystem(new TriggerDrawingSystem());
         world.addRenderSystem(new DarknessSystem());
     }
 

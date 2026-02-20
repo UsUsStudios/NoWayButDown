@@ -20,7 +20,9 @@ public class MapGeneration {
                     add(new HashMap<Class<? extends Component>, Object[]>(){{
                         put(PositionComponent.class, new Object[]{ 21, 21 });
                         put(SpritesheetComponent.class, new Object[]{ "entity/npc/gatekeeper_sheet", 0, 0, 3, 4, 1, 1 });
-                        put(CollisionComponent.class, new Object[]{ 0.6, 1.0001f, 0.2, 0.0001f });
+                        put(CollisionComponent.class, new Object[]{ 0.6, 1.0001, 0.2, 0.0001 });
+                        put(TriggerComponent.class, new Object[]{ "SoundTrigger", 1.5, 1.5, -.25, -.25, false });
+                        put(EventComponent.class, new Object[]{ "SoundTrigger", "Cursor" } );
                     }});
                 }},
                 new ArrayList<>(){{

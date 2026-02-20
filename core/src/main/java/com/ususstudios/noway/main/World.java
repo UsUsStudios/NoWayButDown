@@ -3,7 +3,6 @@ package com.ususstudios.noway.main;
 import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import java.util.*;
-import com.ususstudios.noway.Main;
 
 public class World {
     public final Map<Integer, List<Component>> entities = new HashMap<>();

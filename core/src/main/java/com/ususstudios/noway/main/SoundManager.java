@@ -13,7 +13,7 @@ public class SoundManager {
     private static final HashMap<String, Music> musicLibrary = new HashMap<>();
     private static final HashMap<String, Sound> soundLibrary = new HashMap<>();
     private static Music currentMusic;
-    public static float musicVolume = 0.5f;
+    public static float musicVolume = 0.1f;
     public static float soundVolume = 0.5f;
 
     public static void loadLibrary() {
