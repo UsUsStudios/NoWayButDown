@@ -44,6 +44,7 @@ public class Main extends ApplicationAdapter {
     public static int tileSize = 48;
     public static String language = "english";
     public static String identifier = "nowaybutdown";
+    public static String bottomMiddleText = "";  // Text for "press E to interact" and such
 
     // This is run when the window is created
     @Override
@@ -86,6 +87,7 @@ public class Main extends ApplicationAdapter {
     // This is run every frame
     @Override
     public void render() {
+        bottomMiddleText = "";
         update();
         ScreenUtils.clear(0, 0, 0, 1);
 
@@ -98,6 +100,7 @@ public class Main extends ApplicationAdapter {
 
         // Draw UI based on game state
         switch (gameState) {
+            case PLAYING -> GameRendering.drawPlayingUI();
             case MAIN_MENU -> GameRendering.drawTitle();
             case SPLASH -> GameRendering.drawSplash();
         }
@@ -116,6 +119,7 @@ public class Main extends ApplicationAdapter {
         batch.dispose();
         shapes.dispose();
         GameRendering.dispose();
+        SoundManager.dispose();
         running = false;
         LOGGER.info("Game ended");
     }

@@ -17,6 +17,7 @@ public class GameRendering {
 	static BitmapFont firaMedium;
 	static BitmapFont firaBold;
 	static BitmapFont firaRegular;
+	static BitmapFont firaRegularFlipped;
 
 	// UI
 	public static int uiSelected = 0;
@@ -25,33 +26,36 @@ public class GameRendering {
 	public static void init() {
 		// Load in the fonts
 		try {
-			firaMedium = getFont("FiraSans-Medium");
-			firaBold = getFont("FiraSans-Bold");
-			firaRegular = getFont("FiraSans-Regular");
+			firaMedium = getFont("FiraSans-Medium", false);
+			firaBold = getFont("FiraSans-Bold", false);
+			firaRegular = getFont("FiraSans-Regular", false);
+			firaRegularFlipped = getFont("FiraSans-Regular", true);
 		} catch (FontFormatException | IOException e) {
 			Main.handleException(e);
 		}
 	}
 
-	public static BitmapFont getFont(String name) throws FontFormatException, IOException {
+	public static BitmapFont getFont(String name, boolean flip) throws FontFormatException, IOException {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/" + name + ".ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 128; // fonts size in pixels
+        parameter.flip = flip;
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
-		return font;
-	}
+        return font;
+    }
 
-	public static void drawPlaying() {
-		Map map = MapTileHandler.maps.get(Main.currentMap);
-        Main.batch.getProjectionMatrix().setToOrtho(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);
+    public static void drawPlaying() {
+        Map map = MapTileHandler.maps.get(Main.currentMap);
         Main.batch.begin();
+        Main.batch.getProjectionMatrix().setToOrtho(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);
 
         drawLayer(map, map.layer1());
         drawLayer(map, map.layer2());
         drawLayer(map, map.layer3());
 
         Main.batch.end();
+
 
         if (!Main.debugMode) {
             return;
@@ -82,7 +86,16 @@ public class GameRendering {
             }
         }
         Main.shapes.end();
-	}
+    }
+
+    public static void drawPlayingUI() {
+        Main.batch.begin();
+        if (!Main.bottomMiddleText.isBlank()) {
+            firaRegularFlipped.getData().setScale(0.3f);
+            drawCenteredString(firaRegularFlipped, Main.bottomMiddleText, Main.screenWidth / 2, 550);
+        }
+        Main.batch.end();
+    }
 
     public static void drawBlockCollision(boolean[][] collisionPoints, float x, float y) {
         float mar = 2f; // margin to not draw on the edges

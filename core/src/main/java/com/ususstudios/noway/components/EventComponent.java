@@ -1,6 +1,9 @@
 package com.ususstudios.noway.components;
 
 import java.util.HashMap;
+
+import com.badlogic.gdx.Gdx;
+import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.SoundManager;
 
 /**
@@ -24,11 +27,29 @@ public class EventComponent implements Component {
         events.get(eventName).run();
     }
 
+    public static void call(EventComponent c, String event) {
+        c.call(event);
+    }
+
 
 
 
     // EXTRA EVENT TYPES: used because I can't extend this class because the query method won't identify it
+    /// SoundEvent
     public EventComponent(String eventName, String soundName) {
         this(eventName, () -> { SoundManager.playSFX(soundName); } );
+    }
+
+    /// PrintTextInteractionEvent
+    public EventComponent(String areaEnteringEventName, String interactionText, Integer interactionKey, String textToPrint) {
+        this(new HashMap<>(){{
+            put("_interacted", () -> { System.out.println(textToPrint); });
+        }});
+        events.put(areaEnteringEventName, () -> {
+            Main.bottomMiddleText = interactionText;
+            if (Gdx.input.isKeyJustPressed(interactionKey)) {
+                call("_interacted");
+            }
+        });
     }
 }

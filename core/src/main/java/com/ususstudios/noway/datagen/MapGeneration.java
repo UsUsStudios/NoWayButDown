@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.badlogic.gdx.Input;
 import com.ususstudios.noway.components.*;
 
 /**
@@ -21,8 +22,8 @@ public class MapGeneration {
                         put(PositionComponent.class, new Object[]{ 21, 21 });
                         put(SpritesheetComponent.class, new Object[]{ "entity/npc/gatekeeper_sheet", 0, 0, 3, 4, 1, 1 });
                         put(CollisionComponent.class, new Object[]{ 0.6, 1.0001, 0.2, 0.0001 });
-                        put(TriggerComponent.class, new Object[]{ "SoundTrigger", 1.5, 1.5, -.25, -.25, false });
-                        put(EventComponent.class, new Object[]{ "SoundTrigger", "Cursor" } );
+                        put(TriggerComponent.class, new Object[]{ "InteractionTrigger", 1.5, 1.5, -.25, -.25, true });
+                        put(EventComponent.class, new Object[]{ "InteractionTrigger", "Press E to interact", Input.Keys.E, "heyy" } );
                     }});
                 }},
                 new ArrayList<>(){{

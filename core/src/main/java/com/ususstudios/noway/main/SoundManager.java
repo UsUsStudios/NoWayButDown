@@ -80,4 +80,14 @@ public class SoundManager {
             sound.play(soundVolume);
         }
     }
+
+    public static void dispose() {
+        for (Music music : musicLibrary.values()) {
+            music.dispose();
+        }
+        for (Sound sound : soundLibrary.values()) {
+            sound.dispose();
+        }
+
+    }
 }
