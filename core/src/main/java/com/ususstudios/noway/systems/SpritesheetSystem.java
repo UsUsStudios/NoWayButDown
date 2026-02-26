@@ -3,8 +3,8 @@ package com.ususstudios.noway.systems;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.*;
 import com.ususstudios.noway.components.*;
-import com.badlogic.gdx.graphics.Texture;
 
+/** Draws the sprites of {@link com.ususstudios.noway.components.SpritesheetComponent} */
 public class SpritesheetSystem implements ECSSystem {
     @Override
     public void process(World world) {

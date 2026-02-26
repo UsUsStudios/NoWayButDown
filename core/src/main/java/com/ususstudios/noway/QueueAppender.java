@@ -12,11 +12,21 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/** A custom implementation of the log4j appender so I can do custom stuff */
 @Plugin(name = "Queue", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE)
 public class QueueAppender extends AbstractAppender {
+    /** Writes to the log file */
 	private PrintWriter fileWriter;
-	static private QueueAppender self;
+	/** The working instance of itself */
+    static private QueueAppender self;
 
+    /**
+     * Yeah I don't really know how this works
+     * @param name ?
+     * @param filter ?
+     * @param layout ?
+     * @param ignoreExceptions ?
+    */
 	protected QueueAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions) {
 		super(name, filter, layout, ignoreExceptions, Property.EMPTY_ARRAY);
 		try {
@@ -32,6 +42,13 @@ public class QueueAppender extends AbstractAppender {
 		self = this;
 	}
 
+    /**
+     * No clue what this does either
+     * @param name ?
+     * @param layout ?
+     * @param filter ?
+     * @return ?
+     */
 	@PluginFactory
 	public static QueueAppender createAppender(
 			@PluginAttribute("name") String name,
@@ -43,6 +60,10 @@ public class QueueAppender extends AbstractAppender {
 		return new QueueAppender(name, filter, layout, true);
 	}
 
+    /**
+     * Prints an error to stderr and the log file
+     * @param e The exception, including stack trace, that should be written
+     */
 	public static void printError(Exception e) {
 		System.err.println("\u001B[31m" + e.getClass().getName() + ": " + e.getMessage());
 		if (self.fileWriter != null) {
@@ -62,6 +83,10 @@ public class QueueAppender extends AbstractAppender {
 		}
 	}
 
+    /**
+     * Writes a log to stdout and the log file
+     * @param event The event to write
+     */
 	@Override
 	public void append(LogEvent event) {
 		String message = new String(getLayout().toByteArray(event));

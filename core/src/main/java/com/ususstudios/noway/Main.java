@@ -18,33 +18,48 @@ import java.util.Random;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
+    /**  */
     public static SpriteBatch batch;
+    /**  */
     public static ShapeRenderer shapes;
+    /**  */
     public static final Logger LOGGER = LoggerFactory.getLogger("NoWayButDown");
 
     // Game State
+    /**  */
     public static States.GameStates gameState = States.GameStates.SPLASH;
+    /**  */
     public static String currentMap = "";
+    /**  */
     public static double transitionAlpha = 0;
+    /**  */
     public static boolean debugMode = false;
 
     // Classes
+    /**  */
     public static Random random = new Random();
 
     // Entities
+    /**  */
     public static World world = new World();
+    /**  */
     public static float cameraX = 0;
+    /**  */
     public static float cameraY = 0;
+    /**  */
     public static int playerId = 0;
 
     // Miscellaneous
-    public static boolean running = true;
+    /**  */
     public static int screenWidth = 1100;
+    /**  */
     public static int screenHeight = 700;
+    /**  */
     public static int tileSize = 48;
+    /**  */
     public static String bottomMiddleText = "";  // Text for "press E to interact" and such
 
-    // This is run when the window is created
+    /** This is run when the window is created */
     @Override
     public void create() {
         LOGGER.info("Program started");
@@ -82,7 +97,7 @@ public class Main extends ApplicationAdapter {
         LOGGER.info("Game started");
     }
 
-    // This is run every frame
+    /** This is run every frame */
     @Override
     public void render() {
         bottomMiddleText = "";
@@ -104,6 +119,7 @@ public class Main extends ApplicationAdapter {
         }
     }
 
+    /** Updates the game and UI states */
     public static void update() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) debugMode = !debugMode;
 
@@ -111,17 +127,17 @@ public class Main extends ApplicationAdapter {
         else GameRendering.updateUI();
     }
 
-    // This is run when the window is closed
+    /** This is run when the window is closed */
     @Override
     public void dispose() {
         batch.dispose();
         shapes.dispose();
         GameRendering.dispose();
         SoundManager.dispose();
-        running = false;
         LOGGER.info("Game ended");
     }
 
+    /** Adds all the stuff that will be needed in the {@code world} like the player and systems */
     public static void setupECSWorld() {
         playerId = world.createEntity(new PlayerComponent(300), new PositionComponent(0f, 0f),
                 new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, 1f, 2f),
@@ -137,6 +153,10 @@ public class Main extends ApplicationAdapter {
         world.addRenderSystem(new DarknessSystem());
     }
 
+    /**
+     * Changes the current map
+     * @param map The name of the map from {@link com.ususstudios.noway.rendering.MapTileHandler}
+     */
     public static void loadMap(String map) {
         currentMap = map;
         world.getEntityComponent(playerId, PositionComponent.class).get()
@@ -151,8 +171,13 @@ public class Main extends ApplicationAdapter {
         LOGGER.info("Map '{}' loaded", map);
     }
 
+    /**
+     * Handles an exception. This is called by every place in the code that might raise an exception.
+     * Currently it just stops the game, but I'm hoping to add an error dialog eventually.
+     * @param e The exception that was raised.
+     */
     public static void handleException(Exception e) {
         QueueAppender.printError(e);
-        running = false;
+        System.exit(0);
     }
 }

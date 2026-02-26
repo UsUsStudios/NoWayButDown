@@ -12,10 +12,17 @@ import com.ususstudios.noway.components.LightSourceComponent;
 import com.ususstudios.noway.components.PositionComponent;
 import com.ususstudios.noway.main.World;
 
+/** This system draws the darkness, plus the radial gradients from the lights of {@link com.ususstudios.noway.components.LightSourceComponent}  */
 public class DarknessSystem implements ECSSystem {
-	public float ambientDarkness = 0.92f;  // How dark is it without lights (0.0 = no darkness, 1.0 = complete darkness)
+    /** How dark is it without lights (0.0 = no darkness, 1.0 = complete darkness) */
+	public float ambientDarkness = 0.92f;
+    /** A single radial light generated to draw all radial lights */
     Texture radialLightTexture = createRadialLight(128);
 
+    /**
+     * Draws a radial light to a texture so that texture can be drawn by every light source
+     * @param radius The radius of the texture (it'll be scaled anyway)
+     */
     public static Texture createRadialLight(int radius) {
         int size = radius * 2;
 

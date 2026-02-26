@@ -1,13 +1,13 @@
 package com.ususstudios.noway.systems;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.components.PositionComponent;
 import com.ususstudios.noway.components.TriggerComponent;
 import com.ususstudios.noway.main.World;
 
+/** Draws the collision boxes of {@link com.ususstudios.noway.components.TriggerComponent} */
 public class TriggerDrawingSystem implements ECSSystem {
     @Override
     public void process(World world) {

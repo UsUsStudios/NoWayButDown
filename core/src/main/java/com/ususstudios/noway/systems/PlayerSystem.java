@@ -9,6 +9,7 @@ import com.ususstudios.noway.Main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
+/** Processes all the movement of a {@link com.ususstudios.noway.components.PlayerComponent} */
 public class PlayerSystem implements ECSSystem {
     @Override
     public void process(World world) {

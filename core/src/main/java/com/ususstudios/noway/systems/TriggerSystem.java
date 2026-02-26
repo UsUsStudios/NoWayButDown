@@ -2,9 +2,11 @@ package com.ususstudios.noway.systems;
 
 import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.main.World;
-
 import com.ususstudios.noway.Main;
 
+/**
+ * The TriggerSystem processes {@link com.ususstudios.noway.components.TriggerComponent}.
+ */
 public class TriggerSystem implements ECSSystem {
     @Override
     public void process(World world) {
@@ -27,7 +29,10 @@ public class TriggerSystem implements ECSSystem {
         }
     }
 
-    // Stolen from the CollisionChecker class
+    /**
+     * Stolen from the CollisionChecker class
+     * @param triggerEntity The entity that has the {@link com.ususstudios.noway.components.TriggerComponent}
+     */
     public static boolean checkTriggerCollision(int triggerEntity) {
         // Make sure the entites have the necessary components
         if (Main.world.getEntityComponent(Main.playerId, PositionComponent.class).isEmpty() ||
@@ -53,6 +58,4 @@ public class TriggerSystem implements ECSSystem {
 
         return aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop;
     }
-
-
 }
