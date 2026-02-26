@@ -19,7 +19,7 @@ public class MapTileHandler {
     /** A HashMap of all the tile types and their 2-digit base 64 tile IDs */
 	public static HashMap<String, Tile> tileTypes = new HashMap<>();
 
-	/* Register all the tile types used in the game */
+	/** Register all the tile types used in the game */
 	public static void loadTiles() {
 		registerTile("AA", "nothing", "00000/00000/00000/00000/00000");
 
@@ -244,6 +244,7 @@ public class MapTileHandler {
 	/**
      * A utility method that gets the names of all resource files in a given directory
      * @param directoryPath The path of the resource directory you want to check
+     * @return The list of file names in that directory
      */
 	public static String[] getResourceFileNames(String directoryPath) {
 		try (InputStream inputStream = MapTileHandler.class.getResourceAsStream(directoryPath)) {

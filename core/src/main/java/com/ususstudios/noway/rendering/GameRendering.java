@@ -43,10 +43,12 @@ public class GameRendering {
 	}
 
     /**
-     * Get a {@link com.badlogic.gdx.graphics.g2d.BitmapFont} from a file name.
+     * Get a com.badlogic.gdx.graphics.g2d.BitmapFont from a file name.
      * @param name The path of the font path, starting from /assets/fonts/
      * @param flip Whether to flip the font upside down
      * @return A BitmapFont of the font
+     * @throws FontFormatException If there's an issue with the TrueTypeFont file format
+     * @throws IOException If there's an issue with reading the file
      */
 	public static BitmapFont getFont(String name, boolean flip) throws FontFormatException, IOException {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/" + name + ".ttf"));
@@ -116,7 +118,7 @@ public class GameRendering {
 
     /**
      * Draws the collision points of a tile
-     * @param collisionPoints
+     * @param collisionPoints The 2D array of collision points that are either on or off
      * @param x The x screen position (in pixels) of the top-left of the tile
      * @param y The y screen position (in pixels) of the top-left of the tile
      */
@@ -257,7 +259,7 @@ public class GameRendering {
         font.draw(Main.batch, layout, x, y);
 	}
 
-    /** Release all the {@link com.badlogic.gdx.graphics.BitmapFont} to avoid leaking memory */
+    /** Release all the BitmapFonts to avoid leaking memory */
     public static void dispose() {
         firaMedium.dispose();
         firaBold.dispose();

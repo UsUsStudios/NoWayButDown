@@ -3,10 +3,13 @@ package com.ususstudios.noway.lwjgl3;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.ususstudios.noway.Main;
-import com.ususstudios.noway.main.Translations;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
+    /**
+     * Creates the window and starts up EVERYTHING
+     * @param args Arguments. unused.
+     */
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         createApplication();
@@ -17,9 +20,8 @@ public class Lwjgl3Launcher {
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
-        Translations.loadFiles();
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
-        configuration.setTitle(Translations.get(Main.identifier, "title"));
+        configuration.setTitle("No Way But Down - Alpha");
 
         //// Vsync limits the frames per second to what your hardware can display, and helps eliminate
         //// screen tearing. This setting doesn't always work on Linux, so the line after is a safeguard.

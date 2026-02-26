@@ -22,6 +22,7 @@ public class DarknessSystem implements ECSSystem {
     /**
      * Draws a radial light to a texture so that texture can be drawn by every light source
      * @param radius The radius of the texture (it'll be scaled anyway)
+     * @return The generated texture
      */
     public static Texture createRadialLight(int radius) {
         int size = radius * 2;

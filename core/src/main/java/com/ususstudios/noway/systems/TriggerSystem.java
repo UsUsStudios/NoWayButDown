@@ -32,6 +32,7 @@ public class TriggerSystem implements ECSSystem {
     /**
      * Stolen from the CollisionChecker class
      * @param triggerEntity The entity that has the {@link com.ususstudios.noway.components.TriggerComponent}
+     * @return Whether the player is inside the entity's collision box
      */
     public static boolean checkTriggerCollision(int triggerEntity) {
         // Make sure the entites have the necessary components

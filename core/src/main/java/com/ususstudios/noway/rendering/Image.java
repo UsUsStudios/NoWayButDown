@@ -5,7 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.ususstudios.noway.Main;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -32,11 +31,9 @@ public class Image implements Serializable {
     /** Loads an image from either a cache or creates an entirely new one.
      * If you are loading an entirely new image, it will create a new instance of this class.
      * However, if the same image was already loaded, it will just use that instance. Instances are stored in a private cache.
-     * <p>
      * @param imageName The name of the image you want to load in.
      * The image is loaded in from the {@code /drawable/} directory, so put your image in there
      * If you want to load an image from a directory inside the {@code /drawable/} continue with the path like so: {@code tiles/my_image}
-     * <p>
      * @return An instance of this class, Image. If you try to use this to render an image, it likely won't work.
      * Instead, call the {@code getImage} method from the instance of the class to get a buffered image. This will work if you try to draw it. **/
     public static Image loadImage(String imageName) {
@@ -100,7 +97,6 @@ public class Image implements Serializable {
     }
 
     /** Scales the image to your preferred size while updating all the data required to do so.
-     * <p>
      * @param width The width you want the scaled image to be.
      * @param height The height you want the scaled image to be.
      **/

@@ -64,6 +64,7 @@ public class World {
      * Gets the instance of the given component type that a specific entity has
      * @param id The ID of the entity that you want to fetch the component of
      * @param type The Class of the component type you want to fetch
+     * @param <T> The component type
      * @return the instance of the given component type that belonds to the entity
      */
     public <T extends Component> Optional<T> getEntityComponent(int id, Class<T> type) {

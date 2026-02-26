@@ -4,11 +4,19 @@ package com.ususstudios.noway.main;
 public class States {
     /** The states that the game as a whole can be in */
 	public enum GameStates {
-		SPLASH, PLAYING, MAIN_MENU
+		/** The splash screen displayed before the main menu */
+        SPLASH,
+        /** In-game, with tiles and entities rendering and no additional UI */
+        PLAYING,
+        /** The main menu displayed at startup to load a game */
+        MAIN_MENU
 	}
 
     /** The states that a mob can be in */
 	public enum MobStates {
-		IDLE, WALKING
+		/** Not moving */
+        IDLE,
+        /** Moving in a direction */
+        WALKING
 	}
 }
