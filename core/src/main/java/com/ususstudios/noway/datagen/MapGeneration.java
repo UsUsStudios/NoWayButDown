@@ -14,6 +14,10 @@ import com.ususstudios.noway.components.*;
  * MapGeneration is an API for generating map JSONs.
  */
 public class MapGeneration {
+    /**
+     * Generates all the map JSON files.
+     * Is run automatically by the {@link com.ususstudios.noway.datagen.DataGeneration} {@code public static void main} method.
+     */
     public static void generate() {
         generateMap("main", "Main (Test Map)", 50, 50, 23, 21,
                 new String[]{"Neverending Maze"},
@@ -186,6 +190,18 @@ public class MapGeneration {
                 }});
     }
 
+    /**
+     * Generates a map JSON file based on the arguments.
+     * @param filename The path of the file from /assets/values/maps
+     * @param name The name of the map, used internally
+     * @param sizeX The width of the map in tiles
+     * @param sizeY The height of the map in tiles
+     * @param spawnX The player spawn point x position in tiles
+     * @param spawnY The player spawn point y position in tiles
+     * @param songs The list of song names in the {@link com.ususstudios.noway.main.SoundManager} that should be played randomly when in the map
+     * @param entities The list of entities in the structure: {@code [{"ComponentName": ["arg1", "arg2"], "Component2": []}, {"Component3": []}]}
+     * @param mapLayers The list of map layers. Each map layer (there's 3) is an array of rows, and each row is a string with space-separated tile IDs which are 2-digit base 64 numbers.
+     */
     public static void generateMap(String filename, String name, int sizeX, int sizeY, int spawnX, int spawnY,
             String[] songs, List<HashMap<Class<? extends Component>, Object[]>> entities, List<String[]> mapLayers) {
         JSONObject object = new JSONObject();

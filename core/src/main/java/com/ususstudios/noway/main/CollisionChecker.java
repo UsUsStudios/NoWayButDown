@@ -4,10 +4,18 @@ import com.ususstudios.noway.Main;
 import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
-
 import java.util.Objects;
 
+/**
+ * A helper class for systems that require checking collisions between entities and tiles or entities and other entities
+ */
 public class CollisionChecker {
+    /**
+     * Check the collision between two entities that have a {@link com.ususstudios.noway.components.CollisionComponent}.
+     * @param entityA The ID of the first entity to be checked
+     * @param entityB The ID of the second entity to be checked
+     * @return whether the {@link com.ususstudios.noway.components.CollisionComponent}s of the two entities overlap
+     */
     public static boolean check2EntitiesCollision(int entityA, int entityB) {
         // Make sure the entites have the necessary components
         if (Main.world.getEntityComponent(entityA, PositionComponent.class).isEmpty() ||
@@ -31,9 +39,18 @@ public class CollisionChecker {
         float bRight = pcB.x + cB.offX + cB.width;
         float bBottom = pcB.y + cB.offY + cB.height;
 
+        // AABB collision check
         return aLeft < bRight && aRight > bLeft && aTop < bBottom && aBottom > bTop;
     }
 
+    /**
+     * Check whether the given entity is colliding with the given tile collision.
+     * @param entity The ID of the entity to be checked
+     * @param collisionPoints An array of columns by rows with each point representing a collision point, with the boolean representing whether it can be collided with
+     * @param x The x position (in pixels) of the top-left of the tile
+     * @param y The y position (in pixels) of the top-left of the tile
+     * @return Whether the entity is inside one or more of the enabled collision points
+     */
     public static boolean checkBlockCollision(Integer entity, boolean[][] collisionPoints, float x, float y) {
         // Make sure the entites have the necessary components
         if (Main.world.getEntityComponent(entity, PositionComponent.class).isEmpty()) return false;
@@ -72,7 +89,11 @@ public class CollisionChecker {
         return false;
     }
 
-    // Check if entity collides with any other entity or any tile on layer2
+    /**
+     * Checks if an entity collides with any other entity with a {@link com.ususstudios.noway.components.CollisionComponent} or any tile on layer2
+     * @param entity The ID of the entity to check
+     * @return Whether the entity is colliding with any entity or tile on layer2
+     */
     public static boolean checkEntityCollision(Integer entity) {
         for (Integer other : Main.world.query(CollisionComponent.class, PositionComponent.class)) {
             if (!Objects.equals(other, entity))

@@ -42,8 +42,6 @@ public class Main extends ApplicationAdapter {
     public static int screenWidth = 1100;
     public static int screenHeight = 700;
     public static int tileSize = 48;
-    public static String language = "english";
-    public static String identifier = "nowaybutdown";
     public static String bottomMiddleText = "";  // Text for "press E to interact" and such
 
     // This is run when the window is created

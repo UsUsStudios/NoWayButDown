@@ -12,12 +12,14 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
-// Loads maps and tile types
+/** A static class that loads maps and tile types */
 public class MapTileHandler {
+    /** A HashMap of all the {@link com.ususstudios.noway.rendering.Map}s and their names */
 	public static HashMap<String, Map> maps = new HashMap<>();
+    /** A HashMap of all the tile types and their 2-digit base 64 tile IDs */
 	public static HashMap<String, Tile> tileTypes = new HashMap<>();
 
-	// Register all the tile types used in the game
+	/* Register all the tile types used in the game */
 	public static void loadTiles() {
 		registerTile("AA", "nothing", "00000/00000/00000/00000/00000");
 
@@ -77,7 +79,12 @@ public class MapTileHandler {
 		Main.LOGGER.info("Loaded {} tile images", tileTypes.size());
 	}
 
-	// Registers a tile type with the given ID (in 2-digit Base64), image name, and collision property
+	/**
+     * Registers a tile type with the given ID (in 2-digit Base64), image name, and collision property
+     * @param id The 2-digit base 64 tile ID
+     * @param imageName The path to the image file from /assets/drawable/tile/
+     * @param collision The collision points, with rows of 0 for off and 1 for on, and rows split with /
+     */
 	public static void registerTile(String id, String imageName, String collision) {
 		// Create a new tile and add it to the tileTypes HashMap, set its collision, and load the image
 		boolean[][] collisionArray = new boolean[5][5];
@@ -95,7 +102,7 @@ public class MapTileHandler {
 		tileTypes.put(id, tile);
 	}
 
-	// Load all map files from the resources/values/maps/ directory
+	/** Load all map files from the /assets/values/maps/ directory */
 	public static void loadMaps() {
 		String[] mapFiles = getResourceFileNames("/values/maps");
 		for (String mapFile : mapFiles) {
@@ -115,7 +122,10 @@ public class MapTileHandler {
 		Main.LOGGER.info("Loaded {} map files", maps.size());
 	}
 
-	// Load a specific map from a JSON file
+	/**
+     * Load a specific map from a JSON file
+     * @param fileName The path to the JSON file, starting from /assets/values/maps/
+     */
 	private static void loadMap(String fileName) {
 		Main.LOGGER.info("Loading map: {}", fileName);
 		JSONObject file = UtilityTool.getJsonObject("/values/maps/" + fileName + ".json");
@@ -231,7 +241,10 @@ public class MapTileHandler {
 		maps.put(fileName, mapObj);
 	}
 
-	// Get the names of all resource files in a given directory
+	/**
+     * A utility method that gets the names of all resource files in a given directory
+     * @param directoryPath The path of the resource directory you want to check
+     */
 	public static String[] getResourceFileNames(String directoryPath) {
 		try (InputStream inputStream = MapTileHandler.class.getResourceAsStream(directoryPath)) {
 			if (inputStream == null) {

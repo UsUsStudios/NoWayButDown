@@ -17,11 +17,16 @@ import java.util.HashMap;
  * An instance of this class is created using the {@code loadImage} method in the static version of this class, because the constructor is private.
  * It's private because this method uses a cache system which is more efficient than crating a bunch of new instances of this class **/
 public class Image implements Serializable {
+    /** A chache that stores all the requested images so they don't have to be read from the file again */
     private static final HashMap<String, Image> imageCache = new HashMap<>();
 
+    /** The byte data of the image, for serialization */
     public final byte[] data;
+    /** The {@link com.badlogic.gdx.graphics.Texture} of the image, fetched when you want to draw the image */
     private transient Texture image;
+    /** The width of the image in pixels, for serialization */
     private int width;
+    /** The height of the image in pixels, for serialization */
     private int height;
 
     /** Loads an image from either a cache or creates an entirely new one.
@@ -46,6 +51,10 @@ public class Image implements Serializable {
         return image;
     }
 
+    /**
+     * A private constructor for loading an image from a file
+     * @param imageName The image file path from /assets/drawable/
+     */
     private Image(String imageName) {
         // Get the file that we will use for the image. It's separately instantiated as it will be used for null checking
         FileHandle file = Gdx.files.internal("drawable/" + imageName + ".png");
@@ -139,6 +148,11 @@ public class Image implements Serializable {
         image = scaledImage;
     }
 
+    /**
+     * Serializes a {@link com.badlogic.gdx.graphics.Texture} to a byte array - will be used for world saving
+     * @param image The Texture you would like to serialize
+     * @return The byte array that holds the pixel data of the given Texture
+     */
     public static byte[] serializeImage(Texture image) {
         // Ensure the pixmap is available
         if (!image.getTextureData().isPrepared()) image.getTextureData().prepare();
@@ -155,6 +169,14 @@ public class Image implements Serializable {
         pixmap.dispose();
         return bytes;
     }
+
+    /**
+     * Deserializes a {@link com.badlogic.gdx.graphics.Texture} from a byte array - will be used for loading saved worlds
+     * @param data The pixel data saved from the Texture
+     * @param height The image height in pixels
+     * @param width The image width in pixels
+     * @return A Texture derived from the given pixel data, height and width
+     */
     public static Texture deserializeImage(byte[] data, int height, int width) {
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         pixmap.getPixels().put(data);

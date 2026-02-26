@@ -2,7 +2,6 @@ package com.ususstudios.noway.main;
 
 import com.ususstudios.noway.Main;
 import org.json.JSONObject;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -78,6 +77,11 @@ public class UtilityTool {
         }
     }
 
+    /**
+     * Seriealize an {@code BufferedImage} into a byte array for storage.
+     * @param image The BufferedImage to Seriealize
+     * @return The byte array that holds the BufferedImage's data
+     */
     public static byte[] serializeImage(BufferedImage image) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -88,6 +92,12 @@ public class UtilityTool {
             return null;
         }
     }
+
+    /**
+     * Deserializes a BufferedImage from a byte array that holds its data.
+     * @param data The byte array that holds the BufferedImage's data
+     * @return The BufferedImage generated from the byte array
+     */
     public static BufferedImage deserializeImage(byte[] data) {
         try {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
@@ -98,6 +108,11 @@ public class UtilityTool {
         }
     }
 
+    /**
+     * A custom two-value tuple for stuff.
+     * @param x The first value
+     * @param y The second value
+     */
     public record Tuple<X, Y>(X x, Y y) {
         @Override
         public String toString() {

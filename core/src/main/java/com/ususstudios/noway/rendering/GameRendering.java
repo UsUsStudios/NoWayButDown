@@ -8,21 +8,28 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.Main;
-import com.ususstudios.noway.main.Translations;
 import com.badlogic.gdx.graphics.Color;
 import java.awt.*;
 import java.io.IOException;
 
+/** The static class responsible for drawing tiles and UI on the screen */
 public class GameRendering {
+    /** The Fira medium font size */
 	static BitmapFont firaMedium;
+    /** The Fira bold font size */
 	static BitmapFont firaBold;
-	static BitmapFont firaRegular;
+	/** The Fira regular font size */
+    static BitmapFont firaRegular;
+    /** The Fira regular font size, but flipped */
 	static BitmapFont firaRegularFlipped;
 
 	// UI
+    /** Which UI option is currently selected? */
 	public static int uiSelected = 0;
+    /** How many UI options are there at the moment? */
 	public static int uiMaxOptions = 2;
 
+    /** Initialize all the static stuff needed for this class to render properly. Called by {@link com.ususstudios.noway.Main}. */
 	public static void init() {
 		// Load in the fonts
 		try {
@@ -35,6 +42,12 @@ public class GameRendering {
 		}
 	}
 
+    /**
+     * Get a {@link com.badlogic.gdx.graphics.g2d.BitmapFont} from a file name.
+     * @param name The path of the font path, starting from /assets/fonts/
+     * @param flip Whether to flip the font upside down
+     * @return A BitmapFont of the font
+     */
 	public static BitmapFont getFont(String name, boolean flip) throws FontFormatException, IOException {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/" + name + ".ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -45,6 +58,7 @@ public class GameRendering {
         return font;
     }
 
+    /** Draws all the tiles that should be drawn below the player in the {@link com.ususstudios.noway.main.States.GameStates} PLAYING state. */
     public static void drawPlaying() {
         Map map = MapTileHandler.maps.get(Main.currentMap);
         Main.batch.begin();
@@ -52,7 +66,6 @@ public class GameRendering {
 
         drawLayer(map, map.layer1());
         drawLayer(map, map.layer2());
-        drawLayer(map, map.layer3());
 
         Main.batch.end();
 
@@ -88,8 +101,12 @@ public class GameRendering {
         Main.shapes.end();
     }
 
+    /** Draws all the tiles and UI that should be drawn above the player in the {@link com.ususstudios.noway.main.States.GameStates} PLAYING state. */
     public static void drawPlayingUI() {
+        Map map = MapTileHandler.maps.get(Main.currentMap);
         Main.batch.begin();
+        drawLayer(map, map.layer3());
+
         if (!Main.bottomMiddleText.isBlank()) {
             firaRegularFlipped.getData().setScale(0.3f);
             drawCenteredString(firaRegularFlipped, Main.bottomMiddleText, Main.screenWidth / 2, 550);
@@ -97,6 +114,12 @@ public class GameRendering {
         Main.batch.end();
     }
 
+    /**
+     * Draws the collision points of a tile
+     * @param collisionPoints
+     * @param x The x screen position (in pixels) of the top-left of the tile
+     * @param y The y screen position (in pixels) of the top-left of the tile
+     */
     public static void drawBlockCollision(boolean[][] collisionPoints, float x, float y) {
         float mar = 2f; // margin to not draw on the edges
         if (collisionPoints == null || collisionPoints.length == 0 || collisionPoints[0].length == 0) return;
@@ -117,6 +140,11 @@ public class GameRendering {
         }
     }
 
+    /**
+     * Draws an entire layer of tiles from a {@link com.ususstudios.noway.rendering.Map}
+     * @param map The Map that is currently being drawn
+     * @param layer The 2D array of 2-digit base 64 tile IDs that represent the layer currently being drawn
+     */
     private static void drawLayer(Map map, String[][] layer) {
         float camX = Main.cameraX + Main.tileSize / 2f;
         float camY = Main.cameraY + Main.tileSize / 2f;  // Slight adjustment to center the player on a block
@@ -141,22 +169,24 @@ public class GameRendering {
         }
     }
 
+    /** Draws the UI in the {@link com.ususstudios.noway.main.States.GameStates} TITLE state */
     public static void drawTitle() {
         ScreenUtils.clear(Color.BLACK);
 
         Main.batch.begin();
         firaMedium.setColor(0.234375f, 0.12109375f, 0.75390625f, 1f);
         firaMedium.getData().setScale(0.8f);
-		drawCenteredString(firaMedium, Translations.get(Main.identifier, "title"), Main.screenWidth / 2, 500);
+		drawCenteredString(firaMedium, "No Way But Down", Main.screenWidth / 2, 500);
 
         firaMedium.getData().setScale(0.5f);
         firaMedium.setColor(1f, 1f, 1f, 1f);
-		drawButton("new_game", 300, 0);
-		drawButton("load_game", 220, 1);
-		drawButton("quit", 140, 2);
+		drawButton("New Game", 300, 0);
+		drawButton("Load Game", 220, 1);
+		drawButton("Quit", 140, 2);
         Main.batch.end();
 	}
 
+    /** Draws the splash screen image at game startup */
     public static void drawSplash() {
         Main.batch.begin();
         Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
@@ -171,7 +201,7 @@ public class GameRendering {
         Main.batch.end();
     }
 
-	/// Updates the UI elements via keyboard input
+	/** Updates the UI elements via keyboard input */
 	public static void updateUI() {
         // Input canceling so that you can't press and hold
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
@@ -193,15 +223,28 @@ public class GameRendering {
 		}
 	}
 
-	public static void drawButton(String textName, int y, int i) {
+    /**
+     * Draws a button with a given text and y position
+     * @param text The text that should be drawn on the button
+     * @param y The y position of the bottom (the x is centered)
+     * @param i The index of the button, to know if it is currently being selected
+     */
+    public static void drawButton(String text, int y, int i) {
         if (i == uiSelected) {
-            drawCenteredString(firaMedium, "> " + Translations.get(Main.identifier, textName) + " <",
+            drawCenteredString(firaMedium, "> " + text + " <",
                 Main.screenWidth / 2, y);
         } else {
-            drawCenteredString(firaMedium, Translations.get(Main.identifier, textName), Main.screenWidth / 2, y);
+            drawCenteredString(firaMedium, text, Main.screenWidth / 2, y);
         }
 	}
 
+    /**
+     * Utility for drawing a x- and y-centered string
+     * @param font The font to draw the string with
+     * @param text The text to draw
+     * @param x1 The x-position that the center of the text should be
+     * @param y1 The y-position that the center of the text should be
+     */
 	public static void drawCenteredString(BitmapFont font, String text, int x1, int y1) {
         // Create a layout to measure the text
         GlyphLayout layout = new GlyphLayout();
@@ -214,9 +257,11 @@ public class GameRendering {
         font.draw(Main.batch, layout, x, y);
 	}
 
+    /** Release all the {@link com.badlogic.gdx.graphics.BitmapFont} to avoid leaking memory */
     public static void dispose() {
         firaMedium.dispose();
         firaBold.dispose();
         firaRegular.dispose();
+        firaRegularFlipped.dispose();
     }
 }
