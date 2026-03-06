@@ -5,7 +5,7 @@ import com.ususstudios.noway.systems.*;
 import java.util.*;
 
 /**
- * This (theoretically) singleton class holds all the ECS stuff and the ways to interact with them.
+ * This class holds all the ECS stuff of a world and the ways to interact with them.
  */
 public class World {
     /** The keys are the IDs of the entities and the value is the list of components of the entity */

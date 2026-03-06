@@ -18,46 +18,46 @@ import java.util.Random;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    /**  */
+    /** The com.badlogic.gdx.graphics.g2d.SpriteBatch used to render textures on the screen */
     public static SpriteBatch batch;
-    /**  */
+    /** The com.badlogic.gdx.graphics.glutils.ShapeRenderer used to render shapes and lines on the screen */
     public static ShapeRenderer shapes;
-    /**  */
+    /** The log4j logger used globally. */
     public static final Logger LOGGER = LoggerFactory.getLogger("NoWayButDown");
 
     // Game State
-    /**  */
+    /** The states that the game as a whole can be in */
     public static States.GameStates gameState = States.GameStates.SPLASH;
-    /**  */
+    /** The map ID of the map that is currently being rendered */
     public static String currentMap = "";
-    /**  */
+    /** The alpha value (0.0 - 1.0) of the black curtain faded in and out during transitions */
     public static double transitionAlpha = 0;
-    /**  */
+    /** Whether debug mode is on, which weakens darkness and displays collisions */
     public static boolean debugMode = false;
 
     // Classes
-    /**  */
+    /** Just used for random number generation */
     public static Random random = new Random();
 
     // Entities
-    /**  */
+    /** The {@link com.ususstudios.noway.main.World} that contains the ECS data of the current map */
     public static World world = new World();
-    /**  */
+    /** The x position of the center of the screen in the map (in pixels) */
     public static float cameraX = 0;
-    /**  */
+    /** The y position of the center of the screen in the map (in pixels) */
     public static float cameraY = 0;
-    /**  */
+    /** The entity ID of the player entity */
     public static int playerId = 0;
 
     // Miscellaneous
-    /**  */
+    /** The width of the game window in pixels */
     public static int screenWidth = 1100;
-    /**  */
+    /** The height of the game window in pixels */
     public static int screenHeight = 700;
-    /**  */
+    /** The height and length of tiles in pixels. Changing this is undefined behavior, so don't. */
     public static int tileSize = 48;
-    /**  */
-    public static String bottomMiddleText = "";  // Text for "press E to interact" and such
+    /** Text for "press E to interact" and such */
+    public static String bottomMiddleText = "";
 
     /** This is run when the window is created */
     @Override
@@ -105,7 +105,7 @@ public class Main extends ApplicationAdapter {
         ScreenUtils.clear(0, 0, 0, 1);
 
         // Check the game state and call the appropriate draw method
-        if (gameState == States.GameStates.PLAYING) {
+        if (List.of(States.GameStates.PLAYING, States.GameStates.DIALOG).contains(gameState)) {
             GameRendering.drawPlaying();
         }
 
