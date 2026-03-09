@@ -1,64 +1,16 @@
 package com.ususstudios.noway.rendering;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.Main;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import java.awt.*;
-import java.io.IOException;
 
-/** The static class responsible for drawing tiles and UI on the screen */
+/** The static class responsible for drawing tiles and some UI on the screen */
 public class GameRendering {
-    /** The Fira medium font size */
-	static BitmapFont firaMedium;
-    /** The Fira bold font size */
-	static BitmapFont firaBold;
-	/** The Fira regular font size */
-    static BitmapFont firaRegular;
-    /** The Fira regular font size, but flipped */
-	static BitmapFont firaRegularFlipped;
-
-	// UI
-    /** Which UI option is currently selected? */
-	public static int uiSelected = 0;
-    /** How many UI options are there at the moment? */
-	public static int uiMaxOptions = 2;
-
     /** Initialize all the static stuff needed for this class to render properly. Called by {@link com.ususstudios.noway.Main}. */
-	public static void init() {
-		// Load in the fonts
-		try {
-			firaMedium = getFont("FiraSans-Medium", false);
-			firaBold = getFont("FiraSans-Bold", false);
-			firaRegular = getFont("FiraSans-Regular", false);
-			firaRegularFlipped = getFont("FiraSans-Regular", true);
-		} catch (FontFormatException | IOException e) {
-			Main.handleException(e);
-		}
-	}
-
-    /**
-     * Get a com.badlogic.gdx.graphics.g2d.BitmapFont from a file name.
-     * @param name The path of the font path, starting from /assets/fonts/
-     * @param flip Whether to flip the font upside down
-     * @return A BitmapFont of the font
-     * @throws FontFormatException If there's an issue with the TrueTypeFont file format
-     * @throws IOException If there's an issue with reading the file
-     */
-	public static BitmapFont getFont(String name, boolean flip) throws FontFormatException, IOException {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/" + name + ".ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 128; // fonts size in pixels
-        parameter.flip = flip;
-        BitmapFont font = generator.generateFont(parameter);
-        generator.dispose();
-        return font;
-    }
+	public static void init() {}
 
     /** Draws all the tiles that should be drawn below the player in the {@link com.ususstudios.noway.main.States.GameStates} PLAYING state. */
     public static void drawPlaying() {
@@ -110,9 +62,24 @@ public class GameRendering {
         drawLayer(map, map.layer3());
 
         if (!Main.bottomMiddleText.isBlank()) {
-            firaRegularFlipped.getData().setScale(0.3f);
-            drawCenteredString(firaRegularFlipped, Main.bottomMiddleText, Main.screenWidth / 2, 550);
+            drawCenteredString(UI.getFont("FiraSans-Regular", 38, true), Main.bottomMiddleText, Main.screenWidth / 2, 550);
         }
+        Main.batch.end();
+    }
+
+    /** Draws the splash screen image at game startup */
+    public static void drawSplash() {
+        Main.batch.begin();
+        Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+        Main.batch.enableBlending();
+        Color c = Main.batch.getColor();
+        Main.batch.setColor(c.r, c.g, c.b, (float) Main.transitionAlpha);
+        Main.batch.draw(Image.loadImage("ususlogo").getTexture(), 125, 150, 400, 400);
+
+        BitmapFont firaMedium = UI.getFont("FiraSans-Medium", 128, false);
+        firaMedium.setColor(0.15f, 0.15f, 0.75f, (float) Main.transitionAlpha);
+        firaMedium.getData().setScale(0.75f);
+        firaMedium.draw(Main.batch, "UsUsStudios", 460, 450);
         Main.batch.end();
     }
 
@@ -171,75 +138,6 @@ public class GameRendering {
         }
     }
 
-    /** Draws the UI in the {@link com.ususstudios.noway.main.States.GameStates} TITLE state */
-    public static void drawTitle() {
-        ScreenUtils.clear(Color.BLACK);
-
-        Main.batch.begin();
-        firaMedium.setColor(0.234375f, 0.12109375f, 0.75390625f, 1f);
-        firaMedium.getData().setScale(0.8f);
-		drawCenteredString(firaMedium, "No Way But Down", Main.screenWidth / 2, 500);
-
-        firaMedium.getData().setScale(0.5f);
-        firaMedium.setColor(1f, 1f, 1f, 1f);
-		drawButton("New Game", 300, 0);
-		drawButton("Load Game", 220, 1);
-		drawButton("Quit", 140, 2);
-        Main.batch.end();
-	}
-
-    /** Draws the splash screen image at game startup */
-    public static void drawSplash() {
-        Main.batch.begin();
-        Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
-        Main.batch.enableBlending();
-        Color c = Main.batch.getColor();
-        Main.batch.setColor(c.r, c.g, c.b, (float) Main.transitionAlpha);
-        Main.batch.draw(Image.loadImage("ususlogo").getTexture(), 125, 150, 400, 400);
-
-        firaMedium.setColor(0.15f, 0.15f, 0.75f, (float) Main.transitionAlpha);
-        firaMedium.getData().setScale(0.75f);
-        firaMedium.draw(Main.batch, "UsUsStudios", 460, 450);
-        Main.batch.end();
-    }
-
-	/** Updates the UI elements via keyboard input */
-	public static void updateUI() {
-        // Input canceling so that you can't press and hold
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            uiSelected--;
-            if (uiSelected < 0) uiSelected = 0;
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            uiSelected++;
-            if (uiSelected > uiMaxOptions) uiSelected = uiMaxOptions;
-        }
-
-		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-			switch (uiSelected) {
-				case 0 -> Main.loadMap("main");
-				case 1 -> {}
-				case 2 -> System.exit(0);
-			}
-		}
-	}
-
-    /**
-     * Draws a button with a given text and y position
-     * @param text The text that should be drawn on the button
-     * @param y The y position of the bottom (the x is centered)
-     * @param i The index of the button, to know if it is currently being selected
-     */
-    public static void drawButton(String text, int y, int i) {
-        if (i == uiSelected) {
-            drawCenteredString(firaMedium, "> " + text + " <",
-                Main.screenWidth / 2, y);
-        } else {
-            drawCenteredString(firaMedium, text, Main.screenWidth / 2, y);
-        }
-	}
-
     /**
      * Utility for drawing a x- and y-centered string
      * @param font The font to draw the string with
@@ -260,10 +158,5 @@ public class GameRendering {
 	}
 
     /** Release all the BitmapFonts to avoid leaking memory */
-    public static void dispose() {
-        firaMedium.dispose();
-        firaBold.dispose();
-        firaRegular.dispose();
-        firaRegularFlipped.dispose();
-    }
+    public static void dispose() {}
 }

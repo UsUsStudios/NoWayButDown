@@ -71,9 +71,11 @@ public class Main extends ApplicationAdapter {
         MapTileHandler.loadMaps();
         GameRendering.init();
         SoundManager.loadLibrary();
+        UI.setup();
         setupECSWorld();
 
-        // Start!
+
+        // Start the splash screen
         new Thread(() -> {
             try {
                 gameState = States.GameStates.SPLASH;
@@ -87,8 +89,24 @@ public class Main extends ApplicationAdapter {
                     transitionAlpha -= 0.007f;
                 }
                 Thread.sleep(500);
+
+                // Change to the main menu state
                 SoundManager.playMusic("Can't Go Up", true, false);
                 gameState = States.GameStates.MAIN_MENU;
+                UI.uiState = "Title";
+
+                // Load the main map so we can see it in the main menu
+                currentMap = "main";
+                world.getEntityComponent(playerId, PositionComponent.class).get()
+                    .setPosition(MapTileHandler.maps.get(currentMap).spawnX(), MapTileHandler.maps.get(currentMap).spawnY());
+                cameraX = MapTileHandler.maps.get(currentMap).spawnX() * tileSize;
+                cameraY = MapTileHandler.maps.get(currentMap).spawnY() * tileSize;
+                gameState = States.GameStates.MAIN_MENU;
+                SoundManager.playMapMusic(currentMap);
+
+                for (List<Component> entity : MapTileHandler.maps.get(currentMap).entities()) {
+                    world.createEntity(entity.toArray(new Component[entity.size()]));
+                }
             } catch (InterruptedException e) {
                 handleException(e);
             }
@@ -104,17 +122,16 @@ public class Main extends ApplicationAdapter {
         update();
         ScreenUtils.clear(0, 0, 0, 1);
 
-        // Check the game state and call the appropriate draw method
-        if (List.of(States.GameStates.PLAYING, States.GameStates.DIALOG).contains(gameState)) {
+        if (gameState != States.GameStates.SPLASH) {
+            // Draw the tiles and system
             GameRendering.drawPlaying();
+            world.render();
         }
-
-        if (gameState != States.GameStates.SPLASH) world.render();
 
         // Draw UI based on game state
         switch (gameState) {
             case PLAYING -> GameRendering.drawPlayingUI();
-            case MAIN_MENU -> GameRendering.drawTitle();
+            case MAIN_MENU -> { ScreenUtils.clear(0f, 0f, 0f, 0.1f); UI.stage.draw(); }  // TODO: make the curtain not transparent
             case SPLASH -> GameRendering.drawSplash();
         }
     }
@@ -124,7 +141,7 @@ public class Main extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) debugMode = !debugMode;
 
         if (gameState == States.GameStates.PLAYING) world.update();
-        else GameRendering.updateUI();
+        else UI.update();
     }
 
     /** This is run when the window is closed */
