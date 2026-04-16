@@ -128,7 +128,7 @@ public class UI {
         table.setY(350);
 
         // Center the table
-        table.setPosition((stage.getWidth() - table.getPrefWidth()) / 2f, table.getY());
+        table.setPosition((stage.getWidth() - table.getPrefWidth()) / 2f - 50, table.getY());
 
         // Create the style that will be used for the title
         Label.LabelStyle titleStyle = new Label.LabelStyle();
@@ -142,28 +142,28 @@ public class UI {
 
         // Create the title
         Label title = new Label("No Way But Down", titleStyle);
-        table.add(title);
+        table.add(title).pad(10);
 
         // New Row
-        table.row().pad(5);
+        table.row().pad(5).left();
 
         // Create the first actual button that creates a new game
-        TextButton newMain = createButton("New Game",
+        TextButton newMain = createButton("New Game", 5,
             buttonStyle, () -> Main.loadMap("main"));
         table.add(newMain);
 
         // New Row
-        table.row().pad(5);
+        table.row().pad(5).left();
 
         // A load button (no functionality for now)
-        TextButton loadMain = new TextButton("Load Game", buttonStyle);
+        TextButton loadMain = new TextButton("     Load Game", buttonStyle);
         table.add(loadMain);
 
         // New Row
-        table.row().pad(5);
+        table.row().pad(5).left();
 
         // Finally, a quit button, so players can touch grass
-        TextButton quit = createButton("Quit",
+        TextButton quit = createButton("Quit", 5,
             buttonStyle, () -> Gdx.app.exit());
         table.add(quit);
 
@@ -276,9 +276,9 @@ public class UI {
      * <p>
      * @return The resulting button with hover effects.
      **/
-    public static TextButton createButton(String text, TextButton.TextButtonStyle style, Runnable action) {
+    public static TextButton createButton(String text, int leftPad, TextButton.TextButtonStyle style, Runnable action) {
         // Create the button
-        TextButton button = new TextButton(text, style);
+        TextButton button = new TextButton(" ".repeat(leftPad) + text, style);
 
         // Add in a click listener for epik hover effects
         button.addListener(new ClickListener() {
@@ -292,13 +292,13 @@ public class UI {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 // If the mouse entered, let the player know they can press it by putting arrows around it and playing a sound
                 SoundManager.playSFX("Cursor");
-                button.setText("> " + text + " <");
+                button.setText(" ".repeat(leftPad-1) + "> " + text);
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 // Once the cursor leaves, undo the last method's work
-                button.setText(text);
+                button.setText(" ".repeat(leftPad) + text);
             }
         });
 
