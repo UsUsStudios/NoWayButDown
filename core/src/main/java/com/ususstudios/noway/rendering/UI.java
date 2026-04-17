@@ -4,6 +4,7 @@ import java.util.HashMap;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.main.SoundManager;
+import com.ususstudios.noway.main.States;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -50,6 +51,7 @@ public class UI {
         // Setup (almost) all uiStates
         titleScreen();
         debugState();
+        pauseScreen();
 
         Main.LOGGER.info("Loaded UI");
     }
@@ -169,6 +171,37 @@ public class UI {
 
         // Create the uiState
         uiStates.put("Title", table);
+    }
+
+    /** Sets up the elements for the pause screen. */
+    public static void pauseScreen() {
+        // Create a new table to hold all the items
+        Table table = new Table();
+
+        // Position it on the Y axis (e.g., 200 px from bottom)
+        table.setY(350);
+        table.setPosition((stage.getWidth() - table.getPrefWidth()) / 2f - 50, table.getY());
+
+        // Create the style that will be used for the buttons
+        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        buttonStyle.fontColor = Color.WHITE;
+        buttonStyle.font = getFont("FiraSans-Medium", 72, false);
+
+        table.row().pad(5).left();
+        TextButton resume = createButton("Resume Game", 5,
+            buttonStyle, () -> { Main.gameState = States.GameStates.PLAYING; });
+        table.add(resume);
+
+        table.row().pad(5).left();
+        TextButton exit = createButton("Exit to Menu", 5,
+            buttonStyle, () -> {
+                uiState = "Title";
+                Main.gameState = States.GameStates.MAIN_MENU;
+            });
+        table.add(exit);
+
+        // Create the uiState
+        uiStates.put("Paused", table);
     }
 
     /** Sets up the elements for the play state. */

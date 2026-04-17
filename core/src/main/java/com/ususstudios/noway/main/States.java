@@ -8,6 +8,8 @@ public class States {
         SPLASH,
         /** In-game, with tiles and entities rendering and no additional UI */
         PLAYING,
+        /** Paused, with tiles and entities rendering and pause UI */
+        PAUSED,
         /** The main menu displayed at startup to load a game */
         MAIN_MENU
 	}

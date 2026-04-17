@@ -1,4 +1,4 @@
-// What are you doing, looking through my horrible code? You do not belong here.
+// What are you doing, looking through my horrible code? You don't belong here.
 package com.ususstudios.noway;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -13,6 +13,8 @@ import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.Taskbar.State;
 import java.util.List;
 import java.util.Random;
 
@@ -131,7 +133,8 @@ public class Main extends ApplicationAdapter {
         // Draw UI based on game state
         switch (gameState) {
             case PLAYING -> GameRendering.drawPlayingUI();
-            case MAIN_MENU -> { ScreenUtils.clear(0f, 0f, 0f, 0.1f); UI.stage.draw(); }  // TODO: make the curtain not transparent
+            case PAUSED -> UI.stage.draw();
+            case MAIN_MENU -> UI.stage.draw();  // TODO: make the curtain not transparent
             case SPLASH -> GameRendering.drawSplash();
         }
     }
@@ -139,6 +142,14 @@ public class Main extends ApplicationAdapter {
     /** Updates the game and UI states */
     public static void update() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) debugMode = !debugMode;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if (gameState == States.GameStates.PLAYING) {
+                UI.uiState = "Paused";
+                gameState = States.GameStates.PAUSED;
+            } else if (gameState == States.GameStates.PAUSED) {
+                gameState = States.GameStates.PLAYING;
+            }
+        }
 
         if (gameState == States.GameStates.PLAYING) world.update();
         else UI.update();

@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 /** The static class responsible for drawing tiles and some UI on the screen */
 public class GameRendering {
     /** Initialize all the static stuff needed for this class to render properly. Called by {@link com.ususstudios.noway.Main}. */
-	public static void init() {}
+    public static void init() {}
 
     /** Draws all the tiles that should be drawn below the player in the {@link com.ususstudios.noway.main.States.GameStates} PLAYING state. */
     public static void drawPlaying() {
@@ -22,7 +22,6 @@ public class GameRendering {
         drawLayer(map, map.layer2());
 
         Main.batch.end();
-
 
         if (!Main.debugMode) {
             return;
@@ -54,6 +53,9 @@ public class GameRendering {
         }
         Main.shapes.end();
     }
+
+    /** Draws the pause UI that should be drawn above the player in the {@link com.ususstudios.noway.main.States.GameStates} PAUSED state. */
+    public static void drawPaused() {}
 
     /** Draws all the tiles and UI that should be drawn above the player in the {@link com.ususstudios.noway.main.States.GameStates} PLAYING state. */
     public static void drawPlayingUI() {
