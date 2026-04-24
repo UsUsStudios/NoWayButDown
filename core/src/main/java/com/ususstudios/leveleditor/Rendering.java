@@ -1,0 +1,53 @@
+package com.ususstudios.leveleditor;
+
+import com.ususstudios.noway.rendering.Map;
+import com.ususstudios.noway.rendering.MapTileHandler;
+import com.ususstudios.noway.rendering.Tile;
+
+/** The static class responsible for drawing tiles and some UI on the screen */
+public class Rendering {
+    public static void drawPlaying() {
+        Map map = MapTileHandler.maps.get(Main.currentMap);
+
+        // Position the camera on the player (in world coordinates)
+        Main.gameCamera.position.set(
+            Main.cameraX + Main.tileSize / 2f,
+            Main.cameraY + Main.tileSize / 2f,
+            0
+        );
+        Main.gameCamera.update();
+
+        Main.batch.setProjectionMatrix(Main.gameCamera.combined);
+        Main.batch.begin();
+        drawLayer(map, map.layer1());
+        drawLayer(map, map.layer2());
+        drawLayer(map, map.layer3());
+        Main.batch.end();
+    }
+
+    private static void drawLayer(Map map, String[][] layer) {
+        int tileSize = Main.tileSize;
+
+        // Compute visible tile range using the camera's world bounds
+        float camX = Main.gameCamera.position.x;
+        float camY = Main.gameCamera.position.y;
+        float halfW = Main.gameCamera.viewportWidth / 2f;
+        float halfH = Main.gameCamera.viewportHeight / 2f;
+
+        int minCol = Math.max(0, (int) ((camX - halfW) / tileSize));
+        int maxCol = Math.min(map.width() - 1, (int) ((camX + halfW) / tileSize) + 1);
+        int minRow = Math.max(0, (int) ((camY - halfH) / tileSize));
+        int maxRow = Math.min(map.height() - 1, (int) ((camY + halfH) / tileSize) + 1);
+
+        for (int worldRow = minRow; worldRow <= maxRow; worldRow++) {
+            for (int worldCol = minCol; worldCol <= maxCol; worldCol++) {
+                String tileNumber = layer[worldRow][worldCol];
+                float worldX = worldCol * tileSize;
+                float worldY = worldRow * tileSize;
+
+                Tile currentTile = MapTileHandler.tileTypes.get(tileNumber);
+                Main.batch.draw(currentTile.image().getTexture(), worldX, worldY);
+            }
+        }
+    }
+}

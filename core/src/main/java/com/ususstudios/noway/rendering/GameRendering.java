@@ -147,7 +147,7 @@ public class GameRendering {
      * @param x1 The x-position that the center of the text should be
      * @param y1 The y-position that the center of the text should be
      */
-	public static void drawCenteredString(BitmapFont font, String text, int x1, int y1) {
+    public static void drawCenteredString(BitmapFont font, String text, int x1, int y1) {
         // Create a layout to measure the text
         GlyphLayout layout = new GlyphLayout();
         layout.setText(font, text);
@@ -157,7 +157,7 @@ public class GameRendering {
         float y = y1 + (layout.height) / 2; // for vertical centering
 
         font.draw(Main.batch, layout, x, y);
-	}
+    }
 
     /** Release all the BitmapFonts to avoid leaking memory */
     public static void dispose() {}

@@ -9,29 +9,39 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.ususstudios.noway.rendering.Image;
+import com.ususstudios.noway.rendering.MapTileHandler;
 
 public class Main implements Screen {
 
-    private SpriteBatch batch;
+    public static SpriteBatch batch;
     private Stage stage;
     private ScreenViewport stageViewport;
     private ExtendViewport gameViewport;
-    private OrthographicCamera gameCamera;
+    public static OrthographicCamera gameCamera;
     private static final int SIDEBAR_WIDTH = 200;
 
-    Image image;
+    static String currentMap = "main";
+    public static float cameraX = 0;
+    public static float cameraY = 0;
+    public static int tileSize = 48;
+    public static int screenWidth = 1000;
+    public static int screenHeight = 600;
+    static int gameWidth = Gdx.graphics.getWidth() - SIDEBAR_WIDTH;
+    static int gameHeight = Gdx.graphics.getHeight();
+
 
     @Override
     public void show() {
         batch = new SpriteBatch();
 
         gameCamera = new OrthographicCamera();
-        gameViewport = new ExtendViewport(800, 600, gameCamera);
+        gameCamera.setToOrtho(true, gameWidth, gameHeight);
+        gameViewport = new ExtendViewport(screenWidth - SIDEBAR_WIDTH, screenHeight, gameCamera);
         stageViewport = new ScreenViewport();
         stage = new Stage(stageViewport, batch);
-        image = Image.loadImage("disabled");
-        image.scaleImage(1000, 1000);
+
+        MapTileHandler.loadMaps();
+        MapTileHandler.loadTiles();
 
         buildSidebar();
 
@@ -41,7 +51,7 @@ public class Main implements Screen {
         Gdx.input.setInputProcessor(multiplexer);
     }
 
-    public void buildSidebar() {
+    private void buildSidebar() {
 
     }
 
@@ -50,19 +60,13 @@ public class Main implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        int gameWidth = Gdx.graphics.getWidth() - SIDEBAR_WIDTH;
-        int gameHeight = Gdx.graphics.getHeight();
-
         gameViewport.update(gameWidth, gameHeight);
         gameViewport.apply();
 
         Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
         Gdx.gl.glScissor(0, 0, gameWidth, gameHeight);
 
-        batch.setProjectionMatrix(gameCamera.combined);
-        batch.begin();
-        batch.draw(image.getTexture(), -375, -300);
-        batch.end();
+        Rendering.drawPlaying();
 
         Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
 
