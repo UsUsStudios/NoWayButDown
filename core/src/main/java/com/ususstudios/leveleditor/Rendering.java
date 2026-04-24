@@ -1,5 +1,6 @@
 package com.ususstudios.leveleditor;
 
+import com.badlogic.gdx.graphics.Color;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import com.ususstudios.noway.rendering.Tile;
@@ -22,6 +23,9 @@ public class Rendering {
         drawLayer(map, map.layer1());
         drawLayer(map, map.layer2());
         drawLayer(map, map.layer3());
+        float worldX = Main.mouseTile[1] * Main.tileSize;
+        float worldY = Main.mouseTile[0] * Main.tileSize;
+        Main.drawRect(worldX, worldY, Main.tileSize, Main.tileSize, 2, Color.RED);
         Main.batch.end();
     }
 
