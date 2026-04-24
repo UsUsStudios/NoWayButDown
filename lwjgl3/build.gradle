@@ -52,6 +52,12 @@ run {
   if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
 
+tasks.register('runEditor', JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = 'com.ususstudios.noway.lwjgl3.Lwjgl3Launcher'
+  args '-e'
+}
+
 jar {
   // sets the name of the .jar file this produces to the name of the game or app, with the version after.
   archiveFileName.set("${appName}-${projectVersion}.jar")

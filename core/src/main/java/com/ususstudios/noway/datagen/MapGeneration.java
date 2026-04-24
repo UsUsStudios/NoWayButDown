@@ -12,7 +12,9 @@ import com.ususstudios.noway.components.*;
 
 /**
  * MapGeneration is an API for generating map JSONs.
+ * @deprecated Completely deprecated due to level editor.
  */
+@Deprecated
 public class MapGeneration {
     /**
      * Generates all the map JSON files.

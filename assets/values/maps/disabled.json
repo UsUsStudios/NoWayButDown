@@ -1,7 +1,13 @@
 {
   "name": "Error: Map Not Found",
-  "size": [25, 21],
-  "spawn": [21, 23],
+  "size": [
+    25,
+    21
+  ],
+  "spawn": [
+    21,
+    23
+  ],
   "songs": [],
   "entities": [],
   "map": [

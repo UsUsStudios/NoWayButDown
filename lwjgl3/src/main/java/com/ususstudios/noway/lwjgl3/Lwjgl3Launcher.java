@@ -1,5 +1,6 @@
 package com.ususstudios.noway.lwjgl3;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.ususstudios.noway.Main;
@@ -8,14 +9,14 @@ import com.ususstudios.noway.Main;
 public class Lwjgl3Launcher {
     /**
      * Creates the window and starts up EVERYTHING
-     * @param args Arguments. unused.
+     * @param args Command arguments
      */
     public static void main(String[] args) {
-        if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
-        createApplication();
-    }
-
-    private static void createApplication() {
+        if (StartupHelper.startNewJvmIfRequired()) return;
+        if (args[0].equals("-e")) {
+            new Lwjgl3Application(new EditorScreenWrapper(), getEditorDefaultConfiguration());
+            return;
+        }
         new Lwjgl3Application(new Main(), getDefaultConfiguration());
     }
 
@@ -43,5 +44,38 @@ public class Lwjgl3Launcher {
         configuration.setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.ANGLE_GLES20, 0, 0);
 
         return configuration;
+    }
+
+    private static Lwjgl3ApplicationConfiguration getEditorDefaultConfiguration() {
+        Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
+        configuration.setTitle("NWBD Level Editor");
+
+        //// Vsync limits the frames per second to what your hardware can display, and helps eliminate
+        //// screen tearing. This setting doesn't always work on Linux, so the line after is a safeguard.
+        configuration.useVsync(true);
+        //// Limits FPS to the refresh rate of the currently active monitor, plus 1 to try to match fractional
+        //// refresh rates. The Vsync setting above should limit the actual FPS to match the monitor.
+        configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
+        //// If you remove the above line and set Vsync to false, you can get unlimited FPS, which can be
+        //// useful for testing performance, but can also be very stressful to some hardware.
+        //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
+
+        configuration.setWindowedMode(1000, 600);
+
+        //// This should improve compatibility with Windows machines with buggy OpenGL drivers, Macs
+        //// with Apple Silicon that have to emulate compatibility with OpenGL anyway, and more.
+        //// This uses the dependency `com.badlogicgames.gdx:gdx-lwjgl3-angle` to function.
+        //// You can choose to remove the following line and the mentioned dependency if you want; they
+        //// are not intended for games that use GL30 (which is compatibility with OpenGL ES 3.0).
+        configuration.setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.ANGLE_GLES20, 0, 0);
+
+        return configuration;
+    }
+}
+
+final class EditorScreenWrapper extends Game {
+    @Override
+    public void create() {
+        setScreen(new com.ususstudios.leveleditor.Main());
     }
 }
