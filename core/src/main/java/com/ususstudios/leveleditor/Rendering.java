@@ -20,16 +20,17 @@ public class Rendering {
 
         Main.batch.setProjectionMatrix(Main.gameCamera.combined);
         Main.batch.begin();
-        drawLayer(map, map.layer1());
-        drawLayer(map, map.layer2());
-        drawLayer(map, map.layer3());
+        drawLayer(map, map.layer1(), Main.layer == 1 || Main.layer == 0);
+        drawLayer(map, map.layer2(), Main.layer == 2 || Main.layer == 0);
+        drawLayer(map, map.layer3(), Main.layer == 3 || Main.layer == 0);
         float worldX = Main.mouseTile[1] * Main.tileSize;
         float worldY = Main.mouseTile[0] * Main.tileSize;
         Main.drawRect(worldX, worldY, Main.tileSize, Main.tileSize, 2, Color.RED);
+
         Main.batch.end();
     }
 
-    private static void drawLayer(Map map, String[][] layer) {
+    private static void drawLayer(Map map, String[][] layer, boolean notOnioned) {
         int tileSize = Main.tileSize;
 
         // Compute visible tile range using the camera's world bounds
@@ -42,6 +43,8 @@ public class Rendering {
         int maxCol = Math.min(map.width() - 1, (int) ((camX + halfW) / tileSize) + 1);
         int minRow = Math.max(0, (int) ((camY - halfH) / tileSize));
         int maxRow = Math.min(map.height() - 1, (int) ((camY + halfH) / tileSize) + 1);
+        if (notOnioned) Main.batch.setColor(1, 1, 1, 1);
+        else Main.batch.setColor(1, 1, 1, 0.15f);
 
         for (int worldRow = minRow; worldRow <= maxRow; worldRow++) {
             for (int worldCol = minCol; worldCol <= maxCol; worldCol++) {

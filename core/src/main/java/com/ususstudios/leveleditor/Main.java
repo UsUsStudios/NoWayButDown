@@ -2,8 +2,6 @@ package com.ususstudios.leveleditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -37,6 +34,7 @@ public class Main implements Screen {
     static int gameWidth = Gdx.graphics.getWidth() - SIDEBAR_WIDTH;
     static int gameHeight = Gdx.graphics.getHeight();
     static int[] mouseTile = {0, 0};
+    static int layer = 0;
 
     @Override
     public void show() {
@@ -89,6 +87,11 @@ public class Main implements Screen {
     }
 
     private void handleInput(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) layer = 0;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) layer = 1;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) layer = 2;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) layer = 3;
+
         float inputX = Gdx.input.getX() * (float) Main.screenWidth / (float) (Main.screenWidth - Main.SIDEBAR_WIDTH);
         Vector3 mouseScreen = new Vector3(inputX, Gdx.input.getY(), 0);
         Vector3 mouseWorld = Main.gameCamera.unproject(mouseScreen);
