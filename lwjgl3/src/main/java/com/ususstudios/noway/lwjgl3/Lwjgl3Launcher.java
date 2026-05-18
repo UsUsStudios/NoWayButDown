@@ -13,6 +13,7 @@ public class Lwjgl3Launcher {
      */
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return;
+        if (args.length != 0)
         if (args[0].equals("-e")) {
             new Lwjgl3Application(new EditorScreenWrapper(), getEditorDefaultConfiguration());
             return;

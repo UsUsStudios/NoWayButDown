@@ -9,5 +9,7 @@ public class DataGeneration {
      * Runs all the data generators. Is run automatically by the {@code genData} Gradle task.
      * @param args Arguments. unused.
     */
-    public static void main(String[] args) {}
+    public static void main(String[] args) {
+        MapGeneration.generate();
+    }
 }

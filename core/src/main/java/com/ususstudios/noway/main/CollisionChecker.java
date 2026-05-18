@@ -109,7 +109,7 @@ public class CollisionChecker {
 
         for (int row = 0; row < map.height(); row++) {
             for (int col = 0; col < map.width(); col++) {
-                String tileNumber = map.layer2()[col][row];
+                short tileNumber = map.layer2()[col][row];
                 var tile = MapTileHandler.tileTypes.get(tileNumber);
                 if (tile == null) continue;
 

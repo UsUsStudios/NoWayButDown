@@ -30,7 +30,7 @@ public class Rendering {
         Main.batch.end();
     }
 
-    private static void drawLayer(Map map, String[][] layer, boolean notOnioned) {
+    private static void drawLayer(Map map, short[][] layer, boolean notOnioned) {
         int tileSize = Main.tileSize;
 
         // Compute visible tile range using the camera's world bounds
@@ -48,7 +48,7 @@ public class Rendering {
 
         for (int worldRow = minRow; worldRow <= maxRow; worldRow++) {
             for (int worldCol = minCol; worldCol <= maxCol; worldCol++) {
-                String tileNumber = layer[worldRow][worldCol];
+                short tileNumber = layer[worldRow][worldCol];
                 float worldX = worldCol * tileSize;
                 float worldY = worldRow * tileSize;
 

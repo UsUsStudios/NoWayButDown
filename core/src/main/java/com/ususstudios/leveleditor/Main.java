@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 
 public class Main implements Screen {
@@ -98,6 +99,7 @@ public class Main implements Screen {
 
         mouseTile[1] = (int) Math.floor(mouseWorld.x / Main.tileSize);
         mouseTile[0] = (int) Math.floor(mouseWorld.y / Main.tileSize);
+        handleClick();
 
         int xAxis = 0;
         int yAxis = 0;
@@ -110,6 +112,35 @@ public class Main implements Screen {
         if (xAxis != 0 && yAxis != 0) mul = 1;
         cameraX += xAxis * 300 * delta * mul;
         cameraY += yAxis * 300 * delta * mul;
+
+        Map map = MapTileHandler.maps.get(currentMap);
+        int maxCameraX = map.width() * tileSize - (screenWidth - SIDEBAR_WIDTH) / 2 - tileSize / 2;
+        int maxCameraY = map.height() * tileSize - screenHeight / 2 - tileSize / 2;
+        float minCameraX = (screenWidth - SIDEBAR_WIDTH) / 2f + tileSize / 2;
+        float minCameraY = screenHeight / 2f + tileSize / 2;
+        if (cameraX < minCameraX) cameraX = minCameraX;
+        if (cameraY < minCameraY) cameraY = minCameraY;
+        if (cameraX > maxCameraX) cameraX = maxCameraX;
+        if (cameraY > maxCameraY) cameraY = maxCameraY;
+    }
+
+    private void handleClick() {
+        if (!checkMouseTile()) return;
+
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {}
+        if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {}
+        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+
+        }
+    }
+
+    private boolean checkMouseTile() {
+        Map map = MapTileHandler.maps.get(currentMap);
+        if (mouseTile[0] > map.width() - 1) return false;
+        if (mouseTile[1] > map.height() - 1) return false;
+        if (mouseTile[0] < 0) return false;
+        if (mouseTile[1] < 0) return false;
+        return true;
     }
 
     @Override
