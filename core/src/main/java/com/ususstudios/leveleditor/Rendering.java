@@ -56,5 +56,11 @@ public class Rendering {
                 Main.batch.draw(currentTile.image().getTexture(), worldX, worldY);
             }
         }
+
+        float worldX = Main.mouseTile[1] * Main.tileSize;
+        float worldY = Main.mouseTile[0] * Main.tileSize;
+        Tile currentTile = MapTileHandler.tileTypes.get(Main.tileID);
+        Main.batch.setColor(1, 1, 1, 0.5f);
+        Main.batch.draw(currentTile.image().getTexture(), worldX, worldY);
     }
 }

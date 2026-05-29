@@ -43,7 +43,7 @@ public class Main implements Screen {
     static int gameHeight = Gdx.graphics.getHeight();
     static int[] mouseTile = {0, 0};
     static int layer = 0;
-    static short tileID = 0;
+    static short tileID = 0;  // the selected tile
 
     @Override
     public void show() {
