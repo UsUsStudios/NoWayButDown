@@ -10,11 +10,18 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
+import com.ususstudios.noway.rendering.Tile;
 
 public class Main implements Screen {
 
@@ -36,6 +43,7 @@ public class Main implements Screen {
     static int gameHeight = Gdx.graphics.getHeight();
     static int[] mouseTile = {0, 0};
     static int layer = 0;
+    static short tileID = 0;
 
     @Override
     public void show() {
@@ -62,7 +70,55 @@ public class Main implements Screen {
     }
 
     private void buildSidebar() {
+        Table sidebar = new Table();
+        sidebar.setPosition(Gdx.graphics.getWidth() - SIDEBAR_WIDTH, 0);
+        sidebar.setSize(SIDEBAR_WIDTH, Gdx.graphics.getHeight());
+        sidebar.top().left().pad(4);
 
+        int buttonSize = 48;
+        int columns = 5;
+        int currColumn = 0;
+
+        for (java.util.Map.Entry<Short, Tile> entry : MapTileHandler.tileTypes.entrySet()) {
+            short thisTileId = entry.getKey();
+            Tile tile = entry.getValue();
+
+            TextureRegionDrawable drawable = new TextureRegionDrawable(tile.image().getTexture());
+
+            ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+            style.imageUp = drawable;
+            style.imageChecked = drawable;
+
+            ImageButton button = new ImageButton(style);
+            button.setSize(buttonSize, buttonSize);
+
+            button.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    tileID = thisTileId;
+                    for (Actor a : sidebar.getChildren()) {
+                        if (a instanceof ImageButton b) b.getImage().setColor(Color.WHITE);
+                    }
+                    button.getImage().setColor(Color.CYAN);
+                }
+            });
+
+            sidebar.add(button).size(buttonSize).pad(2);
+            currColumn += 1;
+            if (currColumn >= columns) {
+                sidebar.row();
+                currColumn = 0;
+            }
+        }
+
+        ScrollPane scrollPane = new ScrollPane(sidebar);
+        scrollPane.setScrollingDisabled(false, false); // enable both axes
+        scrollPane.setOverscroll(false, false);
+        scrollPane.setFlingTime(0f); // disable fling/momentum if you want crisp scrolling
+        scrollPane.setPosition(Gdx.graphics.getWidth() - SIDEBAR_WIDTH, 0);
+        scrollPane.setSize(SIDEBAR_WIDTH, Gdx.graphics.getHeight());
+
+        stage.addActor(scrollPane);
     }
 
     @Override
