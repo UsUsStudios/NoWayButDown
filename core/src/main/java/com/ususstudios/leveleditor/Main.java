@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -83,7 +84,9 @@ public class Main implements Screen {
             short thisTileId = entry.getKey();
             Tile tile = entry.getValue();
 
-            TextureRegionDrawable drawable = new TextureRegionDrawable(tile.image().getTexture());
+            TextureRegion region = new TextureRegion(tile.image().getTexture());
+            region.flip(false, true);
+            TextureRegionDrawable drawable = new TextureRegionDrawable(region);
 
             ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
             style.imageUp = drawable;
