@@ -1,5 +1,13 @@
 package com.ususstudios.leveleditor;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Base64;
+import java.util.List;
+
+import org.json.JSONObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -20,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.ususstudios.noway.main.UtilityTool;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import com.ususstudios.noway.rendering.Tile;
@@ -46,6 +55,46 @@ public class Main implements Screen {
     static int layer = 0;
     static short tileID = 0;  // the selected tile
 
+    static String filename = "main";
+    static Map map = null;
+    static List<Object> mapEntities = null;
+
+    private boolean loadMap() {
+        map = MapTileHandler.maps.get(filename);
+        mapEntities = UtilityTool.getJsonObject("/values/maps/" + filename + ".json").getJSONArray("entities").toList();
+        return map != null;
+    }
+
+    private void saveMap() {
+        JSONObject mapJSON = new JSONObject(map);
+        mapJSON.put("name", map.name());
+        mapJSON.put("size", new int[]{ map.width(), map.height() });
+        mapJSON.put("spawn", new int[]{ map.spawnX(), map. spawnY() });
+        mapJSON.put("map", new String[]{ serializeLayer(map.layer1()), serializeLayer(map.layer2()), serializeLayer(map.layer3()) });
+        mapJSON.put("songs", map.songs());
+        mapJSON.put("entities", mapEntities);
+        try {
+            // this is quite hacky lol
+            String workingDir = System.getProperty("user.dir");
+            FileWriter fileWriter = new FileWriter(workingDir.substring(0, workingDir.length() - 7) + "/assets/values/maps/" + filename + ".json");
+            fileWriter.write(mapJSON.toString());
+            fileWriter.close();
+        } catch (IOException e) { com.ususstudios.noway.Main.LOGGER.error("An error occurred while saving map to '/values/maps/" + filename
+                                                                        + ".json: " + e.getMessage()); }
+    }
+
+    private String serializeLayer(short[][] layer) {
+        StringBuilder string = new StringBuilder();
+        ByteBuffer buf = ByteBuffer.allocate(layer.length * layer[0].length * 2)
+                                       .order(ByteOrder.LITTLE_ENDIAN);
+        Base64.Encoder enc = Base64.getEncoder();
+        for (short[] row : layer) {
+            for (short tile : row) buf.putShort(tile);
+        }
+        string.append(enc.encodeToString(buf.array()));
+        return string.toString();
+    }
+
     @Override
     public void show() {
         batch = new SpriteBatch();
@@ -64,6 +113,8 @@ public class Main implements Screen {
 
         MapTileHandler.loadMaps();
         MapTileHandler.loadTiles();
+        loadMap();
+        saveMap();
 
         buildSidebar();
 

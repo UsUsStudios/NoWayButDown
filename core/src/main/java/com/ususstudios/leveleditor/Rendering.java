@@ -8,8 +8,6 @@ import com.ususstudios.noway.rendering.Tile;
 /** The static class responsible for drawing tiles and some UI on the screen */
 public class Rendering {
     public static void drawPlaying() {
-        Map map = MapTileHandler.maps.get(Main.currentMap);
-
         // Position the camera on the player (in world coordinates)
         Main.gameCamera.position.set(
             Main.cameraX + Main.tileSize / 2f,
@@ -20,11 +18,17 @@ public class Rendering {
 
         Main.batch.setProjectionMatrix(Main.gameCamera.combined);
         Main.batch.begin();
-        drawLayer(map, map.layer1(), Main.layer == 1 || Main.layer == 0);
-        drawLayer(map, map.layer2(), Main.layer == 2 || Main.layer == 0);
-        drawLayer(map, map.layer3(), Main.layer == 3 || Main.layer == 0);
+        drawLayer(Main.map, Main.map.layer1(), Main.layer == 1 || Main.layer == 0);
+        drawLayer(Main.map, Main.map.layer2(), Main.layer == 2 || Main.layer == 0);
+        drawLayer(Main.map, Main.map.layer3(), Main.layer == 3 || Main.layer == 0);
+
         float worldX = Main.mouseTile[1] * Main.tileSize;
         float worldY = Main.mouseTile[0] * Main.tileSize;
+        if (Main.layer == 0) {
+            Tile currentTile = MapTileHandler.tileTypes.get(Main.tileID);
+            Main.batch.setColor(1, 1, 1, 0.5f);
+            Main.batch.draw(currentTile.image().getTexture(), worldX, worldY);
+        }
         Main.drawRect(worldX, worldY, Main.tileSize, Main.tileSize, 2, Color.RED);
 
         Main.batch.end();
@@ -57,6 +61,7 @@ public class Rendering {
             }
         }
 
+        if (Main.layer == 0) return;
         float worldX = Main.mouseTile[1] * Main.tileSize;
         float worldY = Main.mouseTile[0] * Main.tileSize;
         Tile currentTile = MapTileHandler.tileTypes.get(Main.tileID);
