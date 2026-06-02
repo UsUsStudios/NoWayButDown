@@ -1,3 +1,3 @@
 # No Way But Down
 
-No Way But Down is a retro RPG. I will make a longer README when I'm not lazy.
+No Way But Down is a survival game made in Java.
