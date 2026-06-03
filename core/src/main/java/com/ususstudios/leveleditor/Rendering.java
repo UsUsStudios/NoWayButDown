@@ -1,9 +1,12 @@
 package com.ususstudios.leveleditor;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import com.ususstudios.noway.rendering.Tile;
+import com.ususstudios.noway.rendering.UI;
 
 /** The static class responsible for drawing tiles and some UI on the screen */
 public class Rendering {
@@ -30,7 +33,6 @@ public class Rendering {
             Main.batch.draw(currentTile.image().getTexture(), worldX, worldY);
         }
         Main.drawRect(worldX, worldY, Main.tileSize, Main.tileSize, 2, Color.RED);
-
         Main.batch.end();
     }
 

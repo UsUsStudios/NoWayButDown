@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Base64;
 import java.util.List;
-
 import org.json.JSONObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,15 +15,23 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -32,16 +39,19 @@ import com.ususstudios.noway.main.UtilityTool;
 import com.ususstudios.noway.rendering.Map;
 import com.ususstudios.noway.rendering.MapTileHandler;
 import com.ususstudios.noway.rendering.Tile;
+import com.ususstudios.noway.rendering.UI;
 
 public class Main implements Screen {
 
     static SpriteBatch batch;
     static Stage stage;
+    static boolean inputEnabled = true;
     static ScreenViewport stageViewport;
     static ExtendViewport gameViewport;
     static OrthographicCamera gameCamera;
     static Texture pixel;
-    static final int SIDEBAR_WIDTH = 200;
+    static Texture greyPixel;
+    static final int SIDEBAR_WIDTH = 268;
 
     static String currentMap = "main";
     static float cameraX = 0;
@@ -58,14 +68,21 @@ public class Main implements Screen {
     static String filename = "main";
     static Map map = null;
     static List<Object> mapEntities = null;
+    static TextField filenameField;
 
-    private boolean loadMap() {
+    private void loadMap() {
+        filename = filenameField.getText();
         map = MapTileHandler.maps.get(filename);
+        if (map == null) {
+            filename = "disabled";
+            map = MapTileHandler.maps.get("disabled");
+            filenameField.setText("Not found!");
+        }
         mapEntities = UtilityTool.getJsonObject("/values/maps/" + filename + ".json").getJSONArray("entities").toList();
-        return map != null;
     }
 
     private void saveMap() {
+        filename = filenameField.getText();
         JSONObject mapJSON = new JSONObject(map);
         mapJSON.put("name", map.name());
         mapJSON.put("size", new int[]{ map.width(), map.height() });
@@ -104,6 +121,15 @@ public class Main implements Screen {
         gameViewport = new ExtendViewport(screenWidth - SIDEBAR_WIDTH, screenHeight, gameCamera);
         stageViewport = new ScreenViewport();
         stage = new Stage(stageViewport, batch);
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (event.getTarget() != filenameField) {
+                    stage.setKeyboardFocus(null);
+                }
+                return false;
+            }
+        });
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -111,21 +137,27 @@ public class Main implements Screen {
         pixel = new Texture(pixmap);
         pixmap.dispose();
 
+        pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.DARK_GRAY);
+        pixmap.fill();
+        greyPixel = new Texture(pixmap);
+        pixmap.dispose();
+
         MapTileHandler.loadMaps();
         MapTileHandler.loadTiles();
-        loadMap();
-        saveMap();
 
         buildSidebar();
+
+        loadMap();
 
         Gdx.input.setInputProcessor(stage);
     }
 
     private void buildSidebar() {
-        Table sidebar = new Table();
-        sidebar.setPosition(Gdx.graphics.getWidth() - SIDEBAR_WIDTH, 0);
-        sidebar.setSize(SIDEBAR_WIDTH, Gdx.graphics.getHeight());
-        sidebar.top().left().pad(4);
+        Table tileSelect = new Table();
+        tileSelect.setPosition(Gdx.graphics.getWidth() - SIDEBAR_WIDTH, 0);
+        tileSelect.setSize(SIDEBAR_WIDTH, Gdx.graphics.getHeight() / 2);
+        tileSelect.top().left().pad(4);
 
         int buttonSize = 48;
         int columns = 5;
@@ -150,29 +182,78 @@ public class Main implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     tileID = thisTileId;
-                    for (Actor a : sidebar.getChildren()) {
+                    for (Actor a : tileSelect.getChildren()) {
                         if (a instanceof ImageButton b) b.getImage().setColor(Color.WHITE);
                     }
                     button.getImage().setColor(Color.CYAN);
                 }
             });
 
-            sidebar.add(button).size(buttonSize).pad(2);
+            tileSelect.add(button).size(buttonSize).pad(2);
             currColumn += 1;
             if (currColumn >= columns) {
-                sidebar.row();
+                tileSelect.row();
                 currColumn = 0;
             }
         }
 
-        ScrollPane scrollPane = new ScrollPane(sidebar);
+        ScrollPane scrollPane = new ScrollPane(tileSelect);
         scrollPane.setScrollingDisabled(false, false); // enable both axes
         scrollPane.setOverscroll(false, false);
         scrollPane.setFlingTime(0f); // disable fling/momentum if you want crisp scrolling
-        scrollPane.setPosition(Gdx.graphics.getWidth() - SIDEBAR_WIDTH, 0);
-        scrollPane.setSize(SIDEBAR_WIDTH, Gdx.graphics.getHeight());
+        scrollPane.setPosition(Gdx.graphics.getWidth() - SIDEBAR_WIDTH, Gdx.graphics.getHeight() / 2);
+        scrollPane.setSize(SIDEBAR_WIDTH, Gdx.graphics.getHeight() / 2);
 
         stage.addActor(scrollPane);
+
+        Table settingsBar = new Table();
+        settingsBar.setPosition(Gdx.graphics.getWidth() - SIDEBAR_WIDTH, 0);
+        settingsBar.setSize(SIDEBAR_WIDTH, Gdx.graphics.getHeight() / 2);
+        settingsBar.top().left().pad(4);
+
+        BitmapFont font = UI.getFont("FiraSans-Regular", 16, false);
+        TextFieldStyle textFieldStyle = new TextFieldStyle();
+        textFieldStyle.font = font;
+        textFieldStyle.cursor = new TextureRegionDrawable(pixel);
+        textFieldStyle.background = new TextureRegionDrawable(greyPixel);
+        textFieldStyle.background.setLeftWidth(4);
+        textFieldStyle.background.setRightWidth(4);
+        textFieldStyle.fontColor = Color.WHITE;
+        filenameField = new TextField(filename, textFieldStyle);
+        filenameField.addListener(new FocusListener() {
+            @Override
+            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+                inputEnabled = !focused;
+            }
+        });
+
+        settingsBar.add(filenameField).width(SIDEBAR_WIDTH / 2 - 4);
+
+        TextButtonStyle buttonStyle = new TextButtonStyle();
+        buttonStyle.font = font;
+
+        TextButton loadButton = new TextButton("Load", buttonStyle);
+        loadButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                loadMap();
+            }
+        });
+
+        settingsBar.add(loadButton).width(SIDEBAR_WIDTH / 4 - 4);
+
+        TextButton saveButton = new TextButton("Save", buttonStyle);
+        loadButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                saveMap();
+            }
+        });
+
+        settingsBar.add(saveButton).width(SIDEBAR_WIDTH / 4 - 4);
+        settingsBar.row();
+
+        stage.addActor(settingsBar);
     }
 
     @Override
@@ -186,7 +267,7 @@ public class Main implements Screen {
         Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
         Gdx.gl.glScissor(0, 0, gameWidth, gameHeight);
 
-        handleInput(delta);
+        if (inputEnabled) handleInput(delta);
         Rendering.drawPlaying();
 
         Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
@@ -223,7 +304,6 @@ public class Main implements Screen {
         cameraX += xAxis * 300 * delta * mul;
         cameraY += yAxis * 300 * delta * mul;
 
-        Map map = MapTileHandler.maps.get(currentMap);
         int maxCameraX = map.width() * tileSize - (screenWidth - SIDEBAR_WIDTH) / 2 - tileSize / 2;
         int maxCameraY = map.height() * tileSize - screenHeight / 2 - tileSize / 2;
         float minCameraX = (screenWidth - SIDEBAR_WIDTH) / 2f + tileSize / 2;
