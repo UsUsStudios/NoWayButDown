@@ -243,7 +243,7 @@ public class Main implements Screen {
         settingsBar.add(loadButton).width(SIDEBAR_WIDTH / 4 - 4);
 
         TextButton saveButton = new TextButton("Save", buttonStyle);
-        loadButton.addListener(new ChangeListener() {
+        saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 saveMap();
@@ -317,15 +317,16 @@ public class Main implements Screen {
     private void handleClick() {
         if (!checkMouseTile()) return;
 
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {}
-        if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {}
-        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            map.setTile(layer, mouseTile[0], mouseTile[1], tileID);
         }
+        if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {}
+        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {}
     }
 
     private boolean checkMouseTile() {
-        Map map = MapTileHandler.maps.get(currentMap);
+        float inputX = Gdx.input.getX() * (float) Main.screenWidth / (float) (Main.screenWidth - Main.SIDEBAR_WIDTH);
+        if (inputX > screenWidth) return false;
         if (mouseTile[0] > map.width() - 1) return false;
         if (mouseTile[1] > map.height() - 1) return false;
         if (mouseTile[0] < 0) return false;

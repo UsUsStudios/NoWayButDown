@@ -18,4 +18,18 @@ import java.util.List;
  */
 public record Map(String name, int width, int height, int spawnX, int spawnY,
                   short[][] layer1, short[][] layer2, short[][] layer3, List<Object> songs,
-                  List<List<Component>> entities) {}
+                  List<List<Component>> entities) {
+    public void setTile(int layer, int x, int y, short newTile) {
+        switch (layer) {
+            case 1:
+                layer1[x][y] = newTile;
+                break;
+            case 2:
+                layer2[x][y] = newTile;
+                break;
+            case 0, 3:
+                layer3[x][y] = newTile;
+                break;
+        }
+    }
+}
