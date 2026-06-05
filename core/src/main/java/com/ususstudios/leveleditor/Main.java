@@ -4,8 +4,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -68,7 +70,9 @@ public class Main implements Screen {
     static String filename = "main";
     static Map map = null;
     static List<Object> mapEntities = null;
+
     static TextField filenameField;
+    static TextField songsListField;
 
     private void loadMap() {
         filename = filenameField.getText();
@@ -78,17 +82,19 @@ public class Main implements Screen {
             map = MapTileHandler.maps.get("disabled");
             filenameField.setText("Not found!");
         }
+        songsListField.setText(new JSONArray(map.songs()).toString());
         mapEntities = UtilityTool.getJsonObject("/values/maps/" + filename + ".json").getJSONArray("entities").toList();
     }
 
     private void saveMap() {
         filename = filenameField.getText();
+        JSONArray mapSongsArray = new JSONArray(songsListField.getText());
         JSONObject mapJSON = new JSONObject(map);
         mapJSON.put("name", map.name());
         mapJSON.put("size", new int[]{ map.width(), map.height() });
         mapJSON.put("spawn", new int[]{ map.spawnX(), map. spawnY() });
         mapJSON.put("map", new String[]{ serializeLayer(map.layer1()), serializeLayer(map.layer2()), serializeLayer(map.layer3()) });
-        mapJSON.put("songs", map.songs());
+        mapJSON.put("songs", mapSongsArray.toList());
         mapJSON.put("entities", mapEntities);
         try {
             // this is quite hacky lol
@@ -124,7 +130,7 @@ public class Main implements Screen {
         stage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (event.getTarget() != filenameField) {
+                if (!(event.getTarget() instanceof TextField)) {
                     stage.setKeyboardFocus(null);
                 }
                 return false;
@@ -146,6 +152,7 @@ public class Main implements Screen {
         MapTileHandler.loadMaps();
         MapTileHandler.loadTiles();
 
+        map = MapTileHandler.maps.get(filename);
         buildSidebar();
 
         loadMap();
@@ -211,6 +218,8 @@ public class Main implements Screen {
         settingsBar.setSize(SIDEBAR_WIDTH, Gdx.graphics.getHeight() / 2);
         settingsBar.top().left().pad(4);
 
+        Table filenameSaveLoad = new Table();
+
         BitmapFont font = UI.getFont("FiraSans-Regular", 16, false);
         TextFieldStyle textFieldStyle = new TextFieldStyle();
         textFieldStyle.font = font;
@@ -219,6 +228,7 @@ public class Main implements Screen {
         textFieldStyle.background.setLeftWidth(4);
         textFieldStyle.background.setRightWidth(4);
         textFieldStyle.fontColor = Color.WHITE;
+
         filenameField = new TextField(filename, textFieldStyle);
         filenameField.addListener(new FocusListener() {
             @Override
@@ -227,7 +237,7 @@ public class Main implements Screen {
             }
         });
 
-        settingsBar.add(filenameField).width(SIDEBAR_WIDTH / 2 - 4);
+        filenameSaveLoad.add(filenameField).width(SIDEBAR_WIDTH / 2 - 8);
 
         TextButtonStyle buttonStyle = new TextButtonStyle();
         buttonStyle.font = font;
@@ -240,7 +250,7 @@ public class Main implements Screen {
             }
         });
 
-        settingsBar.add(loadButton).width(SIDEBAR_WIDTH / 4 - 4);
+        filenameSaveLoad.add(loadButton).width(SIDEBAR_WIDTH / 4 - 4);
 
         TextButton saveButton = new TextButton("Save", buttonStyle);
         saveButton.addListener(new ChangeListener() {
@@ -250,8 +260,19 @@ public class Main implements Screen {
             }
         });
 
-        settingsBar.add(saveButton).width(SIDEBAR_WIDTH / 4 - 4);
+        filenameSaveLoad.add(saveButton).width(SIDEBAR_WIDTH / 4 - 4);
+        settingsBar.add(filenameSaveLoad);
         settingsBar.row();
+
+        songsListField = new TextField(new JSONArray(map.songs()).toString(), textFieldStyle);
+        songsListField.addListener(new FocusListener() {
+            @Override
+            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+                inputEnabled = !focused;
+            }
+        });
+
+        settingsBar.add(songsListField).width(SIDEBAR_WIDTH - 16).pad(4);
 
         stage.addActor(settingsBar);
     }
