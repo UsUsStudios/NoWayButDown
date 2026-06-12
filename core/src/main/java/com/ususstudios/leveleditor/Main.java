@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import org.json.JSONArray;
@@ -26,10 +25,13 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -73,6 +75,7 @@ public class Main implements Screen {
 
     static TextField filenameField;
     static TextField songsListField;
+    static TextField spawnPosField;
 
     private void loadMap() {
         filename = filenameField.getText();
@@ -89,10 +92,11 @@ public class Main implements Screen {
     private void saveMap() {
         filename = filenameField.getText();
         JSONArray mapSongsArray = new JSONArray(songsListField.getText());
+        JSONArray spawnPositionArray = new JSONArray(spawnPosField.getText());
         JSONObject mapJSON = new JSONObject(map);
         mapJSON.put("name", map.name());
         mapJSON.put("size", new int[]{ map.width(), map.height() });
-        mapJSON.put("spawn", new int[]{ map.spawnX(), map. spawnY() });
+        mapJSON.put("spawn", spawnPositionArray.toList());
         mapJSON.put("map", new String[]{ serializeLayer(map.layer1()), serializeLayer(map.layer2()), serializeLayer(map.layer3()) });
         mapJSON.put("songs", mapSongsArray.toList());
         mapJSON.put("entities", mapEntities);
@@ -264,6 +268,11 @@ public class Main implements Screen {
         settingsBar.add(filenameSaveLoad);
         settingsBar.row();
 
+        LabelStyle labelStyle = new LabelStyle();
+        labelStyle.font = font;
+        settingsBar.add(new Label("Songs list", labelStyle));
+        settingsBar.row();
+
         songsListField = new TextField(new JSONArray(map.songs()).toString(), textFieldStyle);
         songsListField.addListener(new FocusListener() {
             @Override
@@ -273,6 +282,20 @@ public class Main implements Screen {
         });
 
         settingsBar.add(songsListField).width(SIDEBAR_WIDTH - 16).pad(4);
+        settingsBar.row();
+
+        settingsBar.add(new Label("Player spawn", labelStyle));
+        settingsBar.row();
+
+        spawnPosField = new TextField(new JSONArray(new int[]{map.spawnX(), map.spawnY()}).toString(), textFieldStyle);
+        spawnPosField.addListener(new FocusListener() {
+            @Override
+            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+                inputEnabled = !focused;
+            }
+        });
+
+        settingsBar.add(spawnPosField).width(SIDEBAR_WIDTH - 16).pad(4);
 
         stage.addActor(settingsBar);
     }
