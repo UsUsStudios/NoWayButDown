@@ -35,7 +35,7 @@ public class GameRendering {
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
-                String tileNumber = map.layer2()[worldRow][worldCol];
+                short tileNumber = map.layer2()[worldRow][worldCol];
                 int worldX = worldCol * tileSize;
                 int worldY = worldRow * tileSize;
                 float screenX = worldX - camX + Main.screenWidth / 2f;
@@ -116,13 +116,13 @@ public class GameRendering {
      * @param map The Map that is currently being drawn
      * @param layer The 2D array of 2-digit base 64 tile IDs that represent the layer currently being drawn
      */
-    private static void drawLayer(Map map, String[][] layer) {
+    private static void drawLayer(Map map, short[][] layer) {
         float camX = Main.cameraX + Main.tileSize / 2f;
         float camY = Main.cameraY + Main.tileSize / 2f;  // Slight adjustment to center the player on a block
         int tileSize = Main.tileSize;
         for (int worldRow = 0; worldRow < map.height(); worldRow++) {
             for (int worldCol = 0; worldCol < map.width(); worldCol++) {
-                String tileNumber = layer[worldRow][worldCol];
+                short tileNumber = layer[worldRow][worldCol];
                 int worldX = worldCol * tileSize;
                 int worldY = worldRow * tileSize;
                 float screenX = worldX - camX + Main.screenWidth / 2f;
@@ -147,7 +147,7 @@ public class GameRendering {
      * @param x1 The x-position that the center of the text should be
      * @param y1 The y-position that the center of the text should be
      */
-	public static void drawCenteredString(BitmapFont font, String text, int x1, int y1) {
+    public static void drawCenteredString(BitmapFont font, String text, int x1, int y1) {
         // Create a layout to measure the text
         GlyphLayout layout = new GlyphLayout();
         layout.setText(font, text);
@@ -157,7 +157,7 @@ public class GameRendering {
         float y = y1 + (layout.height) / 2; // for vertical centering
 
         font.draw(Main.batch, layout, x, y);
-	}
+    }
 
     /** Release all the BitmapFonts to avoid leaking memory */
     public static void dispose() {}

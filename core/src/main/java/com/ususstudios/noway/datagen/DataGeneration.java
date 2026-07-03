@@ -2,6 +2,7 @@ package com.ususstudios.noway.datagen;
 
 /**
  * DataGeneration generates JSON data programmatically.
+ * It's currently completely unused because MapGeneration is deprecated.
  */
 public class DataGeneration {
     /**

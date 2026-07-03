@@ -2,7 +2,10 @@ package com.ususstudios.noway.datagen;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import org.json.JSONArray;
@@ -12,12 +15,17 @@ import com.ususstudios.noway.components.*;
 
 /**
  * MapGeneration is an API for generating map JSONs.
+ * @deprecated Completely deprecated due to level editor.
  */
+@Deprecated
 public class MapGeneration {
+    private static final String BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
     /**
      * Generates all the map JSON files.
      * Is run automatically by the {@link com.ususstudios.noway.datagen.DataGeneration} {@code public static void main} method.
      */
+    @Deprecated
     public static void generate() {
         generateMap("main", "Main (Test Map)", 50, 50, 23, 21,
                 new String[]{"Neverending Maze"},
@@ -188,6 +196,35 @@ public class MapGeneration {
       "AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA AA"
                     });
                 }});
+
+        generateMap("disabled", "Error: Map Not Found", 25, 21, 21, 23,
+                new String[]{},
+                new ArrayList<>(),
+                new ArrayList<>(){{
+                    add(new String[]{
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AB AB AB AB AB AB AB AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AB AR AR AR AR AR AB AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AB AR AR AR AR AR AB AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AB AR AR AR AR AR AB AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AB AR AR AR AR AR AB AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AB AB AB AB AB AB AB AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD",
+      "AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD AD"
+                    });
+                }});
     }
 
     /**
@@ -202,6 +239,7 @@ public class MapGeneration {
      * @param entities The list of entities in the structure: {@code [{"ComponentName": ["arg1", "arg2"], "Component2": []}, {"Component3": []}]}
      * @param mapLayers The list of map layers. Each map layer (there's 3) is an array of rows, and each row is a string with space-separated tile IDs which are 2-digit base 64 numbers.
      */
+    @Deprecated
     public static void generateMap(String filename, String name, int sizeX, int sizeY, int spawnX, int spawnY,
             String[] songs, List<HashMap<Class<? extends Component>, Object[]>> entities, List<String[]> mapLayers) {
         JSONObject object = new JSONObject();
@@ -225,7 +263,7 @@ public class MapGeneration {
         }
         object.put("entities", entitiesArray);
 
-        object.put("map", mapLayers);
+        object.put("map", convertLegacyLayers(mapLayers, sizeX, sizeY));
 
         try (FileWriter file = new FileWriter("../assets/values/maps/" + filename + ".json")) {
             file.write(object.toString());
@@ -234,5 +272,32 @@ public class MapGeneration {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static int parseBase64TileId(String s) {
+        int result = 0;
+        for (char c : s.toCharArray()) {
+            result = result * 64 + BASE64_CHARS.indexOf(c);
+        }
+        return result;
+    }
+
+    private static List<String> convertLegacyLayers(List<String[]> legacyLayers, int width, int height) {
+        Base64.Encoder enc = Base64.getEncoder();
+        List<String> result = new ArrayList<>();
+
+        for (String[] rows : legacyLayers) {
+            ByteBuffer buf = ByteBuffer.allocate(width * height * 2)
+                                   .order(ByteOrder.LITTLE_ENDIAN);
+            for (int y = 0; y < rows.length; y++) {
+                String[] tokens = rows[y].split(" ");
+                for (int x = 0; x < tokens.length; x++) {
+                    int tileId = parseBase64TileId(tokens[x]);
+                    buf.putShort((short) tileId);
+                }
+            }
+            result.add(enc.encodeToString(buf.array()));
+        }
+        return result;
     }
 }
