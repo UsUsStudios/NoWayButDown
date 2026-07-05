@@ -80,7 +80,7 @@ public class Main extends ApplicationAdapter {
         setupECSWorld();
 
         for (int i = 0; i < 1000; i++) {
-            particles.add(new ParticleInstance.Particle(new ParticleInstance.ParticleConfiguration(100, 100, 100, 10, 100, 10, 1, 0, 1, 10, 0, 500, 5, 0f, -0.5f, 1, 1, 1, 1, 1)));
+            particles.add(new ParticleInstance.Particle(new ParticleInstance.ParticleConfiguration(100, 100, 50, 10, 100, 10, 1, 0, 1, 10, 0, 500, 5, 0f, -0.3f, 2, 2f, 6, 2f, MapTileHandler.tileTypes.get((short) 3).image())));
         }
 
         // Start the splash screen
