@@ -3,6 +3,7 @@ package com.ususstudios.noway.rendering;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.ususstudios.noway.Main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -67,6 +68,13 @@ public class GameRendering {
             drawCenteredString(UI.getFont("FiraSans-Regular", 38, true), Main.bottomMiddleText, Main.screenWidth / 2, 550);
         }
         Main.batch.end();
+
+        Main.shapes.begin(ShapeType.Filled);
+        for (ParticleInstance.Particle particle : Main.particles) {
+            particle.tick(1);
+            particle.draw(Main.shapes, 500, 300);
+        }
+        Main.shapes.end();
     }
 
     /** Draws the splash screen image at game startup */

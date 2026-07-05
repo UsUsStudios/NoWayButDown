@@ -1,4 +1,3 @@
-// What are you doing, looking through my horrible code? You don't belong here.
 package com.ususstudios.noway;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -9,10 +8,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.main.*;
 import com.ususstudios.noway.rendering.*;
+import com.ususstudios.noway.rendering.ParticleInstance.Particle;
+import com.ususstudios.noway.rendering.ParticleInstance.ParticleConfiguration;
 import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -59,6 +62,8 @@ public class Main extends ApplicationAdapter {
     /** Text for "press E to interact" and such */
     public static String bottomMiddleText = "";
 
+    public static ArrayList<ParticleInstance.Particle> particles = new ArrayList<>();
+
     /** This is run when the window is created */
     @Override
     public void create() {
@@ -74,6 +79,9 @@ public class Main extends ApplicationAdapter {
         UI.setup();
         setupECSWorld();
 
+        for (int i = 0; i < 1000; i++) {
+            particles.add(new ParticleInstance.Particle(new ParticleInstance.ParticleConfiguration(100, 100, 100, 10, 100, 10, 1, 0, 1, 10, 0, 500, 5, 0f, -0.5f, 1, 1, 1, 1, 1)));
+        }
 
         // Start the splash screen
         new Thread(() -> {

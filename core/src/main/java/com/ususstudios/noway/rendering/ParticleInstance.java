@@ -1,5 +1,7 @@
 package com.ususstudios.noway.rendering;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 public class ParticleInstance {
     /**
      * A record that contains all the information that a {@link com.ususstudios.noway.rendering.ParticleInstance} to generate all the particles.
@@ -25,11 +27,40 @@ public class ParticleInstance {
      * @param endSizeVariation By how much the ending size value can vary randomly in either direction
      * @param sourceImage Each particle's colour will be a colour selected randomly from this image
      */
-    public record ParticleConfiguration(int maxParticles, int duration, int lifetime, int lifetimeVariation,
-            int emissionTicks, int emissionTicksVariation, int emissionCount, double angle, double angleVariation,
-            double velocity, double velocityVariation, double startPositionVariationX, double startPositionVariationY,
-            double gravityX, double gravityY,
+    public static record ParticleConfiguration(int maxParticles, int duration, int lifetime, int lifetimeVariation,
+            int emissionTicks, int emissionTicksVariation, int emissionCount, float angle, float angleVariation,
+            float velocity, float velocityVariation, float startPositionVariationX, float startPositionVariationY,
+            float gravityX, float gravityY,
 
-            double startSize, double startSizeVariation, double endSize, double endSizeVariation, Image sourceImage) {}
+            float startSize, float startSizeVariation, float endSize, float endSizeVariation, float sourceImage) {}
 
+    public static class Particle {
+        ParticleConfiguration config;
+        float posX;
+        float posY;
+        float velocityX;
+        float velocityY;
+        public Particle(ParticleConfiguration config) {
+            this.config = config;
+            posX = ((float) Math.random() - 0.5f) * config.startPositionVariationX() * 2;
+            posY = ((float) Math.random() - 0.5f) * config.startPositionVariationY() * 2;
+
+            float startingAngle = config.angle() + ((float) Math.random() - 0.5f) * config.angleVariation() * 2;
+            float velocity = config.velocity() + ((float) Math.random() - 0.5f) * config.velocityVariation() * 2;
+            velocityX = (float) Math.cos(startingAngle) * velocity;
+            velocityY = (float) Math.sin(startingAngle) * velocity;
+        }
+
+        public void tick(double delta) {
+            velocityX += config.gravityX() * delta;
+            velocityY += config.gravityY() * delta;
+            posX += velocityX * delta;
+            posY += velocityY * delta;
+        }
+
+        public void draw(ShapeRenderer renderer, float worldPosX, float worldPosY) {
+            renderer.circle(posX + worldPosX, posY + worldPosY, 2f);
+
+        }
+    }
 }
