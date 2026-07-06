@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.ususstudios.noway.Main;
+import com.ususstudios.noway.rendering.particles.Particle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
@@ -70,7 +71,7 @@ public class GameRendering {
         Main.batch.end();
 
         Main.shapes.begin(ShapeType.Filled);
-        for (ParticleInstance.Particle particle : Main.particles) {
+        for (Particle particle : Main.particles) {
             particle.tick(1);
             particle.draw(Main.shapes, 500, 300);
         }

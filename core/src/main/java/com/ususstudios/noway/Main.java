@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.ususstudios.noway.main.*;
 import com.ususstudios.noway.rendering.*;
-import com.ususstudios.noway.rendering.ParticleInstance.Particle;
-import com.ususstudios.noway.rendering.ParticleInstance.ParticleConfiguration;
+import com.ususstudios.noway.rendering.particles.Particle;
+import com.ususstudios.noway.rendering.particles.ParticleConfiguration;
 import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
@@ -62,7 +62,7 @@ public class Main extends ApplicationAdapter {
     /** Text for "press E to interact" and such */
     public static String bottomMiddleText = "";
 
-    public static ArrayList<ParticleInstance.Particle> particles = new ArrayList<>();
+    public static ArrayList<Particle> particles = new ArrayList<>();
 
     /** This is run when the window is created */
     @Override
@@ -80,7 +80,7 @@ public class Main extends ApplicationAdapter {
         setupECSWorld();
 
         for (int i = 0; i < 1000; i++) {
-            particles.add(new ParticleInstance.Particle(new ParticleInstance.ParticleConfiguration(100, 100, 50, 10, 100, 10, 1, 0, 1, 10, 0, 500, 5, 0f, -0.3f, 2, 2f, 6, 2f, MapTileHandler.tileTypes.get((short) 3).image())));
+            particles.add(new Particle(new ParticleConfiguration(100, 100, 50, 10, 100, 10, 1, 0, 1, 10, 0, 500, 5, 0f, -0.3f, 2, 2f, 6, 2f, MapTileHandler.tileTypes.get((short) 3).image())));
         }
 
         // Start the splash screen
