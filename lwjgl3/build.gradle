@@ -55,7 +55,10 @@ run {
 tasks.register('runEditor', JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'com.ususstudios.noway.lwjgl3.Lwjgl3Launcher'
+  workingDir = rootProject.file('assets').path
   args '-e'
+
+  if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
 
 jar {
