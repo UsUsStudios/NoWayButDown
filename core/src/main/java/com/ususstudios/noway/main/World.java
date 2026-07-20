@@ -86,7 +86,6 @@ public class World {
         for (ECSSystem system : updateSystems) {
             system.process(this);
         }
-
     }
 
     /**
