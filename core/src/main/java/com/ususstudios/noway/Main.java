@@ -106,7 +106,6 @@ public class Main extends ApplicationAdapter {
                 cameraX = MapTileHandler.maps.get(currentMap).spawnX() * tileSize;
                 cameraY = MapTileHandler.maps.get(currentMap).spawnY() * tileSize;
                 gameState = States.GameStates.MAIN_MENU;
-                SoundManager.playMapMusic(currentMap);
 
                 for (List<Component> entity : MapTileHandler.maps.get(currentMap).entities()) {
                     world.createEntity(entity.toArray(new Component[entity.size()]));
