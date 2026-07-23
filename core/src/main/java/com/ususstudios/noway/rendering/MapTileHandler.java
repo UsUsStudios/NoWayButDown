@@ -25,8 +25,10 @@ public class MapTileHandler {
     public static void loadTiles() {
         registerTile(0, "nothing", "00000/00000/00000/00000/00000");
 
+        // Rocks
+        registerTile(1, "rocks_1", "00000/00000/00000/00000/00000");
+
         // Grass
-        registerTile(1, "grass/grass_1", "00000/00000/00000/00000/00000");
         registerTile(2, "grass/grass_2", "00000/00000/00000/00000/00000");
 
         // Water
@@ -64,8 +66,8 @@ public class MapTileHandler {
         registerTile(30, "floor", "00000/00000/00000/00000/00000");
         registerTile(31, "planks", "11111/11111/11111/11111/11111");
 
-        // Tree
-        registerTile(32, "tree/tree", "01110/11111/11111/11111/01110");
+        // Eye-Shroom (TEMPORARY)
+        registerTile(32, "eye_shroom", "01110/11111/11111/11111/01110");
 
         // Event Tiles
         registerTile(33, "path/path_pit", "00000/00000/00000/00000/00000");
@@ -78,6 +80,7 @@ public class MapTileHandler {
         registerTile(38,"grass/dark_grass", "00000/00000/00000/00000/00000");
 
         registerTile(39,"tunnel_door", "00000/00000/00000/00000/00000");
+
         Main.LOGGER.info("Loaded {} tile images", tileTypes.size());
     }
 
