@@ -1,8 +1,8 @@
 package com.ususstudios.noway.rendering.particles;
 
 import java.util.ArrayList;
-
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import java.util.Iterator;
+import java.util.concurrent.locks.ReentrantLock;
 import com.ususstudios.noway.Main;
 
 public class ParticleInstance {
@@ -10,49 +10,72 @@ public class ParticleInstance {
     ArrayList<Particle> particles = new ArrayList<>();
     int age = 0;
     int nextSpawnAge = 1;
-    boolean listLock = false;
+    Thread thread;
+    int particlesToAdd = 0;
+    private final ReentrantLock particleLock = new ReentrantLock();
 
     public ParticleInstance(ParticleConfiguration config) {
         this.config = config;
-    }
-
-    public void tick(double delta) {
-        age += 1;
-        if (age == nextSpawnAge && (age >= config.duration() || config.duration() == -1)) {
-            nextSpawnAge = age + Math.round(config.emissionTicks() + ((float) Math.random() - 0.5f) * config.emissionTicksVariation() * 2);
-            listLock = true;
-            for (int i = 0; i < config.emissionCount(); i += 1) {
-                if (particles.size() < config.maxParticles()) particles.add(new Particle(config));
-            }
-            listLock = false;
-        }
-
-        new Thread(() -> {
-            ArrayList<Particle> toDelete = new ArrayList<>();
-            for (Particle p : particles) {
-                p.tick(delta);
-                if (p.lifeTicks >= p.lifetime) {
-                    toDelete.add(p);
+        thread = new Thread(() -> {
+            while (true) {
+                int ticksSinceLast = 0;
+                try {
+                    ticksSinceLast++;
+                    Thread.sleep(16);
+                    if (tick(ticksSinceLast)) ticksSinceLast = 0;
+                } catch (Exception e) {
+                    System.out.println(e);
                 }
             }
+        });
+        thread.start();
+    }
 
-            for (Particle p : toDelete) {
-                try {
-                    while (listLock) { Thread.sleep(10); }
-                } catch (Exception e) {}
+    // returns whether it ticked (otherwise it skipped this tick)
+    private boolean tick(int ticks) {
+        boolean locked = particleLock.tryLock();
+        if (!locked) return false;
+        age++;
 
-                particles.remove(p);
+        if (!locked) particleLock.lock();
+
+        try {
+            Iterator<Particle> it = particles.iterator();
+
+            while (it.hasNext()) {
+                Particle p = it.next();
+
+                p.tick(ticks);  // do each particle only every other tick
+                if (p.lifeTicks >= p.lifetime) {
+                    it.remove();
+                }
             }
-        }).start();
+        } finally {
+            particleLock.unlock();
+        }
+
+        if (age >= nextSpawnAge && (age >= config.duration() || config.duration() == -1)) {
+            nextSpawnAge = age + Math.round(config.emissionTicks() + ((float) Math.random() - 0.5f) * config.emissionTicksVariation() * 2);
+            particlesToAdd += config.emissionCount();
+        }
+
+        return true;
     }
 
     public void draw() {
-        Main.shapes.begin(ShapeType.Filled);
-        listLock = true;
-        for (Particle p : particles) {
-            p.draw(Main.shapes, 500, 700);
+        particleLock.lock();
+        try {
+            while (particlesToAdd > 0) {
+                if (particles.size() < config.maxParticles()) {
+                    particles.add(new Particle(config));
+                }
+                particlesToAdd--;
+            }
+            for (Particle p : particles) {
+                p.draw(Main.shapes, 500, 700);
+            }
+        } finally {
+            particleLock.unlock();
         }
-        listLock = false;
-        Main.shapes.end();
     }
 }

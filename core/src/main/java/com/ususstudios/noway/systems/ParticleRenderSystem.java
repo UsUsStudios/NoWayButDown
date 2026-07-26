@@ -1,5 +1,6 @@
 package com.ususstudios.noway.systems;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.World;
 
@@ -11,8 +12,9 @@ public class ParticleRenderSystem implements ECSSystem {
     */
     @Override
     public void process(World world) {
-        Main.particles.tick(1);
+        Main.shapes.begin(ShapeType.Filled);
         Main.particles.draw();
+        Main.shapes.end();
     }
 }
 

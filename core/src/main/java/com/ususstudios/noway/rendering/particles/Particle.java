@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Particle {
     ParticleConfiguration config;
+
     float posX;
     float posY;
 
