@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.ususstudios.noway.Main;
 
 public class Particle {
     ParticleConfiguration config;
@@ -78,12 +79,20 @@ public class Particle {
         posY += velocityY * delta;
     }
 
-    public void draw(ShapeRenderer renderer, float worldPosX, float worldPosY) {
+    public void draw(ShapeRenderer renderer, float screenPosX, float screenPosY) {
         if (lifeTicks < lifetime) {
             float t = lifeTicks / lifetime;
             float size = startSize * (1 - t) + endSize * t;  // lerp the start and end size
             renderer.setColor(colour);
-            renderer.circle(posX + worldPosX, posY + worldPosY, size);
+
+            float screenX = posX + screenPosX;
+            float screenY = posY + screenPosY;
+            if (screenX + 3 > 0 &&
+                screenX - 3 < Main.screenWidth &&
+                screenY + 3 > 0 &&
+                screenY - 3 < Main.screenHeight) {
+            renderer.circle(screenX, screenY, size);
+                }
         }
     }
 }

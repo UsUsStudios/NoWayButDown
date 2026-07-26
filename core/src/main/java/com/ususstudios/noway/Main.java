@@ -77,7 +77,7 @@ public class Main extends ApplicationAdapter {
         UI.setup();
         setupECSWorld();
 
-        particles = new ParticleInstance(new ParticleConfiguration(800, -1, 50, 10, 2, 1, 100, -1.3f, 0.1f, 10, 0, 400, 50, 0f, -0.6f, 2, 0.2f, 3, 0.2f, MapTileHandler.tileTypes.get((short) 3).image()));
+        particles = new ParticleInstance(new ParticleConfiguration(800, -1, 50, 10, 2, 1, 100, -1.3f, 0.1f, 10, 0, 50.5f, 50, 0f, -0.6f, 2, 0.2f, 3, 0.2f, MapTileHandler.tileTypes.get((short) 3).image()));
 
         // Start the splash screen
         new Thread(() -> {
