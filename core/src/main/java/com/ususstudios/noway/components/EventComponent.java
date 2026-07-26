@@ -4,6 +4,9 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.ususstudios.noway.Main;
 import com.ususstudios.noway.main.SoundManager;
+import com.ususstudios.noway.rendering.MapTileHandler;
+import com.ususstudios.noway.rendering.particles.ParticleConfiguration;
+import com.ususstudios.noway.rendering.particles.ParticleInstance;
 
 // TODO: improve this code to make it work better with JSON data
 /**
@@ -71,5 +74,27 @@ public class EventComponent implements Component {
                 call("_interacted");
             }
         });
+    }
+
+    public EventComponent(Integer interactionKey) {
+        this(new HashMap<>(){{
+            put("_interacted", () -> {
+                PositionComponent position = Main.world.getEntityComponent(Main.playerId, PositionComponent.class).get();
+                synchronized (Main.particles) {
+                    Main.particles.add(new ParticleInstance(new ParticleConfiguration(800, 50, 50, 10, 2, 1, 100, -1.3f, 0.1f, 10, 0, 500, 50, 0f, -0.16f, 2, 0.2f, 3, 0.2f, MapTileHandler.tileTypes.get((short) 3).image()), position));
+                }
+            });
+        }});
+
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(16);
+                } catch (Exception e) {}
+                if (Gdx.input.isKeyJustPressed(interactionKey)) {
+                    call("_interacted");
+                }
+            }
+        }).start();
     }
 }

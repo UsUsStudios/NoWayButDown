@@ -14,6 +14,7 @@ import com.ususstudios.noway.components.*;
 import com.ususstudios.noway.systems.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -60,7 +61,7 @@ public class Main extends ApplicationAdapter {
     /** Text for "press E to interact" and such */
     public static String bottomMiddleText = "";
 
-    public static ParticleInstance particles;
+    public static ArrayList<ParticleInstance> particles = new ArrayList<>();
 
     /** This is run when the window is created */
     @Override
@@ -76,8 +77,6 @@ public class Main extends ApplicationAdapter {
         SoundManager.loadLibrary();
         UI.setup();
         setupECSWorld();
-
-        particles = new ParticleInstance(new ParticleConfiguration(800, -1, 50, 10, 2, 1, 100, -1.3f, 0.1f, 10, 0, 50.5f, 50, 0f, -0.6f, 2, 0.2f, 3, 0.2f, MapTileHandler.tileTypes.get((short) 3).image()));
 
         // Start the splash screen
         new Thread(() -> {
@@ -103,6 +102,7 @@ public class Main extends ApplicationAdapter {
                 currentMap = "main";
                 world.getEntityComponent(playerId, PositionComponent.class).get()
                     .setPosition(MapTileHandler.maps.get(currentMap).spawnX(), MapTileHandler.maps.get(currentMap).spawnY());
+
                 cameraX = MapTileHandler.maps.get(currentMap).spawnX() * tileSize;
                 cameraY = MapTileHandler.maps.get(currentMap).spawnY() * tileSize;
                 gameState = States.GameStates.MAIN_MENU;
@@ -171,6 +171,7 @@ public class Main extends ApplicationAdapter {
         playerId = world.createEntity(new PlayerComponent(300), new PositionComponent(0f, 0f),
                 new SpritesheetComponent("entity/player/player", 0, 1, 4, 5, 1f, 2f),
                 new CollisionComponent(0.4f, 1.4f, 0.3f, 0.4f),
+                new EventComponent(Input.Keys.SPACE),
                 new LightSourceComponent(0.8f, 125f, 0.1f, -.5f * Main.tileSize, -.2f * Main.tileSize));
 
         world.addUpdateSystem(new PlayerSystem());

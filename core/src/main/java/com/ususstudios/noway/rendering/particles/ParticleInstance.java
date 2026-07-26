@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantLock;
 import com.ususstudios.noway.Main;
+import com.ususstudios.noway.components.PositionComponent;
 
 public class ParticleInstance {
     ParticleConfiguration config;
@@ -13,9 +14,11 @@ public class ParticleInstance {
     Thread thread;
     int particlesToAdd = 0;
     private final ReentrantLock particleLock = new ReentrantLock();
+    PositionComponent position;
 
-    public ParticleInstance(ParticleConfiguration config) {
+    public ParticleInstance(ParticleConfiguration config, PositionComponent position) {
         this.config = config;
+        this.position = position;
         thread = new Thread(() -> {
             while (true) {
                 int ticksSinceLast = 0;
@@ -54,7 +57,7 @@ public class ParticleInstance {
             particleLock.unlock();
         }
 
-        if (age >= nextSpawnAge && (age >= config.duration() || config.duration() == -1)) {
+        if (age >= nextSpawnAge && (age <= config.duration() || config.duration() == -1)) {
             nextSpawnAge = age + Math.round(config.emissionTicks() + ((float) Math.random() - 0.5f) * config.emissionTicksVariation() * 2);
             particlesToAdd += config.emissionCount();
         }
@@ -66,13 +69,17 @@ public class ParticleInstance {
         particleLock.lock();
         try {
             while (particlesToAdd > 0) {
-                if (particles.size() < config.maxParticles()) {
+                if (particles.size() < config.maxParticles() && (age <= config.duration() || config.duration() == -1)) {
                     particles.add(new Particle(config));
                 }
                 particlesToAdd--;
             }
+
             for (Particle p : particles) {
-                p.draw(Main.shapes, 500, 700);
+                float screenX = position.x - Main.cameraX + Main.screenWidth / 2f;
+                // flip the y axis because we flip the projection (I think)
+                float screenY = Main.cameraY - position.y + Main.screenHeight / 2f;
+                p.draw(Main.shapes, screenX, screenY);
             }
         } finally {
             particleLock.unlock();
